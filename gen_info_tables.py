@@ -1,7 +1,9 @@
 def nut_supplements(conn, cursor, file_number, table):
-    from add_update_sql import update_multiple, review_input
+    from add_update_sql import review_input
     from breast_cancer_tables import nut_supp_table
     from ask_y_n_statement import ask_y_n
+    import pccm_names
+    module_name = "nut_supplements"
     check = False
     while not check:
         nut_supplements = ask_y_n("Nutritional supplements taken")
@@ -13,20 +15,17 @@ def nut_supplements(conn, cursor, file_number, table):
             nuts = ("NA",) * 3
         nuts_type, nuts_quant, nuts_dur = nuts
         data_list = [nut_supplements, nuts_type, nuts_quant, nuts_dur]
-        columns_list = ["Nutritional_supplements_y_n", "Type_Nutritional_supplements",
-                        "Quantity_Nutritional_supplements", \
-                        "Duration_Nutritional_supplements"]
+        columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
-    data = nut_supplements, nuts_type, nuts_quant, nuts_dur
-    columns = "Nutritional_supplements_y_n", "Type_Nutritional_supplements", "Quantity_Nutritional_supplements", \
-              "Duration_Nutritional_supplements"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def phys_act(conn, cursor, file_number, table):
+def phys_act(conn, cursor, file_number):
     from breast_cancer_tables import physical_activity_table
-    from add_update_sql import update_multiple, review_input
+    from add_update_sql import review_input
     from ask_y_n_statement import ask_y_n
+    import pccm_names
+    module_name = "phys_act"
     check = False
     while not check:
         phys_act = ask_y_n("Any Physical Activities ?")
@@ -38,17 +37,17 @@ def phys_act(conn, cursor, file_number, table):
             phys_act = "No Physical Activities"
             phys_act_done, phys_act_freq = ("NA",) * 2
         data_list = [phys_act, phys_act_done, phys_act_freq]
-        columns_list = ["Physical_Activity_y_n", "Type_Physical_Activity", "Frequency_Physical_Activity"]
+        columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
-    data = phys_act, phys_act_done, phys_act_freq
-    columns = "Physical_Activity_y_n", "Type_Physical_Activity", "Frequency_Physical_Activity"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def med_history(conn, cursor, file_number, table):
+def med_history(conn, cursor, file_number):
     from breast_cancer_tables import med_history_table
     from ask_y_n_statement import ask_y_n
-    from add_update_sql import update_multiple, review_input
+    from add_update_sql import review_input
+    import pccm_names
+    module_name = "med_history"
     check = False
     while not check:
         medical_history_y_n = ask_y_n("Other Medical History ?")
@@ -60,18 +59,17 @@ def med_history(conn, cursor, file_number, table):
             med_hist = ("NA",) * 3
         condition_hist, diagnosis_date_hist, treatment_hist = med_hist
         data_list = [medical_history_y_n, condition_hist, diagnosis_date_hist, treatment_hist]
-        columns_list = ["Any_Other_Medical_History_y_n", "Type_Any_Other_Medical_History",
-                        "Diagnosis_Date_Any_Other_Medical_History", "Treatment_Any_Other_Medical_History"]
+        columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
-    data = medical_history_y_n, condition_hist, diagnosis_date_hist, treatment_hist
-    columns = "Any_Other_Medical_History_y_n", "Type_Any_Other_Medical_History", "Diagnosis_Date_Any_Other_Medical_History", "Treatment_Any_Other_Medical_History"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def cancer_history(conn, cursor, file_number, table):
+def cancer_history(conn, cursor, file_number):
     from breast_cancer_tables import cancer_table
-    from add_update_sql import update_multiple, review_input
+    from add_update_sql import review_input
     from ask_y_n_statement import ask_y_n
+    import pccm_names
+    module_name = "cancer_history"
     check = False
     while not check:
         previous_cancer_history_y_n = ask_y_n("Previous history of cancer ?")
@@ -83,22 +81,20 @@ def cancer_history(conn, cursor, file_number, table):
             previous_cancer = ("NA",) * 5
         type_of_cancer_list, year_diagnosis_list, treat_all, type_all, duration_all = previous_cancer
         data_list = [previous_cancer_history_y_n, type_of_cancer_list, year_diagnosis_list, treat_all, type_all, duration_all]
-        columns_list = ["Previous_Cancer_History_y_n", "Type_Previous_Cancer", "Year_Diagnosed_Previous_Cancer", \
-                        "Treatment_Previous_Cancer", "Treatment_Type_Previous_Cancer",
-                        "Treatment_Duration_Previous_Cancer"]
+        columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
-    data = previous_cancer_history_y_n, type_of_cancer_list, year_diagnosis_list, treat_all, type_all, duration_all
-    columns = "Previous_Cancer_History_y_n", "Type_Previous_Cancer", "Year_Diagnosed_Previous_Cancer", \
-              "Treatment_Previous_Cancer", "Treatment_Type_Previous_Cancer", "Treatment_Duration_Previous_Cancer"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def family_details(conn, cursor, file_number, table):
-    from add_update_sql import update_multiple, review_input
-    from ask_y_n_statement import ask_y_n
+def family_details(conn, cursor, file_number):
+    from add_update_sql import review_input
+    from ask_y_n_statement import ask_option, ask_y_n
+    import pccm_names
+    import breast_cancer_tables
+    module_name = "family_details"
     check = False
     while not check:
-        marital_status = input('Marital_Status :')
+        marital_status = input('Marital Status :')
         siblings = ask_y_n('Siblings')
         if siblings:
             siblings_number = input("Number of siblings: ")
@@ -113,20 +109,6 @@ def family_details(conn, cursor, file_number, table):
             sons = input('Sons :')
         else:
             children_number, daughters, sons = "No Children", "0", "0"
-        columns_list = ["Marital_Status", "Siblings", "Sisters", "Brothers", "Children", "Daughters", "Sons"]
-        data_list = [marital_status, siblings_number, sisters, brothers, children_number, daughters, sons]
-        check = review_input(file_number, columns_list, data_list)
-    columns = "Marital_Status", "Siblings", "Sisters", "Brothers", "Children", "Daughters", "Sons"
-    new_data = marital_status, siblings_number, sisters, brothers, children_number, daughters, sons
-    update_multiple(conn, cursor, table, columns, file_number, new_data)
-
-
-def repro_details(conn, cursor, file_number, table):
-    from add_update_sql import update_multiple, review_input
-    from breast_cancer_tables import feed_duration
-    from ask_y_n_statement import ask_option, ask_y_n
-    check = False
-    while not check:
         menarche = input('Age at menarche (yrs): ')
         category = "Menopausal Status"
         options = ["Pre-menopausal", "Peri-menopausal", "Post-Menopausal", "Other"]
@@ -142,106 +124,100 @@ def repro_details(conn, cursor, file_number, table):
             options = ["Regular", "Irregular", "Other"]
             period_type = ask_option(category, options)
         number_pregnancy = input("Number of pregnancies: ")
-        number_term = input("Pregnancy carried to term (include abortion after 6 months): )")
-        number_abortion = input("Number of abortions: ")
-        sql = ('SELECT Children FROM Patient_Information_History WHERE File_number = \'' + file_number + "'")
-        cursor.execute(sql)
-        kids = cursor.fetchall()
-        children_number = kids[0][0]
-        sql = ('SELECT Age_yrs FROM Patient_Information_History WHERE File_number = \'' + file_number + "'")
-        cursor.execute(sql)
-        age = cursor.fetchall()
-        age_mother = age[0][0]
-        if children_number == 'No Children':
-            age_first, age_last = ('NA',) * 2
+        if number_pregnancy == "0":
+            age_first_preg, age_last_preg, number_term, number_abortion, age_first, age_last, twice_birth, \
+            breast_feeding_data, kid_feeding, duration_feeding, breast_usage = ('NA',) * 11
         else:
-            age_first = input("Age of first child: ")
-            if int(children_number) > 1:
-                age_last = input("Age of last child: ")
+            number_term = input("Pregnancy carried to term (include abortion after 6 months): )")
+            number_abortion = input("Number of abortions: ")
+            age_first_preg = input("Age at first pregnancy: ")
+            sql = ('SELECT Age_yrs FROM Patient_Information_History WHERE File_number = \'' + file_number + "'")
+            cursor.execute(sql)
+            age = cursor.fetchall()
+            age_mother = age[0][0]
+            if children_number == 'No Children':
+                age_first, age_last, twice_birth, breast_feeding_data, kid_feeding, \
+                duration_feeding, breast_usage = ('NA',) * 7
             else:
-                age_last = age_first
-        age_first_preg = input("Age at first pregnancy: ")
-        if age_first_preg == "NA":
-            age_first_preg = str(int(age_mother) - int(age_first))
-        age_last_preg = input("Age at last pregnancy: ")
-        if age_last_preg == "NA":
-            age_last_preg = str(int(age_mother) - int(age_last))
-        twice_birth = ask_y_n("Two births in a year (not twins) y/n: ", "Two births in a year",
-                              "No two births in a year")
-        breast_feeding = ask_y_n("Breast feeding?")
-        if breast_feeding:
-            breast_feeding_data = "Breast feeding"
-            feed_details = feed_duration(conn, cursor, file_number, children_number)
-        else:
-            breast_feeding_data = "No Breast feeding"
-            feed_details = ("NA",) * 3
-        kid_feeding, duration_feeding, breast_usage = feed_details
+                age_first = input("Age of first child: ")
+                if int(children_number) > 1:
+                    age_last = input("Age of last child: ")
+                else:
+                    age_last = age_first
+            if age_first_preg == "NA":
+                age_first_preg = str(int(age_mother) - int(age_first))
+            age_last_preg = input("Age at last pregnancy: ")
+            if age_last_preg == "NA":
+                age_last_preg = str(int(age_mother) - int(age_last))
+            twice_birth = ask_y_n("Two births in a year (not twins) y/n: ", "Two births in a year",
+                                  "No two births in a year")
+            breast_feeding = ask_y_n("Breast feeding?")
+            if breast_feeding:
+                breast_feeding_data = "Breast feeding"
+                feed_details = breast_cancer_tables.feed_duration(conn, cursor, file_number, children_number)
+            else:
+                breast_feeding_data = "No Breast feeding"
+                feed_details = ("NA",) * 3
+            kid_feeding, duration_feeding, breast_usage = feed_details
         type_birth_control = input("Type of birth control used: ")
         if str.lower(type_birth_control) == "na":
             type_birth_control, detail_birth_control, duration_birth_control = ("NA",) * 3
         else:
             detail_birth_control = input("Details of birth control used: ")
             duration_birth_control = input("Duration of birth control use: ")
-        data_list = [menarche, menopause, menopause_age, lmp, period_type, number_pregnancy, number_term,
-                     number_abortion,age_first, age_first_preg, age_last, age_last_preg, twice_birth,
+        data_list = [marital_status, siblings_number, sisters, brothers, children_number, daughters, sons, menarche,
+                     menopause, menopause_age, lmp, period_type, number_pregnancy, number_term,
+                     number_abortion, age_first, age_first_preg, age_last, age_last_preg, twice_birth,
                      breast_feeding_data, kid_feeding, duration_feeding, breast_usage, type_birth_control,
                      detail_birth_control, duration_birth_control]
-        columns_list = ["Menarche_yrs", "Menopause_Status", "Age_at_Menopause_yrs", "Date_last_menstrual_period",
-                        "Period_Type", "Number_pregnancies", "Pregnancy_to_term", "Number_abortions", "Age_first_child","Age_first_pregnancy", \
-                        "Age_last_child", "Age_last_pregnancy", "Two_births_in_year", "Breast_feeding",
-                        "Child_Breast_feeding", "Duration_Breast_feeding", "Breast_Usage_Breast_feeding",
-                        "Type_birth_control_used", "Details_birth_control", "Duration_birth_control"]
+        columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
-    data = menarche, menopause, menopause_age, lmp, period_type, number_pregnancy, number_term, number_abortion,\
-           age_first, age_first_preg, age_last, age_last_preg, twice_birth, breast_feeding_data, kid_feeding, \
-           duration_feeding, breast_usage, type_birth_control, detail_birth_control, duration_birth_control
-    columns = "Menarche_yrs", "Menopause_Status", "Age_at_Menopause_yrs", "Date_last_menstrual_period", "Period_Type", \
-              "Number_pregnancies", "Pregnancy_to_term", "Number_abortions", "Age_first_child", \
-              "Age_first_pregnancy", "Age_last_child", "Age_last_pregnancy", "Two_births_in_year", "Breast_feeding", \
-              "Child_Breast_feeding", "Duration_Breast_feeding", "Breast_Usage_Breast_feeding", \
-              "Type_birth_control_used", "Details_birth_control", "Duration_birth_control"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
-def breast_symptoms(conn, cursor, file_number, table):
-    from ask_y_n_statement import get_symptom, get_rb_lb, ask_y_n
-    from add_update_sql import update_multiple, review_input
-    from breast_cancer_tables import other_symp
+def breast_symptoms(file_number):
+    from ask_y_n_statement import ask_y_n
+    from add_update_sql import review_input
+    import pccm_names
+    import textwrap
+    module_name = "breast_symptoms"
     check = False
     while not check:
+        note = "Pain or tenderness; Lumps, Nipple Discharge - Milky/water discharge on pressing nippple, " \
+               "Nipple Retraction - nipple reagion goes inside, Dimpling small pits anwywhere on breast, " \
+               "Discolouration - may occur after surgery, Ulceration (small boils on surface), " \
+               "Eczema - Reddish spots with without itching"
+        wrapper = textwrap.TextWrapper(width=100)
+        string = wrapper.fill(text=note)
+        print(string)
         symp_state = ["Pain or tenderness", "Lumps", "Nipple Discharge", "Nipple Retraction", "Dimpling", \
-                     "Discolouration", "Ulceration", "Eczema"]
+                      "Discolouration", "Ulceration", "Eczema"]
         rb_symp_list = []
-        rb_dur_list= []
+        rb_dur_list = []
         lb_symp_list = []
         lb_dur_list = []
         for index in symp_state:
-            RB = ask_y_n(index + " in Right Breast?")
-            if RB:
-                rb_symp = index
-                rb_dur = input ("Duration of "+ index+": ")
-                rb_symp_list.append(rb_symp)
-                rb_dur_list.append(rb_dur)
-            LB = ask_y_n(index + " in Left Breast?")
-            if LB:
-                lb_symp = index
-                lb_dur = input ("Duration of "+ index+": ")
-                lb_symp_list.append(lb_symp)
-                lb_dur_list.append(lb_dur)
+            symp = ask_y_n("Is " + index + " present")
+            if symp:
+                RB = ask_y_n(index + " in Right Breast?")
+                if RB:
+                    rb_symp = index
+                    rb_dur = input("Duration of " + index + ": ")
+                    rb_symp_list.append(rb_symp)
+                    rb_dur_list.append(rb_dur)
+                LB = ask_y_n(index + " in Left Breast?")
+                if LB:
+                    lb_symp = index
+                    lb_dur = input("Duration of " + index + ": ")
+                    lb_symp_list.append(lb_symp)
+                    lb_dur_list.append(lb_dur)
         rb_symps = "; ".join(rb_symp_list)
         rb_duration = "; ".join(rb_dur_list)
         lb_symps = "; ".join(lb_symp_list)
         lb_duration = "; ".join(lb_dur_list)
-        data_list = [rb_symps, rb_duration, lb_symps, lb_duration]
-        for index in range(0, len(data_list)):
-            if data_list[index] == '':
-                data_list[index] = "NA"
-        columns_list = ["RB_symptoms", "RB_symptoms_duration", "LB_symptoms", "LB_symptoms_duration"]
-        check = review_input(file_number, columns_list, data_list)
-    data = tuple(data_list)
-    columns = "RB_symptoms", "RB_symptoms_duration", "LB_symptoms", "LB_symptoms_duration"
-    update_multiple(conn,cursor, table, columns, file_number, data)
-    check = False
-    while not check:
+        data_list_symp = [rb_symps, rb_duration, lb_symps, lb_duration]
+        for index in range(0, len(data_list_symp)):
+            if data_list_symp[index] == '':
+                data_list_symp[index] = "NA"
         rb_symp_list = []
         rb_dur_list = []
         lb_symp_list = []
@@ -268,21 +244,42 @@ def breast_symptoms(conn, cursor, file_number, table):
         rb_duration_other = "; ".join(rb_dur_list)
         lb_symps_other = "; ".join(lb_symp_list)
         lb_duration_other = "; ".join(lb_dur_list)
-        data_list = [rb_symps_other, rb_duration_other , lb_symps_other , lb_duration_other]
-        for index in range(0, len(data_list)):
-            if data_list[index] == '':
-                data_list[index] = "NA"
-        columns_list = ["RB_Other_Symptoms", "RB_Other_Symptoms_duration", "LB_Other_Symptoms", "LB_Other_Symptoms_duration"]
+        data_list_other = [rb_symps_other, rb_duration_other, lb_symps_other, lb_duration_other]
+        for index in range(0, len(data_list_other)):
+            if data_list_other[index] == '':
+                data_list_other[index] = "NA"
+        met = []
+        met_bone = ask_y_n("Bone Pain")
+        if met_bone:
+            met.append(["Bone Pain"])
+        met_cough = ask_y_n("Cough")
+        if met_cough:
+            met.append(["Cough"])
+        met_jaundice = ask_y_n("Jaundice")
+        if met_jaundice:
+            met.append(["Jaundice"])
+        met_headache = ask_y_n("Headache")
+        if met_headache:
+            met.append(["Headache"])
+        met_weight = ask_y_n("Weight loss")
+        if met_weight:
+            met.append(["WeightLoss"])
+        met_flat = [item for sublist in met for item in sublist]
+        data_met = "; ".join(met_flat)
+        if met_flat == []:
+            data_met = "No Metastatis Symptoms"
+        columns_list = pccm_names.names_info(module_name)
+        data_list = data_list_symp + data_list_other + [data_met]
         check = review_input(file_number, columns_list, data_list)
-    data = tuple(data_list)
-    columns = "RB_Other_Symptoms", "RB_Other_Symptoms_duration", "LB_Other_Symptoms", "LB_Other_Symptoms_duration"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
 
-def habits(conn, cursor, file_number, table):
-    from add_update_sql import update_multiple, review_input
+def habits(file_number):
+    import pccm_names
+    from add_update_sql import review_input
     from ask_y_n_statement import ask_option, ask_y_n
+    module_name = "habits"
     check = False
     while not check:
         category = "Diet"
@@ -298,41 +295,45 @@ def habits(conn, cursor, file_number, table):
         else:
             alcohol_consump = "No Alcohol Consumption"
             alcohol_age, alcohol_quant, alcohol_duration, alcohol_comments = ("NA",) * 4
-        columns_list = ["Diet", "Alcohol_y_n", "Alcohol_Consumption_age_yrs", "Quantity_alcohol_per_week",
-                        "Duration_alcohol", "Comments_alcohol"]
-        data_list = [diet, alcohol_consump, alcohol_age, alcohol_quant, alcohol_duration, alcohol_comments]
-        check = review_input(file_number, columns_list, data_list)
-    columns = "Diet", "Alcohol_y_n", "Alcohol_Consumption_age_yrs", "Quantity_alcohol_per_week", "Duration_alcohol", "Comments_alcohol"
-    new_data = diet, alcohol_consump, alcohol_age, alcohol_quant, alcohol_duration, alcohol_comments
-    update_multiple(conn, cursor, table, columns, file_number, new_data)
-    check = False
-    while not check:
-        tobacco = ask_y_n("Tobacco consumption")
+        data_list_alc = [diet, alcohol_consump, alcohol_age, alcohol_quant, alcohol_duration, alcohol_comments]
+        tobacco = ask_y_n("Tobacco exposure (Passive and/or Active)")
         if tobacco:
             tobacco = "Tobacco consumption"
-            tobacco_type = input("Type of tobacco consumption: ")
+            exposure_type = ask_option("Mode of exposure to Tobacco", ["Passive", "Active", "Other"])
+            if exposure_type =="Passive":
+                tobacco_type_partic = ask_option("Mode of passive consumption", ["Home", "Work", "Commute",  "Social Interactions"])
+                if tobacco_type_partic == "Home":
+                    tobacco_type_who = input ("What is the specific source?")
+                    tobacco_passive = tobacco_type_partic + (" : ") + tobacco_type_who
+
+                else:
+                    tobacco_passive = tobacco_type_partic
+            else:
+                tobacco_passive = "NA"
+            tobacco_type = ask_option("Type of tobacco use", ["Cigarette", "Beedi", "Gutkha", "Pan Masala", "Jarda/Maava", "Hookah", "Nicotine Patch", "Mishri", "Other"])
             tobacco_age = input("Consumption of tobacco from which age (yrs): ")
+            tobacco_freq = input ("Frequency of tobacco consumption: ")
             tobacco_quant = input("Quantity of tobacco consumed per week: ")
             tobacco_duration = input("Duration of tobacco consumption: ")
             tobacco_comments = input("Additional comments for tobacco consumption: ")
         else:
             tobacco = "No Tobacco Consumption"
-            tobacco_type, tobacco_age, tobacco_quant, tobacco_duration, tobacco_comments = ("NA",) * 5
+            exposure_type, tobacco_type, tobacco_passive, tobacco_age, tobacco_freq, tobacco_quant, tobacco_duration, \
+            tobacco_comments = ("NA",) * 8
         other_del_habits = input("Other Deleterious Habits (if present give details): ")
-        columns_list = ["Tobacco_y_n", "Type_tobacco", "Tobacco_consumption_age_yrs", "Quantity_tobacco_per_week",
-                        "Duration_tobacco", "Comments_tobacco", "Other_Deleterious_Habits"]
-        data_list = [tobacco, tobacco_type, tobacco_age, tobacco_quant, tobacco_duration, tobacco_comments,
-                     other_del_habits]
+        data_list_tob = [tobacco, exposure_type, tobacco_passive,tobacco_type, tobacco_age, tobacco_freq, tobacco_quant, tobacco_duration, tobacco_comments, other_del_habits]
+        columns_list = pccm_names.names_info(module_name)
+        data_list = data_list_alc + data_list_tob
         check = review_input(file_number, columns_list, data_list)
-    columns = "Tobacco_y_n", "Type_tobacco", "Tobacco_consumption_age_yrs", "Quantity_tobacco_per_week", \
-              "Duration_tobacco", "Comments_tobacco", "Other_Deleterious_Habits"
-    data = tobacco, tobacco_type, tobacco_age, tobacco_quant, tobacco_duration, tobacco_comments, other_del_habits
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def metastasis_symp (conn, cursor, file_number, table):
-    from add_update_sql import update_single, review_input
+
+def metastasis_symp (file_number):
+    import pccm_names
+    from add_update_sql import review_input
     from ask_y_n_statement import ask_y_n
+    module_name = "metastasis_symp"
     check = False
     while not check:
         met_none = ask_y_n("Metastatis Symptoms Present?")
@@ -357,34 +358,38 @@ def metastasis_symp (conn, cursor, file_number, table):
                 met.append(["WeightLoss"])
         met_flat = [item for sublist in met for item in sublist]
         data_met = "; ".join(met_flat)
-        check = review_input(file_number, ["Metastasis_Symptoms"], [data_met])
-    update_single(conn, cursor, table, "Metatasis_Symptoms", file_number, data_met)
+        columns_list= pccm_names.names_info(module_name)
+        check = review_input(file_number, columns_list, [data_met])
+    return (str(data_met))
 
 
-def det_by(conn, cursor, table, file_number):
-    from add_update_sql import update_multiple, review_input
+def det_by(file_number):
+    from add_update_sql import review_input
     from ask_y_n_statement import ask_option
+    import pccm_names
+    module_name = "det_by"
     check = False
     while not check:
-        category = "Current Breast Cancer"
+        category = "Current Breast Cancer Detected by"
         options = ["Self", "Physician", "Screening Camp", "Other"]
         determined_by = ask_option(category, options)
         if determined_by == "Screening Camp":
             sc_id = input("Screening Camp ID: ")
             determined_by = "Screening Camp ID " + sc_id
         det_date = input("Date of current breast cancer detection: ")
-        columns_list = ["Current_Breast_Cancer_Detected_By", "Current_Breast_Cancer_Detected_Date"]
+        columns_list =pccm_names.names_info(module_name)
         data_list = [determined_by, det_date]
         check = review_input(file_number, columns_list, data_list)
-    columns = "Current_Breast_Cancer_Detected_By", "Current_Breast_Cancer_Detected_Date"
-    data = determined_by, det_date
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def family_cancer(conn, cursor, file_number, table):
-    from add_update_sql import update_multiple, review_input
+
+def family_cancer(conn, cursor, file_number):
+    from add_update_sql import review_input
     from breast_cancer_tables import family_cancer_table
     from ask_y_n_statement import ask_y_n
+    import  pccm_names
+    module_name = "family_cancer"
     check = False
     while not check:
         family_cancer_history_y_n = ask_y_n('Cancer history in Family')
@@ -395,16 +400,16 @@ def family_cancer(conn, cursor, file_number, table):
             family_cancer_history_y_n = "No Family History of Cancer"
             family_cancer = "NA"
         data_list = [family_cancer_history_y_n, family_cancer]
-        columns_list = ["FamilyCancer_history_y_n", "Type_DegreeRelation_TypeRelation_Age_FamilyCancer"]
+        columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
-    data = family_cancer_history_y_n, family_cancer
-    columns = "FamilyCancer_history_y_n", "Type_DegreeRelation_TypeRelation_Age_FamilyCancer"
-    update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def bio_info(conn, cursor, file_number, table):
+def bio_info(file_number):
     import add_update_sql
     import ask_y_n_statement
+    import pccm_names
+    module_name = "bio_info"
     check = False
     while not check:
         mr_number = input('MR_number :')
@@ -413,27 +418,32 @@ def bio_info(conn, cursor, file_number, table):
                                             "Consent form not present")
         aadhaar_card = input("Aadhaar card number (if available): ")
         date_first = input("Date of first visit: ")
-        permanent_address = input('Permanent_Address :')
-        current_address = input('Current_Address :')
+        permanent_address = input('Permanent Address :')
+        current_address_check = ask_y_n_statement.ask_option('Current Address', ["Same as Permanent", "Different"])
+        if current_address_check == "Different":
+            current_address = input("Current Address: ")
+        else:
+            current_address = permanent_address
         phone = input('Phone :')
         email_id = input('Email_ID :')
-        gender = input('Gender :')
+        gender = ask_y_n_statement.ask_option('Gender', ["Female", "Male", "Other"])
         age_yrs = input('Age (yrs) :')
-        date_of_birth = input('Date of Birth :')
+        date_of_birth = input('Date of Birth (mm/dd/yyyy):')
         place_birth = input('Place of Birth :')
-        height_cm = input('Height (cm) :')
+        height = ask_y_n_statement.ask_option("Height unit", ["cm", "feet/inches"])
+        if height == "cm":
+            height_cm = input('Height (cm) :')
+        else:
+            height_feet = float(input("Height (feet)"))
+            height_inch = float(input("Height (inches)"))
+            height_inch = height_inch + 12 * height_feet
+            height_cm = str(height_inch * 2.54)
         weight_kg = input('Weight (kg) :')
         height = float(height_cm) / 100
         weight = float(weight_kg)
         BMI = str(round(weight / (height * height)))
-        columns_list = ["MR_number", "Name", "Consent", "Aadhaar_Card", "FirstVisit_Date", "Permanent_Address",
-                        "Current_Address", "Phone", "Email_ID", "Gender", "Age_yrs", "Date_of_Birth", "Place_Birth",
-                        "Height_cm", "Weight_kg", "BMI"]
+        columns_list = pccm_names.names_info(module_name)
         new_data = [mr_number, name, consent, aadhaar_card, date_first, permanent_address, current_address, phone,
                     email_id, gender, age_yrs, date_of_birth, place_birth, height_cm, weight_kg, BMI]
         check = add_update_sql.review_input(file_number, columns_list, new_data)
-    columns = "MR_number", "Name", "Consent", "Aadhaar_Card", "FirstVisit_Date", "Permanent_Address", "Current_Address", \
-              "Phone", "Email_ID", "Gender", "Age_yrs", "Date_of_Birth", "Place_Birth", "Height_cm", "Weight_kg", "BMI"
-    data = mr_number, name, consent, aadhaar_card, date_first, permanent_address, current_address, phone, email_id, \
-           gender, age_yrs, date_of_birth, place_birth, height_cm, weight_kg, BMI
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(new_data))

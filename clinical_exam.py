@@ -1,17 +1,11 @@
-def check_file_row(cursor, file_number):
-    import ask_y_n_statement
-    sql = "SELECT rowid FROM Clinical_Exam WHERE File_number = ?"
-    cursor.execute(sql, (file_number,))
-    data = cursor.fetchall()
-    if len(data) == 0:
-        cursor.execute("INSERT INTO Clinical_Exam(File_number) VALUES ('" + file_number + "')")
-        return (True)
-    else:
-        return (False)
+def file_row(cursor, file_number):
+    cursor.execute("INSERT INTO Clinical_Exam(File_number) VALUES ('" + file_number + "')")
 
-def clinical_exam_initial (conn, cursor, file_number, table):
+def clinical_exam_initial (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import  pccm_names
+    module_name = "clinical_exam_initial"
     check = False
     while not check:
         prov_diag = input ("Provisional Diagnosis: ")
@@ -59,7 +53,7 @@ def clinical_exam_initial (conn, cursor, file_number, table):
             mastitis_location_data.append(mastitis_location_lb_data)
         mastitis_location_data = "; ".join(mastitis_location_data)
         if mastitis_location == "Not present":
-            mastitis_location_data = "mastitis" + mastitis_location
+            mastitis_location_data = "mastitis " + mastitis_location
             mastitis_type = "NA"
         else:
             mastitis_type = ask_y_n_statement.ask_option("Mastitis type", ["Diffuse", "Sectoral", "Other"])
@@ -96,7 +90,7 @@ def clinical_exam_initial (conn, cursor, file_number, table):
             supra_nodes_number = input("Number of nodes: ")
             supra_nodes_size = input("Size of nodes: ")
             supra_nodes_fixity = ask_y_n_statement.ask_y_n("Fixity of supraclavicular nodes", "Yes", "No")
-        contra_breast = ask_y_n_statement.ask_option("Contralateral Breast", ["Nomral", "Diffuse Mastitis", "Localised Mastitis", "Other"])
+        contra_breast = ask_y_n_statement.ask_option("Contralateral Breast", ["Normal", "Diffuse Mastitis", "Localised Mastitis", "Other"])
         arm_edema = ask_y_n_statement.ask_option("Edema of arm", ["Right", "Left", "Both", "Not Present", "Other"])
         arm_circ_right = input("Circumference of right arm (cm): ")
         arm_volume_right = input("Upper limb volume - right arm (cc): ")
@@ -111,38 +105,15 @@ def clinical_exam_initial (conn, cursor, file_number, table):
                supra_nodes_size, supra_nodes_fixity, contra_breast, arm_edema, arm_circ_right, arm_volume_right, \
                arm_elbow_right, arm_circ_left, arm_volume_left, arm_elbow_left]
 
-        columns_list = ['Provisional_Diagnosis_Clinical_Examination_CE', 'Lump_Palpable_CE', 'Lump_Location_CE', 'Lump_Size_CE', 'Lump_Number_CE', \
-                  'Lump_Consistency_CE', 'Lump_Fixity_CE', 'Mastitis_CE', 'Mastitis_type_CE', 'Tenderness_CE', \
-                  'Nipple_Retraction_CE', 'Nipple_Discharge_CE', 'Nipple_Discharge_Type_CE', 'Skin_changes_CE', \
-                  'Skin_change_type_CE', 'Palpable_axillary_nodes_CE', 'Palpable_axillary_nodes_number_CE', \
-                  'Palpable_axillary_nodes_size_CE', 'Palpable_axillary_nodes_fixity_CE', \
-                  'Palpable_supraclavicular_nodes_CE', 'Palpable_supraclavicular_nodes_number_CE', \
-                  'Palpable_supraclavicular_nodes_size_CE', 'Palpable_supraclavicular_nodes_fixity_CE', \
-                  'Contralateral_Breast_CE', 'Edema_arm_CE', 'RightArm_Circumference_cm_CE', \
-                  'RightArm_UpperLimbVolume_cc_CE', 'RightArm_ElbowDistance_cm_CE', 'LeftArm_Circumference_cm_CE', \
-                  'LeftArm_UpperLimbVolume_cc_CE', 'LeftArm_ElbowDistance_cm_CE']
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    data = prov_diag, lump_palp, lump_location_data, lump_size, lump_number, lump_consistency, lump_fixity, \
-                 mastitis_location_data, mastitis_type, tender, retract, discharge, discharge_type, skin_change_location, \
-                 skin_change_type, ax_nodes, ax_nodes_number, ax_nodes_size, ax_nodes_fixity, supra_nodes,supra_nodes_number, \
-                 supra_nodes_size, supra_nodes_fixity, contra_breast, arm_edema, arm_circ_right, arm_volume_right, \
-                 arm_elbow_right, arm_circ_left, arm_volume_left, arm_elbow_left
+    return (tuple(data_list))
 
-    columns = 'Provisional_Diagnosis_Clinical_Examination_CE', 'Lump_Palpable_CE', 'Lump_Location_CE', 'Lump_Size_CE', 'Lump_Number_CE', \
-                   'Lump_Consistency_CE', 'Lump_Fixity_CE', 'Mastitis_CE', 'Mastitis_type_CE', 'Tenderness_CE', \
-                   'Nipple_Retraction_CE', 'Nipple_Discharge_CE', 'Nipple_Discharge_Type_CE', 'Skin_changes_CE', \
-                   'Skin_change_type_CE', 'Palpable_axillary_nodes_CE', 'Palpable_axillary_nodes_number_CE', \
-                   'Palpable_axillary_nodes_size_CE', 'Palpable_axillary_nodes_fixity_CE', \
-                   'Palpable_supraclavicular_nodes_CE', 'Palpable_supraclavicular_nodes_number_CE', \
-                   'Palpable_supraclavicular_nodes_size_CE', 'Palpable_supraclavicular_nodes_fixity_CE', \
-                   'Contralateral_Breast_CE', 'Edema_arm_CE', 'RightArm_Circumference_cm_CE', \
-                   'RightArm_UpperLimbVolume_cc_CE', 'RightArm_ElbowDistance_cm_CE', 'LeftArm_Circumference_cm_CE', \
-                   'LeftArm_UpperLimbVolume_cc_CE', 'LeftArm_ElbowDistance_cm_CE'
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
-
-def nipple_cytology (conn, cursor, file_number, table):
+def nipple_cytology (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import pccm_names
+    module_name = "nipple_cytology"
     check = False
     while not check:
         cyto = ask_y_n_statement.ask_option("Nipple Cytology", ["Done", "Not Done"])
@@ -153,24 +124,25 @@ def nipple_cytology (conn, cursor, file_number, table):
             cyto_number = input("Nipple Cytology number: ")
             cyto_report = ask_y_n_statement.ask_option("Nipple Cytology report and interpretation", ["Normal", "Suspicious", "Diagnostic for Cancer", "Other"])
         data_list = [cyto, cyto_date, cyto_number, cyto_report]
-        columns_list = ["Nipple_Cytology", "Date_Nipple_Cytology", "Number_Nipple_Cytology", "Report_Nipple_Cytology"]
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    data = [cyto, cyto_date, cyto_number, cyto_report]
-    columns = ["Nipple_Cytology", "Date_Nipple_Cytology", "Number_Nipple_Cytology", "Report_Nipple_Cytology"]
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
-def mammography (conn, cursor, file_number, table):
+def mammography (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import pccm_names
+    module_name = "mammography"
     check = False
     while not check:
         mammo_loc = ask_y_n_statement.ask_option("Mammography Diagnosis at", ["PCCM", "Outside", "Other"])
         mammo_details = ask_y_n_statement.ask_y_n("First Mammography?")
-        mammo_date = input("Date of last mammography done: ")
         if mammo_details:
+            mammo_date = input("Date when mammography done: ")
             mammo_details = "First Mammography"
             mammo_number, mammo_rep_previous = ("NA",)*2
         else:
+            mammo_date = input("Date of last mammography done: ")
             mammo_details = "More than one Mammography"
             mammo_number = input ("Number of mammographies undergone: ")
             mammo_rep_previous = input ("Report of previous mammography: ")
@@ -178,7 +150,7 @@ def mammography (conn, cursor, file_number, table):
         if mammo:
             mammo = "Mammography diagnosis done"
             mammo_diag_date = input("Date of mammography diagnosis: ")
-            mammo_diag_acc = input ("Accession number of mammography diagnosis")
+            mammo_diag_acc = input ("Accession number of mammography diagnosis: ")
         else:
             mammo = "Mammography diagnosis not done"
             mammo_diag_date, mammo_diag_acc = "NA", "NA"
@@ -201,7 +173,7 @@ def mammography (conn, cursor, file_number, table):
         mammo_lesion_data = "; ".join(mammo_lesion_data)
         if mammo_lesion == "Not present":
             mammo_lesion_data = "Lesion" + mammo_lesion
-        mammo_shape = ask_y_n_statement.ask_option("Shape", ["Oval", "Round", "Irregular"])
+        mammo_shape = ask_y_n_statement.ask_option("Shape", ["Oval", "Round", "Irregular", "Other"])
         mammo_size = ask_y_n_statement.ask_option("Size of mass", ["<2 cm", "2-5 cm", ">5cm"])
         mammo_margin = ask_y_n_statement.ask_option("Margins", ["Circumscribed", "Obscured", "Indistinct", "Spiculated", "Other"])
         mammo_density = ask_y_n_statement.ask_option("Density", ["High Density", "Equal Density", "Low Density",
@@ -217,7 +189,7 @@ def mammography (conn, cursor, file_number, table):
         elif mammo_calcification in {"Milk of Calcium", "Suture","Amorphous", "Coarse Heterogeneous", "Fine Pleomorphic",
                                                 "Fine Linear or Fine Linear Branching"}:
             mammo_calcification_type = "Suspicious Morphology"
-            print(mammo_calcification_type)
+            print("Implication of calcification Type is "+ mammo_calcification_type)
         else:
             mammo_calcification_type = input ("Implication of calcification type "+ mammo_calcification)
         mammo_calcification_dist = ask_y_n_statement.ask_option("Calcification distribution", ["Diffuse", "Regional",
@@ -246,42 +218,16 @@ def mammography (conn, cursor, file_number, table):
                      mammo_calcification_dist, mammo_arch, mammo_asymm, mammo_intra, mammo_lesion_skin, mammo_dil,
                      asso_feat_1, asso_feat_2, asso_feat_3, asso_feat_4, asso_feat_5, asso_feat_6, asso_feat_7,
                      mammo_sec, mammo_dist, mammmo_pect,  mammo_birads]
-        columns_list = ['DiagnosisLocation_Mammography', 'First_Mammography', 'LatestDate_Mammography', 'Number_Mammography', \
-                  'PreviousDate_Mammography', 'Diagnosis_Mammography', 'Date_Diagnosis_Mammography', 'AccessionNumber_Mammography', \
-                  'BreastDensity_Mammography','Lesion_Mammography', 'LesionLocation_Mammography', 'Shape_Mammography', 'Size_Mammography', \
-                  'Margin_Mammography', 'Density_Mammography', 'Calcification_Mammography', \
-                  'Calcification_Implication_Mammography', 'Calcification_Distribution_Mammography', \
-                  'Architecture_Mammography', 'Asymmetry_Mammography', 'IntraMammaryLN_Mammography', \
-                  'SkinLesion_Mammography', 'DilatedDuct_Mammography', 'Features_SkinRetraction_Mammography', \
-                  'Features_NippleRetraction_Mammography', 'Features_SkinThickening_Mammography', \
-                  'Features_TrabecularThickening_Mammography', 'Features_AxillaryLymphadenopathy_Mammography', \
-                  'Features_ArchitecturalDistortion_Mammography', "Features_Calcification_Mammography"\
-                  'SecondaryLesion_ContralateralBreast_Mammography', \
-                  'DistancefromSkin_Mammography', 'DistanceFromPectMaj_Mammography', 'BIRADS_Mammography']
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    data = mammo_loc, mammo_details, mammo_date, mammo_number, mammo_rep_previous, mammo, mammo_diag_date, \
-           mammo_diag_acc, breast_density,mammo_lesion, mammo_lesion_data, mammo_shape, mammo_size, mammo_margin, \
-           mammo_density, mammo_calcification, mammo_calcification_type, mammo_calcification_dist, mammo_arch, \
-           mammo_asymm, mammo_intra, mammo_lesion_skin, mammo_dil, asso_feat_1, asso_feat_2, asso_feat_3, asso_feat_4, \
-           asso_feat_5, asso_feat_6, asso_feat_7, mammo_sec, mammo_dist, mammmo_pect, mammo_birads
-    columns = 'DiagnosisLocation_Mammography', 'First_Mammography', 'LatestDate_Mammography', 'Number_Mammography',\
-              'PreviousDate_Mammography', 'Diagnosis_Mammography', 'Date_Diagnosis_Mammography', \
-              'AccessionNumber_Mammography', 'BreastDensity_Mammography','Lesion_Mammography', \
-              'LesionLocation_Mammography', 'Shape_Mammography', 'Size_Mammography', 'Margin_Mammography', \
-              'Density_Mammography', 'Calcification_Mammography', 'Calcification_Implication_Mammography', \
-              'Calcification_Distribution_Mammography', 'Architecture_Mammography', 'Asymmetry_Mammography', \
-              'IntraMammaryLN_Mammography', 'SkinLesion_Mammography', 'DilatedDuct_Mammography', \
-              'Features_SkinRetraction_Mammography', 'Features_NippleRetraction_Mammography', \
-              'Features_SkinThickening_Mammography', 'Features_TrabecularThickening_Mammography', \
-              'Features_AxillaryLymphadenopathy_Mammography', 'Features_ArchitecturalDistortion_Mammography', \
-              "Features_Calcification_Mammography", 'SecondaryLesion_ContralateralBreast_Mammography', \
-              'DistancefromSkin_Mammography', 'DistanceFromPectMaj_Mammography', 'BIRADS_Mammography'
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
 
-def tomosynthesis (conn, cursor, file_number, table):
+def tomosynthesis (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import pccm_names
+    module_name = "tomosynthesis"
     check = False
     while not check:
         tomo = ask_y_n_statement.ask_y_n("3D digital Tomosynthesis done")
@@ -304,9 +250,10 @@ def tomosynthesis (conn, cursor, file_number, table):
                 tomo_lesion_lb = ask_y_n_statement.ask_option(category, options)
                 tomo_lesion_lb_data = "LB-" + tomo_lesion_lb
                 tomo_lesion_data.append(tomo_lesion_lb_data)
-                tomo_lesion_data = "; ".join(tomo_lesion_data)
             if tomo_lesion == "Not present":
                 tomo_lesion_data = "Lesion" + tomo_lesion
+            else:
+                tomo_lesion_data = "; ".join(tomo_lesion_data)
             tomo_size = ask_y_n_statement.ask_option("Size of lesion", ["<2 cm", "2-5 cm", ">5 cm"])
             tomo_dist = ask_y_n_statement.ask_option("Distance from Skin (cm)", ["<0.5 cm", ">0.5 cm"])
             tomo_pect = input("Distance from Pectoralis Major (cm): ")
@@ -317,18 +264,15 @@ def tomosynthesis (conn, cursor, file_number, table):
             tomo_date, tomo_acc, tomo_lesion, tomo_lesion_data, tomo_size, tomo_dist, tomo_pect, tomo_diagnosis = ("NA", )*8
 
         data_list = [tomo, tomo_date, tomo_acc, tomo_lesion_data, tomo_size, tomo_dist, tomo_pect, tomo_diagnosis]
-        columns_list = ["3D_Tomosynthesis", "Date_Tomosynthesis", "Accession_Tomosynthesis", "Lesion_Tomosynthesis", \
-                        "Lesion_Location_Tomosynthesis", "Size_Tomosynthesis", "Distance_Tomosynthesis", "Distance_PectMajor_Tomosynthesis", \
-              "Diagnosis_Tomosynthesis"]
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    data = tomo, tomo_date, tomo_acc, tomo_lesion, tomo_lesion_data, tomo_size, tomo_dist, tomo_pect, tomo_diagnosis
-    columns = "3D_Tomosynthesis", "Date_Tomosynthesis", "Accession_Tomosynthesis", "Lesion_Tomosynthesis",\
-              "Lesion_Location_Tomosynthesis", "Size_Tomosynthesis", "Distance_Tomosynthesis", "Distance_PectMajor_Tomosynthesis", "Diagnosis_Tomosynthesis"
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
-def abvs (conn, cursor, file_number, table):
+def abvs (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import pccm_names
+    module_name = "abvs"
     check = False
     while not check:
         abvs = ask_y_n_statement.ask_y_n("Automated Breast Volume Scanner (ABVS) done?")
@@ -351,31 +295,29 @@ def abvs (conn, cursor, file_number, table):
                 abvs_lesion_lb = ask_y_n_statement.ask_option(category, options)
                 abvs_lesion_lb_data = "LB-" + abvs_lesion_lb
                 abvs_lesion_data.append(abvs_lesion_lb_data)
-                abvs_lesion_data = "; ".join(abvs_lesion_data)
             if abvs_lesion == "Not present":
                 abvs_lesion_data = "Lesion" + abvs_lesion
+            else:
+                abvs_lesion_data = "; ".join(abvs_lesion_data)
             abvs_size = ask_y_n_statement.ask_option("Size of lesion", ["<2 cm", "2-5 cm", ">5 cm", "Other"])
             abvs_dist = ask_y_n_statement.ask_option("Distance from Skin (cm)", ["<0.5 cm", ">0.5 cm", "Other"])
             abvs_pect = input("Distance from Pectoralis Major (cm): ")
             abvs_diagnosis = ask_y_n_statement.ask_option("ABVS Diagnosis", ["Normal", "Benign", "Suspicious",
                                                                                       "Diagnostic for Cancer"])
         else:
-            abvs = "3D digital Tomosynthesis not done"
+            abvs = "Automated Breast Volume Scanner done"
             abvs_date, abvs_acc, abvs_lesion, abvs_lesion_data, abvs_size, abvs_dist, abvs_pect, abvs_diagnosis = ("NA", )*8
 
         data_list = [abvs, abvs_date, abvs_acc,abvs_lesion, abvs_lesion_data, abvs_size, abvs_dist, abvs_pect, abvs_diagnosis]
-        columns_list = ["Automated_Breast_Volume_Scanner_ABVS", "Date_ABVS", "Accession_ABVS", "Lesion_ABVS", \
-              "Lesion_Location_ABVS", "Size_ABVS", "Distance_ABVS", "Distance_PectMajor_ABVS", \
-              "Diagnosis_ABVS"]
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    data = abvs, abvs_date, abvs_acc, abvs_lesion, abvs_lesion_data, abvs_size, abvs_dist, abvs_pect, abvs_diagnosis
-    columns = "Automated_Breast_Volume_Scanner_ABVS", "Date_ABVS", "Accession_ABVS", "Lesion_ABVS","Lesion_Location_ABVS","Size_ABVS", \
-              "Distance_ABVS", "Distance_PectMajor_ABVS", "Diagnosis_ABVS"
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
-def sonomammo (conn, cursor, file_number, table):
+def sonomammo (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import pccm_names
+    module_name = "sonomammo"
     check = False
     while not check:
         sonomammo = ask_y_n_statement.ask_y_n("Sono-Mammography done?")
@@ -399,9 +341,10 @@ def sonomammo (conn, cursor, file_number, table):
                 sonomammo_lesion_lb = ask_y_n_statement.ask_option(category, options)
                 sonomammo_lesion_lb_data = "LB-" + sonomammo_lesion_lb
                 sonomammo_lesion_data.append(sonomammo_lesion_lb_data)
-                sonomammo_lesion_data = "; ".join(sonomammo_lesion_data)
             if sonomammo_lesion == "Not present":
                 sonomammo_lesion_data = "Lesion" + sonomammo_lesion
+            else:
+                sonomammo_lesion_data = "; ".join(sonomammo_lesion_data)
             sonomammo_shape = ask_y_n_statement.ask_option("Shape of lesion: ", ["Oval", "Round", "Irregular", "Other"])
             sonomammo_size =  ask_y_n_statement.ask_option("Size of lesion", ["<2 cm", "2-5 cm", ">5 cm", "Other"])
             sonomammo_orientation = ask_y_n_statement.ask_option("Orientation of lesion", ["Parallel", "Non-parallel"])
@@ -430,37 +373,20 @@ def sonomammo (conn, cursor, file_number, table):
             sonomammo_orientation,sonomammo_margins,sonomammo_echo,sonomammo_postacoustic,sonomammo_calc, sonomammo_arch,\
             sonomammo_skin, sonomammo_edema, sonomammo_vasc, sonomammo_lymph, sonomammo_dist_nipple, sonomammo_dist_skin,\
             sonomammo_pect ,sonomammo_diag = ("NA", )*21
-        data_list = sonomammo, sonomammo_date, sonomammo_acc, sonomammo_lesion_number, sonomammo_lesion, \
+        data_list = [sonomammo, sonomammo_date, sonomammo_acc, sonomammo_lesion_number, sonomammo_lesion, \
                     sonomammo_lesion_data, sonomammo_shape ,sonomammo_size,sonomammo_orientation, sonomammo_margins,\
                     sonomammo_echo, sonomammo_postacoustic,sonomammo_calc, sonomammo_arch,sonomammo_skin, \
                     sonomammo_edema, sonomammo_vasc, sonomammo_lymph, sonomammo_dist_nipple, sonomammo_dist_skin, \
-                    sonomammo_pect ,sonomammo_diag
-        columns_list = ['SonoMammography', 'Date_SonoMammography', 'AccessionNumber_SonoMammography', \
-                       'Number_SonoMammography', 'Lesion_SonoMammography', 'Lesion_Location_SonoMammography', \
-                       'Shape_SonoMammography', 'Size_SonoMammography', 'Orientation_SonoMammography', \
-                       'Margins_SonoMammography', 'Echo_SonoMammography', 'Postacoustic_SonoMammography', \
-                       'Calcification_SonoMammography', 'ArchitecturalDistoration_SonoMammography', \
-                       'SkinChanges_SonoMammography', 'Edema_SonoMammography', 'Vascularity_SonoMammography', \
-                       'LymphNodes_SonoMammography', 'DistanceNipple_SonoMammography', 'DistanceSkin_SonoMammography', \
-                       'Distance_PectMajor_SonoMammography', 'Diagnosis_SonoMammography']
+                    sonomammo_pect ,sonomammo_diag]
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    data = sonomammo, sonomammo_date, sonomammo_acc, sonomammo_lesion_number, sonomammo_lesion, sonomammo_lesion_data, \
-           sonomammo_shape, sonomammo_size, sonomammo_orientation, sonomammo_margins, sonomammo_echo, \
-           sonomammo_postacoustic, sonomammo_calc, sonomammo_arch, sonomammo_skin, sonomammo_edema, sonomammo_vasc, \
-           sonomammo_lymph, sonomammo_dist_nipple, sonomammo_dist_skin, sonomammo_pect, sonomammo_diag
-    columns = 'SonoMammography', 'Date_SonoMammography', 'AccessionNumber_SonoMammography', \
-                    'Number_SonoMammography', 'Lesion_SonoMammography', 'Lesion_Location_SonoMammography', \
-                    'Shape_SonoMammography', 'Size_SonoMammography', 'Orientation_SonoMammography', \
-                    'Margins_SonoMammography', 'Echo_SonoMammography', 'Postacoustic_SonoMammography', \
-                    'Calcification_SonoMammography', 'ArchitecturalDistoration_SonoMammography', \
-                    'SkinChanges_SonoMammography', 'Edema_SonoMammography', 'Vascularity_SonoMammography', \
-                    'LymphNodes_SonoMammography', 'DistanceNipple_SonoMammography', 'DistanceSkin_SonoMammography', \
-                    'Distance_PectMajor_SonoMammography', 'Diagnosis_SonoMammography'
-    add_update_sql.update_multiple(conn, cursor, table, columns, file_number, data)
+    return (tuple(data_list))
 
-def mri_breast_axilla (conn, cursor, table, file_number):
+def mri_breast_axilla (file_number):
     import ask_y_n_statement
     import add_update_sql
+    import pccm_names
+    module_name = "mri_breast_axilla"
     check = False
     while not check:
         mri_breast = ask_y_n_statement.ask_y_n("MRI-Breast and Axilla done?")
@@ -476,16 +402,17 @@ def mri_breast_axilla (conn, cursor, table, file_number):
                 options = ["UOQ", "UIQ", "C", "UCQ", "LCQ", "LOQ", "LIQ"]
                 mri_breast_lesion_rb = ask_y_n_statement.ask_option(category, options)
                 mri_breast_lesion_rb_data = "RB-" + mri_breast_lesion_rb
-                mri_breast_lesion_data.append(mri_breastlesion_rb_data)
+                mri_breast_lesion_data.append(mri_breast_lesion_rb_data)
             if mri_breast_lesion == "Left Breast" or mri_breast_lesion == "Both":
                 category = "Lesion location on Left Breast"
                 options = ["UOQ", "UIQ", "C", "UCQ", "LCQ", "LOQ", "LIQ"]
                 mri_breast_lesion_lb = ask_y_n_statement.ask_option(category, options)
                 mri_breast_lesion_lb_data = "LB-" + mri_breast_lesion_lb
                 mri_breast_lesion_data.append(mri_breast_lesion_lb_data)
-                mri_breast_lesion_data = "; ".join(mri_breast_lesion_data)
             if mri_breast_lesion == "Not present":
                 mri_breast_lesion_data = "Lesion" + mri_breast_lesion
+            else:
+                mri_breast_lesion_data = "; ".join(mri_breast_lesion_data)
             mri_breast_size = ask_y_n_statement.ask_option("Size of lesion", ["<2 cm", "2-5 cm", ">5 cm", "Other"])
             mri_breast_dist = ask_y_n_statement.ask_option("Distance from Skin (cm)", ["<0.5 cm", ">0.5 cm", "Other"])
             mri_breast_pect = input("Distance from Pectoralis Major (cm): ")
@@ -497,16 +424,7 @@ def mri_breast_axilla (conn, cursor, table, file_number):
             mri_breast_size, mri_breast_dist, mri_breast_pect, mri_breast_diagnosis = ("NA", )*8
         data_list = [mri_breast, mri_breast_date , mri_breast_acc, mri_breast_lesion, mri_breast_lesion_data, \
             mri_breast_size, mri_breast_dist, mri_breast_pect, mri_breast_diagnosis]
-        columns_list = ['MRI-Breast_Axilla', 'Date_MRI-Breast_Axilla', 'AccessionNumber_MRI-Breast_Axilla',
-                        'Lesion_MRI-Breast_Axilla', 'LesionLocation_MRI-Breast_Axilla', 'Size_MRI-Breast_Axilla',
-                        'DistancefromSkin_MRI-Breast_Axilla', 'DistanceFromPectMaj_MRI-Breast_Axilla',
-                        'Diagnosis_MRI-Breast_Axilla']
+        columns_list = pccm_names.names_clinical(module_name)
         check = add_update_sql.review_input(file_number,columns_list, data_list)
-    data = [mri_breast, mri_breast_date, mri_breast_acc, mri_breast_lesion, mri_breast_lesion_data, mri_breast_size,
-            mri_breast_dist, mri_breast_pect, mri_breast_diagnosis]
-    columns = 'MRI-Breast_Axilla', 'Date_MRI-Breast_Axilla', 'AccessionNumber_MRI-Breast_Axilla', \
-              'Lesion_MRI-Breast_Axilla', 'LesionLocation_MRI-Breast_Axilla', 'Size_MRI-Breast_Axilla',\
-              'DistancefromSkin_MRI-Breast_Axilla', 'DistanceFromPectMaj_MRI-Breast_Axilla',\
-              'Diagnosis_MRI-Breast_Axilla'
-    add_update_sql.update_multiple(conn, cursor,table,columns,file_number,data)
+    return (tuple(data_list))
 

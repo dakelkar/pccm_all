@@ -71,7 +71,7 @@ def ask_option(category, options):
     return option
 
 
-def ask_y_n(question, yes_ans = True, no_ans = False):
+def ask_y_n(question: object, yes_ans: object = True, no_ans: object = False) -> object:
     option_list = ["1. Yes", "2. No"]
     option_flat = " ".join(option_list)
     check = False

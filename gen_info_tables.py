@@ -159,6 +159,16 @@ def family_details(conn, cursor, file_number):
                 breast_feeding_data = "No Breast feeding"
                 feed_details = ("NA",) * 3
             kid_feeding, duration_feeding, breast_usage = feed_details
+        fert_treat_y_n = ask_y_n("Fertility_treatment_y_n")
+        if fert_treat_y_n:
+            fert_treat = "Fertility Treatment used"
+            type_fert = input("Type of fertility treatment used: ")
+            detail_fert = input ("Details of fertility treatment used:")
+            cycles_fert = input("Number of cycles of fertility treatment taken: ")
+            success_fert = ask_y_n("Did fertility treatment result in successful pregnancy? ", "Pregnancy from Treatment", "No pregnancy from treatment")
+        else:
+            fert_treat = "No Fertility Treatment used"
+            type_fert, detail_fert, cycles_fert, success_fert = ("NA", )* 4
         type_birth_control = input("Type of birth control used: ")
         if str.lower(type_birth_control) == "na":
             type_birth_control, detail_birth_control, duration_birth_control = ("NA",) * 3
@@ -168,8 +178,9 @@ def family_details(conn, cursor, file_number):
         data_list = [marital_status, siblings_number, sisters, brothers, children_number, daughters, sons, menarche,
                      menopause, menopause_age, lmp, period_type, number_pregnancy, number_term,
                      number_abortion, age_first, age_first_preg, age_last, age_last_preg, twice_birth,
-                     breast_feeding_data, kid_feeding, duration_feeding, breast_usage, type_birth_control,
-                     detail_birth_control, duration_birth_control]
+                     breast_feeding_data, kid_feeding, duration_feeding, breast_usage, fert_treat, type_fert,
+                     detail_fert, cycles_fert, success_fert, type_birth_control, detail_birth_control,
+                     duration_birth_control]
         columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
     return (tuple(data_list))

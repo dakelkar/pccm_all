@@ -17,7 +17,9 @@ def names_info(module_name):
                     "Period_Type", "Number_pregnancies", "Pregnancy_to_term", "Number_abortions", "Age_first_child",
                     "Age_first_pregnancy", "Age_last_child", "Age_last_pregnancy", "Two_births_in_year",
                     "Breast_feeding", "Child_Breast_feeding", "Duration_Breast_feeding", "Breast_Usage_Breast_feeding",
-                    "Type_birth_control_used", "Details_birth_control", "Duration_birth_control"]
+                    "Fertility_treatment_y_n", "Type_fertility_treatment", "Details_fertility_treatment",
+                    "Cycles_fertility_treatment", "Success_fertility_treatment","Type_birth_control_used",
+                    "Details_birth_control", "Duration_birth_control"]
     elif module_name == "breast_symptoms":
         col_list = ["RB_symptoms", "RB_symptoms_duration", "LB_symptoms", "LB_symptoms_duration",
                     "RB_Other_Symptoms","RB_Other_Symptoms_duration", "LB_Other_Symptoms", "LB_Other_Symptoms_duration",

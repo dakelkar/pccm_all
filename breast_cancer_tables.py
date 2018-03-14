@@ -200,7 +200,7 @@ def feed_duration (conn, cursor, file_number, children_number):
         feeding_duration = input("Breast feeding duration for "+ kid_add +" (months) ?")
         feeding_duration_list.append(feeding_duration)
         category = "Breast feeding for child " + kid
-        options = ["Right", "Left", "Both", "Other"]
+        options = ["Right Breast", "Left Breast", "Both Breasts", "Other"]
         feeding_details = ask_option(category, options)
         feeding_details_list.append(feeding_details)
         columns = 'File_number, Child_number, Feeding_duration, Breast_usage_feeding'

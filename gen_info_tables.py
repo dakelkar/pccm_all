@@ -1,4 +1,4 @@
-def nut_supplements(conn, cursor, file_number, table):
+def nut_supplements(conn, cursor, file_number):
     from add_update_sql import review_input
     from breast_cancer_tables import nut_supp_table
     from ask_y_n_statement import ask_y_n
@@ -17,6 +17,7 @@ def nut_supplements(conn, cursor, file_number, table):
         data_list = [nut_supplements, nuts_type, nuts_quant, nuts_dur]
         columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
+
     return (tuple(data_list))
 
 
@@ -50,7 +51,7 @@ def med_history(conn, cursor, file_number):
     module_name = "med_history"
     check = False
     while not check:
-        medical_history_y_n = ask_y_n("Other Medical History ?")
+        medical_history_y_n = ask_y_n("Any Other Medical History ?")
         if medical_history_y_n:
             med_hist = med_history_table(conn, cursor, file_number)
             medical_history_y_n = "Previous medical history present"
@@ -149,7 +150,7 @@ def family_details(conn, cursor, file_number):
             age_last_preg = input("Age at last pregnancy: ")
             if age_last_preg == "NA":
                 age_last_preg = str(int(age_mother) - int(age_last))
-            twice_birth = ask_y_n("Two births in a year (not twins) y/n: ", "Two births in a year",
+            twice_birth = ask_y_n("Two births in a year (not twins)", "Two births in a year",
                                   "No two births in a year")
             breast_feeding = ask_y_n("Breast feeding?")
             if breast_feeding:
@@ -159,7 +160,7 @@ def family_details(conn, cursor, file_number):
                 breast_feeding_data = "No Breast feeding"
                 feed_details = ("NA",) * 3
             kid_feeding, duration_feeding, breast_usage = feed_details
-        fert_treat_y_n = ask_y_n("Fertility_treatment_y_n")
+        fert_treat_y_n = ask_y_n("Have any fertility treatments ever been used")
         if fert_treat_y_n:
             fert_treat = "Fertility Treatment used"
             type_fert = input("Type of fertility treatment used: ")
@@ -260,19 +261,19 @@ def breast_symptoms(file_number):
             if data_list_other[index] == '':
                 data_list_other[index] = "NA"
         met = []
-        met_bone = ask_y_n("Bone Pain")
+        met_bone = ask_y_n("Is Bone Pain present?")
         if met_bone:
             met.append(["Bone Pain"])
-        met_cough = ask_y_n("Cough")
+        met_cough = ask_y_n("Is Cough present")
         if met_cough:
             met.append(["Cough"])
-        met_jaundice = ask_y_n("Jaundice")
+        met_jaundice = ask_y_n("Is Jaundice present")
         if met_jaundice:
             met.append(["Jaundice"])
-        met_headache = ask_y_n("Headache")
+        met_headache = ask_y_n("Is Headache present")
         if met_headache:
             met.append(["Headache"])
-        met_weight = ask_y_n("Weight loss")
+        met_weight = ask_y_n("Has Weight loss occurred")
         if met_weight:
             met.append(["WeightLoss"])
         met_flat = [item for sublist in met for item in sublist]
@@ -423,10 +424,8 @@ def bio_info(file_number):
     module_name = "bio_info"
     check = False
     while not check:
-        mr_number = input('MR_number :')
+        mr_number = input('MR number :')
         name = input('Name :')
-        consent = ask_y_n_statement.ask_y_n("Is consent form with signature present in file", "Consent Taken",
-                                            "Consent form not present")
         aadhaar_card = input("Aadhaar card number (if available): ")
         date_first = input("Date of first visit: ")
         permanent_address = input('Permanent Address :')
@@ -454,7 +453,10 @@ def bio_info(file_number):
         weight = float(weight_kg)
         BMI = str(round(weight / (height * height)))
         columns_list = pccm_names.names_info(module_name)
-        new_data = [mr_number, name, consent, aadhaar_card, date_first, permanent_address, current_address, phone,
+        new_data = [mr_number, name, aadhaar_card, date_first, permanent_address, current_address, phone,
                     email_id, gender, age_yrs, date_of_birth, place_birth, height_cm, weight_kg, BMI]
         check = add_update_sql.review_input(file_number, columns_list, new_data)
     return (tuple(new_data))
+
+def file_row(cursor, file_number):
+    cursor.execute("INSERT INTO Clinical_Exam(File_number) VALUES ('" + file_number + "')")

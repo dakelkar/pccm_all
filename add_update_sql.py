@@ -47,8 +47,8 @@ def review_input (file_number, columns, data):
 
 def review_data (conn, cursor, table, file_number, col_list):
     import ask_y_n_statement
-    sql = ('SELECT '+ ", ".join(col_list) +' FROM '+ table + ' WHERE File_number = ?')
-    data = cursor.execute(sql, file_number)
+    sql = ('SELECT '+ ", ".join(col_list) +' FROM '+ table + " WHERE File_number = '" +file_number+"'")
+    data = cursor.execute(sql)
     data_list = data.fetchall()
     data_list = list(data_list[0])
     col_number = len(col_list)

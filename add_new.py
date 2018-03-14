@@ -5,7 +5,9 @@ def add_new(conn, cursor, file_number, table):
     import gen_info_tables
     import clinical_exam
     import pccm_names
-    if table == "Patient_Information_History":
+    from print_gen_info import print_info
+    if table in {"Patient_Information_History", "All"}:
+        gen_info_tables.file_row(cursor, file_number)
         enter = ask_y_n("Enter Patient Biographical Information")
         if enter:
             data = gen_info_tables.bio_info(file_number)
@@ -16,7 +18,8 @@ def add_new(conn, cursor, file_number, table):
             add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("phys_act"), file_number, data)
             data = gen_info_tables.habits(file_number)
             add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("habits"), file_number, data)
-            gen_info_tables.nut_supplements(conn, cursor, file_number, table)
+            data = gen_info_tables.nut_supplements(conn, cursor, file_number)
+            add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("nut_supplements"), file_number, data)
         enter = ask_y_n("Enter Patient family and reproductive details?")
         if enter:
             data = gen_info_tables.family_details(conn, cursor, file_number)
@@ -39,7 +42,8 @@ def add_new(conn, cursor, file_number, table):
             data = gen_info_tables.breast_symptoms(file_number)
             add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("breast_symptoms"), file_number,
                                            data)
-    if table == "Block_Report_Data":
+        print_info(cursor, file_number)
+    if table in {"Block_Report_Data", "All"}:
         block_report_data.file_row(cursor, file_number)
         enter = ask_y_n("Enter Block Report information?")
         if enter:
@@ -76,7 +80,7 @@ def add_new(conn, cursor, file_number, table):
             data = block_report_data.path_stage(file_number)
             add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_block("path_stage"), file_number,
                                           data)
-    if table == "Clinical_Exam":
+    if table in {"Clinical_Exam", "All"}:
         clinical_exam.file_row(cursor, file_number)
         enter = ask_y_n("Enter Clinical Examination information")
         if enter:

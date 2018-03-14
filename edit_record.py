@@ -5,6 +5,7 @@ def edit_record(conn, cursor, file_number, table):
     import block_report_data
     import clinical_exam
     import pccm_names as colname
+    import print_gen_info
     if table == "Patient_Information_History":
         print("Patient Biographical Information")
         col_list = colname.names_info("bio_info")
@@ -19,7 +20,7 @@ def edit_record(conn, cursor, file_number, table):
         if enter:
             data_phys = gen_info_tables.phys_act(conn, cursor, file_number)
             data_hab = gen_info_tables.habits(file_number)
-            data_nut = gen_info_tables.nut_supplements(conn, cursor, file_number, table)
+            data_nut = gen_info_tables.nut_supplements(conn, cursor, file_number)
             data = data_phys + data_hab + data_nut
             add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
         print("Patient family and reproductive details")
@@ -46,6 +47,7 @@ def edit_record(conn, cursor, file_number, table):
             data_symp = gen_info_tables.breast_symptoms(file_number)
             data = data_det + data_symp
             add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        print_gen_info.print_info(cursor, file_number)
     if table == "Block_Report_Data" or table == "All":
         print("Block Report information")
         col_list = colname.names_block("block_report_info")
@@ -131,4 +133,10 @@ def edit_record(conn, cursor, file_number, table):
         enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
         if enter:
             data = clinical_exam.mri_breast_axilla(file_number)
+            add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        print("BI-RADS category")
+        col_list = colname.names_clinical("birads")
+        enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+        if enter:
+            data = clinical_exam.birads(file_number)
             add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)

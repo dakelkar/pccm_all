@@ -4,8 +4,8 @@ from datetime import date
 import os.path
 import pccm_names
 folder = "DB"
-db_name = "PCCM_BreastCancerDB_" + str(date.today()) + '.db'
-path = os.path.join(folder, db_name)
+db_name = "PCCM_BreastCancerDB2_" + str(date.today()) + '.db'
+path = "DB\\PCCM_BreastCancerDB_2018-03-09.db"
 
 if os.path.isfile(path):
     print (path + " file already exists")
@@ -73,6 +73,15 @@ else:
     columns8 = "File_number, Child_number, Feeding_duration, Breast_usage_feeding"
     cursor.execute('CREATE TABLE {tn} ({nf})' \
                    .format(tn=table_name8, nf=columns8))
+
+    table_name11 = "SonnoMammography_Multiple_Mass"
+    columns11 = pccm_names.mammo_tables(table_name11)
+    cursor.execute('CREATE TABLE {tn} ({nf})'.format(tn=table_name11, nf=columns11))
+
+    table_name12 = "Mammography_Multiple_Mass"
+    columns12 = pccm_names.mammo_tables(table_name12)
+    cursor.execute('CREATE TABLE {tn} ({nf})'.format(tn=table_name12, nf=columns12))
+
     conn.commit()
     print (path + (" file created"))
     conn.close()

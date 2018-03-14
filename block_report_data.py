@@ -3,20 +3,27 @@ def file_row(cursor, file_number):
 
 def block_report_info (file_number):
     from add_update_sql import review_input
-    from ask_y_n_statement import ask_option
+    from ask_y_n_statement import ask_option, ask_y_n
     import  pccm_names
     module_name = "block_report_info"
     check = False
     while not check:
+        con_stat = ask_y_n("Has consent been taken from patient?", "Consent Taken", "No Consent")
+        if con_stat == "Consent Taken":
+            con_form = ask_y_n("Is consent form with signature present in file ?",
+                                                 "Consent form with signature present in folder",
+                                                 "Completed consent form not present in folder")
+        else:
+            con_form = "NA"
         block_sr = input("Block Serial Number: ")
         block_id = input ("Biopsy Block ID: ")
-        block_number = input("No of blocks: ")
+        block_number = input("Number of blocks: ")
         block_date = input("Date of Biopsy: ")
         lab_id = input("Lab ID: ")
         category = "Biopsy Type"
         options = ["Direct", "USG Guided", "VAB", "True-cut", "Steriotactic", "Other"]
         biopsy_type= ask_option(category, options)
-        data_list = [block_sr, block_id, block_number, block_date, lab_id,biopsy_type]
+        data_list = [con_stat,con_form,block_sr, block_id, block_number, block_date, lab_id,biopsy_type]
         columns_list = pccm_names.names_block(module_name)
         check = review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
@@ -35,33 +42,23 @@ def tumour_biopsy_data(file_number):
                    "Papillary Carcinoma", "Phylloid Carcinoma", "Invasive Mammary Carcinoma",
                    "Invasive Breast Carcinoma", "Other"]
         tumour_diagnosis = ask_option(category, options)
-        category = "Tumour Biopsy Diagnosis"
-        options = ["Grade 1", "Grade 2", "Grade 3", "Other"]
-        tumour_grade = ask_option(category, options)
-        category = "ER Status"
-        options = ["Positive", "Negative"]
-        tumour_er= ask_option(category, options)
+        tumour_grade = ask_option("Tumour Biopsy Diagnosis", ["Grade 1", "Grade 2", "Grade 3", "Other"])
+        tumour_er= ask_option("ER Status", ["Positive", "Negative"])
         if (tumour_er == "Positive"):
             tumour_er_percent = input ("ER Percent: ")
         else:
             tumour_er_percent = "NA"
-        category = "PR Status"
-        options = ["Positive", "Negative"]
-        tumour_pr = ask_option(category, options)
+        tumour_pr = ask_option("PR Status", ["Positive", "Negative"])
         if (tumour_pr == "Positive"):
             tumour_pr_percent = input ("PR Percent: ")
         else:
             tumour_pr_percent = "NA"
-        category = "HER2 Status"
-        options = ["Positive", "Equivocal", "Negative"]
-        tumour_her2 = ask_option(category, options)
+        tumour_her2 = ask_option("HER2 Status", ["Positive", "Equivocal", "Negative"])
         if tumour_her2 == "Negative":
             tumour_her2_grade, tumour_fish = ("NA", )*2
         else:
             tumour_her2_grade = input ("HER2 Grade: ")
-            category = "FISH"
-            options = ["Positive", "Negative"]
-            tumour_fish = ask_option(category, options)
+            tumour_fish = ask_option("FISH", ["Positive", "Negative"])
         tumour_ki67 = input("Ki67 Percent: ")
         data_list = [tumour_diagnosis, tumour_grade, tumour_er ,tumour_er_percent ,tumour_pr, tumour_pr_percent,
                      tumour_her2, tumour_her2_grade, tumour_fish, tumour_ki67]
@@ -76,16 +73,10 @@ def lymphnode_biopsy(file_number):
     module_name = "lymphnode_biopsy"
     check = False
     while not check:
-        category = "Lymph Node biopsy FNAC"
-        options = ["Done", "Not Done"]
-        fnac = ask_option(category, options)
+        fnac = ask_option("Lymph Node biopsy FNAC", ["Done", "Not Done"])
         if fnac == "Done":
-            category = "Lymph Node biopsy location"
-            options = ["Right", "Left", "Both"]
-            fnac_location = ask_option(category, options)
-            category = "Lymph Node biopsy diagnosis"
-            options = ["Normal", "Benign", "Malignant", "Other"]
-            fnac_diagnosis = ask_option(category, options)
+            fnac_location = ask_option("Lymph Node biopsy location",  ["Right", "Left", "Both"])
+            fnac_diagnosis = ask_option("Lymph Node biopsy diagnosis", ["Normal", "Benign", "Malignant", "Other"])
         else:
             fnac_location, fnac_diagnosis = ("NA", )*2
         data_list = [fnac, fnac_location, fnac_diagnosis]
@@ -132,17 +123,11 @@ def surgery_info (file_number):
         elif lesion_side_lb_y_n:
             lesion_side = lesion_side_lb_data
         print("Lesion side "+ lesion_side)
-        category = "Type Surgery"
-        options = ["Reconstruction", "Breast Conservation Surgery (BCS)", "Therapeutic Mammoplasty",
-                   "Reduction Mammoplasty", "Wide Local Excision", "Other"]
-        surg_type = ask_option (category, options)
+        surg_type = ask_option ("Type Surgery", ["Reconstruction", "Breast Conservation Surgery (BCS)", "Therapeutic Mammoplasty",
+                   "Reduction Mammoplasty", "Wide Local Excision", "Other"])
         if surg_type == "Reconstruction":
-            category = "Type Reconstruction"
-            options = ["Mastectomy/Modified Radical Mastectomy", "Implant"]
-            surg_type = ask_option(category, options)
-        category = "Response to Surgery"
-        options = ["Complete_Remission/No Residual Tumor", "Progressing", "Partial", "Static", "Other"]
-        surg_response = ask_option(category, options)
+            surg_type = ask_option("Type Reconstruction", ["Mastectomy/Modified Radical Mastectomy", "Implant"])
+        surg_response = ask_option("Response to Surgery", ["Complete_Remission/No Residual Tumor", "Progressing", "Partial", "Static", "Other"])
         data_list = [surg_block_id, surg_location, surg_no_block, surg_block_source, surg_tumour_block, surg_node_block,
                      surg_normal_block, surg_red_block, surg_date, surg_name, surg_hosp_id, lesion_side, surg_type,
                      surg_response]
@@ -160,30 +145,20 @@ def surgery_block (file_number):
     while not check:
         print ("Surgery Block Report")
         tumour_size = input ("Tumour size: ")
-        category = "Tumour Grade"
-        options = ["I", "II", "III", "Other"]
-        tumour_grade = ask_option(category, options)
-        category = "Surgery Diagnosis"
-        options = ["Ductal carcinoma in situ(DCIS)", "Invasive Ductal Carcinoma", "Other"]
-        surg_diag = ask_option(category, options)
+        tumour_grade = ask_option("Tumour Grade", ["I", "II", "III", "Other"])
+        surg_diag = ask_option("Surgery Diagnosis", ["Ductal carcinoma in situ(DCIS)", "Invasive Ductal Carcinoma", "Other"])
         if (surg_diag == "Ductal carcinoma in situ(DCIS)"):
             dcis_percent = input ("Percent DCIS: ")
-            category = "DCIS Invasion"
-            options = ['Microinvasion', 'Macroinvasion']
-            dcis_invasion = ask_option(category, options)
+            dcis_invasion = ask_option("DCIS Invasion", ['Microinvasion', 'Macroinvasion'])
         else:
             dcis_percent, dcis_invasion = ("NA", )*2
         per_inv = ask_y_n("Perineural Invasion", "Perineural Invasion Present", "Perineural Invasion Absent")
         necrosis = ask_y_n("Necrosis", "Necrosis Present", "Necrosis Absent")
         lymph_invasion = ask_y_n("Lymphovascular invasion", "Lymphovascular invasion Present",
                                  "Lymphovascular invasion Absent")
-        category = "Margins"
-        options = ["Involved", "Free"]
-        margin = ask_option(category, options)
+        margin = ask_option("Margins", ["Involved", "Free"])
         print ("Surgery Block Report")
-        category = "Pathological Complete Remission"
-        options = ["Yes", "No", "Other"]
-        report = ask_option(category, options)
+        report = ask_option("Pathological Complete Remission",["Yes", "No", "Other"])
         data_list = [tumour_size,tumour_grade,surg_diag,dcis_percent,dcis_invasion,per_inv,necrosis,
                      lymph_invasion,margin, report]
         columns_list = pccm_names.names_block(module_name)
@@ -191,8 +166,8 @@ def surgery_block (file_number):
     return (tuple(data_list))
 
 def node_block (file_number):
-    from ask_y_n_statement import ask_option
-    from add_update_sql import update_multiple, review_input
+    from ask_y_n_statement import ask_option, ask_y_n
+    from add_update_sql import review_input
     import pccm_names
     module_name = "node_block"
     check = False
@@ -206,12 +181,8 @@ def node_block (file_number):
         ap_data = node_details("Apical")
         ap, ap_number_rem, ap_number_pos, ap_number = ap_data
         print("Apical Node " + ap_number)
-        category =  "Perinodal Spread"
-        options = ["Yes", "No"]
-        per_spread = ask_option(category, options)
-        category = "Supraclavicular Node Involvment"
-        options = ["Yes", "No"]
-        supra_inv = ask_option(category, options)
+        per_spread = ask_y_n("Perinodal Spread", "Perinodal Spread", "No Perinodal Spread")
+        supra_inv = ask_y_n("Supraclavicular Node Involvment", "Supraclavicular Node Involved", "No Supraclavicular Node Involvment")
         data_list = [sentinel, sent_number_rem, sent_number_pos, sent_number, ax, ax_number_rem,
                      ax_number_pos, ax_number, ap, ap_number_rem, ap_number_pos, ap_number, per_spread, supra_inv]
         columns_list = pccm_names.names_block(module_name)
@@ -249,7 +220,7 @@ def path_stage(file_number):
         M = ask_option(category, options)
         path_stage = "pT" + pT + "N" + pN + "M" + M
         print ("Pathological Stage: "+ path_stage)
-        check = ask_y_n("Is patholgicial stage correct")
+        check = ask_y_n("Is pathological stage correct")
         if not check:
             path_stage = input("Please enter correct pathological stage: ")
         if M == "1":
@@ -291,7 +262,8 @@ def path_stage(file_number):
         else:
             clinical_stage = input("Clinical Staging: ")
         print ("Clinical stage "+ clinical_stage)
-        print ("Based on TNM status", path_stage, "and data at https://emedicine.medscape.com/article/2007112-overview")
+        print ("Based on TNM status", path_stage, "and Anatomic stage/prognostic groups table at"
+                                                  "https://emedicine.medscape.com/article/2007112-overview")
         check = ask_y_n("Is clinical stage correct")
         if not check:
             clinical_stage = input("Please enter correct clinical stage: ")

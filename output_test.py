@@ -31,3 +31,33 @@ for i, row in enumerate (data_xx2):
     for j, value in enumerate(row):
         worksheet.write_row(i, 0, row)
 workbook.close()
+
+table_name = ["Patient_Information_History", "General_Medical_History", "Family_Cancer_History", "Previous_Cancer_History", "Nutritional_Supplements", "Physical_Activity", "Breast_Feeding",\
+             "Clinical_Exam", "Block_Report_Data", "SonnoMammography_Multiple_Mass", "Mammography_Multiple_Mass", "SonnoMammography_Multiple_Mass",  "MRI_Multiple_Mass", "Calcification_Mammography"]
+
+def print_table(file_number, table):
+    from xlsxwriter.workbook import Workbook
+    import pccm_names
+    from datetime import date
+    import sqlite3
+    table = "Patient_Information_History"
+    work_name = ("Output_"+str(date.today())+".xlsx")
+    workbook = Workbook(work_name)
+    worksheet = workbook.add_worksheet()
+
+
+    conn=sqlite3.connect('DB\\PCCM_BreastCancerDB3_2018-03-14.db')
+    cursor=conn.cursor()
+    files = ('SELECT File_number FROM '+table)
+    all_files = cursor.execute(files)
+    all_files = all_files.fetchall()
+    sql = ('SELECT ' + ", ".join(pccm_names.col_name("bio_info")) + ' FROM ' + table + " WHERE File_number = '"+file_number+"'")
+    data_retrieve = cursor.execute(sql)
+    data = data_retrieve.fetchall()
+    data_list = list(all_files[0])+ list(data[0])
+    names_list = ["File_number"]+ pccm_names.col_name("bio_info")
+    data_print = [names_list] + [data_list]
+    for i, row in enumerate(data_print):
+        for j, value in enumerate(row):
+            worksheet.write_row(i, 0, row)
+    workbook.close()

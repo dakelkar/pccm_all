@@ -4,8 +4,8 @@ from datetime import date
 import os.path
 import pccm_names
 folder = "DB"
-db_name = "PCCM_BreastCancerDB2_" + str(date.today()) + '.db'
-path = "DB\\PCCM_BreastCancerDB_2018-03-09.db"
+db_name = "PCCM_BreastCancerDB1_" + str(date.today()) + '.db'
+path = os.path.join(folder, db_name)
 
 if os.path.isfile(path):
     print (path + " file already exists")
@@ -22,25 +22,44 @@ else:
         col_name = pccm_names.names_info(index)
         add_columns(cursor, table_name1, col_name)
 
+    table = "Biopsy_Report_Data"
+    columns1 = "File_number"
+    cursor.execute('CREATE TABLE {tn} ({nf})' .format(tn=table, nf=columns1))
+    module_names = ["biopsy_report_info", "tumour_biopsy_data", "lymphnode_biopsy"]
+    for index in module_names:
+        col_name = pccm_names.names_biopsy(index)
+        add_columns(cursor, table, col_name)
+
     table_name9 = "Clinical_Exam"
     columns9 = "File_number"
     cursor.execute('CREATE TABLE {tn} ({nf})' \
                    .format(tn=table_name9, nf=columns9))
     module_names = ["clinical_exam_initial", "nipple_cytology", "mammography", "tomosynthesis", "abvs", "sonomammo",
-                    "mri_breast_axilla"]
+                    "mri_breast"]
     for index in module_names:
-        col_name = pccm_names.names_clinical(index)
+        col_name = pccm_names.name_clinical(index)
         add_columns(cursor, table_name9, col_name)
+        #print(", ".join(col_name))
 
-    table_name10 = "Block_Report_Data"
-    columns10 = "File_number"
-    cursor.execute('CREATE TABLE {tn} ({nf})' \
-                   .format(tn=table_name10, nf=columns10))
-    module_names = ['block_report_info', 'tumour_biopsy_data', 'lymphnode_biopsy', 'surgery_info', 'surgery_block',
-                    'node_block', 'path_stage']
+    table = "Surgery_Block_Report_Data"
+    column = "File_number"
+    cursor.execute('CREATE TABLE {tn} ({nf})' .format(tn=table, nf=column))
+    module_names = ["surgery_block_information_1","surgery_block_information_2", "surgery_block_information_3",
+                    "path_stage"]
     for index in module_names:
-        col_name = pccm_names.names_block(index)
-        add_columns(cursor, table_name10, col_name)
+        col_name = pccm_names.names_surgery(index)
+        add_columns(cursor, table, col_name)
+
+    #table_name10 = "Block_Report_Data"
+    #columns10 = "File_number"
+    #cursor.execute('CREATE TABLE {tn} ({nf})' \
+    #               .format(tn=table_name10, nf=columns10))
+    #module_names = ['block_report_info', 'tumour_biopsy_data', 'lymphnode_biopsy', 'surgery_info', 'surgery_block',
+    #                'node_block', 'path_stage']
+    #for index in module_names:
+    #    col_name = pccm_names.names_block(index)
+    #    add_columns(cursor, table_name10, col_name)
+        #print (", ".join(col_name))
 
 # additional tables
     table_name2 = "General_Medical_History"
@@ -75,13 +94,20 @@ else:
                    .format(tn=table_name8, nf=columns8))
 
     table_name11 = "SonnoMammography_Multiple_Mass"
-    columns11 = pccm_names.mammo_tables(table_name11)
+    columns11 = ", ".join(pccm_names.name_clinical(table_name11))
     cursor.execute('CREATE TABLE {tn} ({nf})'.format(tn=table_name11, nf=columns11))
 
     table_name12 = "Mammography_Multiple_Mass"
-    columns12 = pccm_names.mammo_tables(table_name12)
+    columns12 = ", ".join(pccm_names.name_clinical(table_name12))
     cursor.execute('CREATE TABLE {tn} ({nf})'.format(tn=table_name12, nf=columns12))
 
+    table_name13 = "MRI_Multiple_Mass"
+    columns13 = ", ".join(pccm_names.name_clinical(table_name13))
+    cursor.execute('CREATE TABLE {tn} ({nf})'.format(tn=table_name13, nf=columns13))
+
+    table_name14 = "Calcification_Mammography"
+    columns14 = ", ".join(pccm_names.name_clinical(table_name14))
+    cursor.execute('CREATE TABLE {tn} ({nf})'.format(tn=table_name14, nf=columns14))
     conn.commit()
     print (path + (" file created"))
     conn.close()

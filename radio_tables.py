@@ -3,7 +3,7 @@ def multiple_mass(table, conn, cursor, file_number):
     import add_update_sql
     import pccm_names
     data_return = []
-    mass_number = int(input("Number of masses detected"))
+    mass_number = int(input("Number of masses detected: "))
     if table == "SonnoMammography_Multiple_Mass":
         sonno_quad, sonno_location, sonno_clock, sonno_shape, sonno_orientation, sonno_margin, sonno_echo, \
         sonno_posterior = [list([]) for _ in range(8)]
@@ -32,7 +32,8 @@ def multiple_mass(table, conn, cursor, file_number):
                                                               ["High density", "Equal density", "Low density",
                                                                "Fat-containing"])
                 density.append(mammo_mass_density)
-                data_list = [file_number, mass_location, location_quad, mammo_mass_shape,mammo_mass_margin,
+                mass_id = "Mass " + str(index + 1)
+                data_list = [file_number, mass_id, mass_location, location_quad, mammo_mass_shape,mammo_mass_margin,
                              mammo_mass_density]
             elif table == "MRI_Multiple_Mass":
                 mass_location = ask_y_n_statement.ask_option("Location of mass " + str(mass_id),
@@ -84,7 +85,7 @@ def multiple_mass(table, conn, cursor, file_number):
                 mass_id = "Mass "+ str(index+1)
                 data_list = [file_number, mass_id, mass_location, location_quad, location_clock, mass_shape,
                              mass_orientation, mass_margin, mass_echo, mass_posterior]
-            col_list = pccm_names.mammo_tables(table)
+            col_list = pccm_names.name_clinical(table)
             check = add_update_sql.review_input(file_number, col_list, data_list)
         add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data_list)
     if table == "SonnoMammography_Multiple_Mass":
@@ -179,7 +180,7 @@ def cal_table (file_number, conn, cursor):
             mass_id = "Mass " + str(index + 1)
             data_list = [file_number, mass_id, mass_location, location_quad,mammo_calcification,
                          mammo_calcification_type, mammo_calcification_distribution]
-            col_list = pccm_names.mammo_tables(table)
+            col_list = pccm_names.name_clinical(table)
             check = add_update_sql.review_input(file_number, col_list, data_list)
         add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data_list)
     all_data = [[str(mass_number)], location, quad, type, calc_type, dist]
@@ -200,5 +201,5 @@ def lesion_location(lesion, category = ["Location on Right Breast", "Location on
         lesion_lb = ask_y_n_statement.ask_option(category[1],option)
         lesion_lb_data = "LB-" + lesion_lb
         lesion_data.append(lesion_lb_data)
-    lesion_data = "; ".join(lesion_data)
+    lesion_data = "|".join(lesion_data)
     return lesion_data

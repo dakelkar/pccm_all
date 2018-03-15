@@ -1,8 +1,9 @@
 def physical_activity_table(conn, cursor, file_number):
     from add_update_sql import insert
     from ask_y_n_statement import ask_y_n
+    import pccm_names
     table_act = "Physical_Activity"
-    columns = "File_number, Type_activity, Frequency_activity"
+    columns = pccm_names.col_name("phys_act")
     add_act = True
     type_phys_list, freq_phys_list = [], []
     while add_act:
@@ -20,6 +21,7 @@ def physical_activity_table(conn, cursor, file_number):
 def cancer_table(conn, cursor, file_number):
     from add_update_sql import insert, update_multiple
     from ask_y_n_statement import ask_y_n
+    import pccm_names
     table_cancer = "Previous_Cancer_History"
     type_of_cancer_list = []
     year_diagnosis_list = []
@@ -33,9 +35,9 @@ def cancer_table(conn, cursor, file_number):
         type_of_cancer_list.append(type_of_cancer)
         year_diagnosis = input("Year of diagnosis: ")
         year_diagnosis_list.append(year_diagnosis)
-        columns = ("File_number, Type_Cancer, Year_diagnosis")
+        col = ("File_number, Type_Cancer, Year_diagnosis")
         data = file_number, type_of_cancer, year_diagnosis
-        insert(conn, cursor, table_cancer, columns, data)
+        insert(conn, cursor, table_cancer, col, data)
         print ("Please enter the type of treatment used: ")
         treatment = ["Surgery", "Radiation", "Chemotherapy", "Hormone", "Alternative", "HomeRemedy"]
         treat_list = []
@@ -76,11 +78,11 @@ def cancer_table(conn, cursor, file_number):
 def nut_supp_table(conn, cursor, file_number):
     from add_update_sql import insert
     from ask_y_n_statement import  ask_y_n
+    import pccm_names
     type_nut_list, quant_nut_list, duration_nut_list = [], [], []
     add_supp = True
     table_nut = "Nutritional_Supplements"
-    columns = "File_number, Type_nutritional_supplements, Quantity_nutritional_supplements_per_day, " \
-              "Duration_nutritional_supplements"
+    columns = pccm_names.col_name("nut_sup")
     while add_supp:
         nut_supplements_type = input("Type of nutritional supplements taken: ")
         type_nut_list.append(nut_supplements_type)
@@ -145,7 +147,6 @@ def family_cancer_table(conn, cursor, file_number):
 def other_symp(conn, cursor, file_number, table):
     from add_update_sql import update_multiple
     from ask_y_n_statement import get_rb_lb, ask_y_n
-    # data = file_number, mr_number, name
     add_symp = True
     all_data = []
     while add_symp:

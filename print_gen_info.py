@@ -19,7 +19,7 @@ def print_info(cursor, file_number):
         data = cursor.execute(sql)
         data_file = data.fetchall()
         data_print = list(data_file[0])
-        text_titles = pccm_names.info_print(module_name[index])
+        text_titles = pccm_names.info_print_all(module_name[index])
         for i in range(0, len(data_print)):
             p = doc.add_paragraph((text_titles[i] + ":  "), style="List Bullet")
             (p.add_run(data_print[i])).bold = True

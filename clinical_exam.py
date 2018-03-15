@@ -111,7 +111,7 @@ def clinical_exam_initial (file_number):
                      supra_nodes, supra_nodes_number, supra_nodes_size, supra_nodes_fixity, contra_breast, arm_edema,
                      arm_circ_right, arm_volume_right, arm_elbow_right, arm_circ_left, arm_volume_left, arm_elbow_left]
 
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
@@ -130,7 +130,7 @@ def nipple_cytology (file_number):
             cyto_number = input("Nipple Cytology number: ")
             cyto_report = ask_y_n_statement.ask_option("Nipple Cytology report and interpretation", ["Normal", "Suspicious", "Diagnostic for Cancer", "Other"])
         data_list = [cyto, cyto_date, cyto_number, cyto_report]
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
@@ -198,7 +198,7 @@ def mammography (conn, cursor, file_number):
                 mammo_lesion = ask_y_n_statement.ask_option("Location of lesion", ["Right Breast", "Left Breast", "Both"])
             else:
                 mammo_lesion = "NA"
-            mammo_dil = input("Description of Solitary Dilated duct")
+            mammo_dil = input("Description of Solitary Dilated duct: ")
             asso_feat = ["Skin Retraction", "Nipple Retraction", "Skin Thickening", "Trabecular Thickening",
                          "Axillary adenopathy", "Architectural Distortion", "Calcifications"]
             asso_feat_data = []
@@ -236,7 +236,7 @@ def mammography (conn, cursor, file_number):
                      mammo_asymm, mammo_intra,  mammo_lesion, mammo_dil, asso_feat_1, asso_feat_2, asso_feat_3,
                      asso_feat_4, asso_feat_5, asso_feat_6, asso_feat_7, mammo_depth, mammo_lateral,mammo_quad,
                      mammo_dist, mammmo_pect, mammo_birad, mammo_diag]
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
 
     return (tuple(data_list))
@@ -254,7 +254,7 @@ def tomosynthesis (file_number):
         if tomo:
             tomo = "3D digital Tomosynthesis done"
             tomo_date = input("Date of examination of Tomosynthesis: ")
-            tomo_acc = input("Accession number of Tomosynthesis")
+            tomo_acc = input("Accession number of Tomosynthesis: ")
             tomo_lesion = ask_y_n_statement.ask_option("Location of lesion",
                                                        ["Right Breast", "Left Breast", "Both", "Not present"])
             if tomo_lesion in {"Right Breast", "Left Breast", "Both"}:
@@ -271,7 +271,7 @@ def tomosynthesis (file_number):
             tomo_date, tomo_acc, tomo_lesion, tomo_lesion_loc, tomo_size, tomo_dist, tomo_pect, tomo_diagnosis = ("NA", )*8
 
         data_list = [tomo, tomo_date, tomo_acc, tomo_lesion_loc, tomo_size, tomo_dist, tomo_pect, tomo_diagnosis]
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
@@ -287,10 +287,9 @@ def abvs (file_number):
         if abvs:
             abvs = "Automated Breast Volume Scanner done"
             abvs_date = input("Date of examination of ABVS: ")
-            abvs_acc = input("Accession number of ABVS")
+            abvs_acc = input("Accession number of ABVS: ")
             abvs_lesion = ask_y_n_statement.ask_option("Location of lesion",
                                                        ["Right Breast", "Left Breast", "Both", "Not present"])
-            abvs_lesion_data = []
             if abvs_lesion in {"Right Breast", "Left Breast", "Both"}:
                 abvs_lesion_data = radio_tables.lesion_location(abvs_lesion)
             else:
@@ -307,7 +306,7 @@ def abvs (file_number):
 
         data_list = [abvs, abvs_date, abvs_acc,abvs_lesion, abvs_lesion_data, abvs_size, abvs_dist, abvs_pect,
                      abvs_diagnosis]
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
@@ -331,9 +330,10 @@ def sonomammo (conn, cursor, file_number):
             mass_sonomammo = ask_y_n_statement.ask_y_n("Is there any mass detected")
             if mass_sonomammo:
                 mass_sonomammo = "Mass Detected"
+                table = "SonnoMammography_Multiple_Mass"
                 mass_number_sonomammo, mass_location, mass_quad, mass_clock, mass_shape_sonomammo, \
                 mass_orientation_sonomammo, mass_margin_sonomammo, mass_echo_sonomammo, mass_posterior_sonomammo\
-                    = radio_tables.multiple_mass(conn, cursor, file_number)
+                    = radio_tables.multiple_mass(table, conn, cursor, file_number)
             else:
                 mass_sonomammo = "No Mass Detected"
                 mass_location, mass_quad, mass_clock, mass_number_sonomammo, mass_shape_sonomammo, \
@@ -385,7 +385,7 @@ def sonomammo (conn, cursor, file_number):
             sonammo_pect = input ("Distance from Pectoralis Major (cm): ")
             sono_birad = ask_y_n_statement.ask_y_n("Does the report include a BI-RAD assessment/Diagnosis?")
             if sono_birad:
-                sonomammo_birad, sonomammo_diag = radio_tables.birad()
+                sonomammo_birad, sonomammo_diag = radio_tables.birads()
             else:
                 sonomammo_birad, sonomammo_diag = ("NA", )*2
         else:
@@ -404,7 +404,7 @@ def sonomammo (conn, cursor, file_number):
                      sonomammo_vasc, sonomammo_elast, sonomammo_lymph_intra, sonomammo_lymph_ax, lymph_ax_cort,
                      lymph_ax_hilum, lymph_ax_vasc, sonomammo_other, sonomammo_dist, sonamammo_skin_dist, sonammo_pect,
                      sonomammo_birad, sonomammo_diag]
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
@@ -498,9 +498,92 @@ def mri_breast (conn, cursor, file_number):
                      mri_breast_non_enhance, mri_breast_implant, mri_breast_lesion, mri_breast_lesion_location,
                      mri_breast_lesion_depth, mri_breast_size, mri_breast_dist, mri_breast_pect,
                      mri_breast_birad, mri_breast_birad_diag]
-        columns_list = pccm_names.names_clinical(module_name)
+        columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number,columns_list, data_list)
     return (tuple(data_list))
 
+def add_data(conn, cursor, file_number):
+    import add_update_sql
+    from ask_y_n_statement import ask_y_n
+    import pccm_names
+    table = "Clinical_Exam"
+    file_row(cursor, file_number)
+    enter = ask_y_n("Enter Clinical Examination information")
+    if enter:
+        data = clinical_exam_initial(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("clinical_exam_initial"),
+                                       file_number, data)
+    enter = ask_y_n("Enter Nipple Cytology report?")
+    if enter:
+        data = nipple_cytology(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("nipple_cytology"), file_number,
+                                       data)
+    enter = ask_y_n("Enter Mammography Report?")
+    if enter:
+        data = mammography(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("mammography"), file_number, data)
+    enter = ask_y_n("Enter 3D Tomosynthesis?")
+    if enter:
+        data = tomosynthesis(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("tomosynthesis"), file_number,
+                                       data)
+    enter = ask_y_n("Enter Automated Breast Volume Scanner")
+    if enter:
+        data = abvs(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("abvs"), file_number, data)
+    enter = ask_y_n("Enter Sono-Mammography")
+    if enter:
+        data = sonomammo(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("sonomammo"), file_number, data)
+    enter = ask_y_n("Enter MRI-Breast")
+    if enter:
+        data = mri_breast(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.name_clinical("mri_breast"), file_number, data)
 
+def edit_data(conn, cursor, file_number):
+    import add_update_sql
+    import pccm_names as colname
+    table = "Clinical_Exam"
+    print("Initial Clinical Examination")
+    col_list = colname.name_clinical("clinical_exam_initial")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = clinical_exam_initial(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Nipple Cytology")
+    col_list = colname.name_clinical("nipple_cytology")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = nipple_cytology(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Mammography")
+    col_list = colname.name_clinical("mammography")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = mammography(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("3D-Tomosynthesis")
+    col_list = colname.name_clinical("tomosynthesis")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = tomosynthesis(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Automated Breast Volume Scan")
+    col_list = colname.name_clinical("abvs")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = abvs(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Sono-Mammography")
+    col_list = colname.name_clinical("sonomammo")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = sonomammo(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("MRI Breast")
+    col_list = colname.name_clinical("mri_breast")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = mri_breast(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
 

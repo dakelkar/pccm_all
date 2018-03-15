@@ -1,15 +1,15 @@
 # -*- mode: python -*-
 import sys
 from os import path
-site_packages = next(p for p in sys.path if 'site-packages' in p)
 
+site_packages = next (p for p in sys.path if 'site_packages' in p)
 block_cipher = None
 
 
 a = Analysis(['add_insert_file_number.py'],
              pathex=['D:\\repos\\pccm_all'],
              binaries=[],
-             datas=[(path.join(site_packages,"docx","templates"), "docx/templates")],
+             datas=[(path.join(site_packages, "docx", "templates"),"docx/templates")],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],

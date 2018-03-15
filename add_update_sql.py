@@ -104,8 +104,10 @@ def check_file(conn, cursor, table, file_number):
         add_new.add_new(conn, cursor, file_number, table)
     else:
         todo = ask_y_n_statement.ask_option(file_number + " already exists in table " + table + ".",
-                                            ["Edit record", "Add new record for same file number"])
+                                            ["Edit record", "Add new record for same file number", "Edit None"])
         if todo == "Edit record":
             edit_record.edit_record(conn, cursor, file_number, table)
-        else:
+        elif todo =="Add new record for same file number":
             print("Add additional record module TBD")
+        else:
+            print ("Proceeding to next table")

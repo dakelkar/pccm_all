@@ -129,7 +129,7 @@ def family_details(conn, cursor, file_number):
             age_first_preg, age_last_preg, number_term, number_abortion, age_first, age_last, twice_birth, \
             breast_feeding_data, kid_feeding, duration_feeding, breast_usage = ('NA',) * 11
         else:
-            number_term = input("Pregnancy carried to term (include abortion after 6 months): )")
+            number_term = input("Pregnancy carried to term (include abortion after 6 months): ")
             number_abortion = input("Number of abortions: ")
             age_first_preg = input("Age at first pregnancy: ")
             sql = ('SELECT Age_yrs FROM Patient_Information_History WHERE File_number = \'' + file_number + "'")
@@ -460,3 +460,94 @@ def bio_info(file_number):
 
 def file_row(cursor, file_number):
     cursor.execute("INSERT INTO Clinical_Exam(File_number) VALUES ('" + file_number + "')")
+
+
+def add_gen_info(conn, cursor, file_number):
+    from print_gen_info import print_info
+    import add_update_sql
+    from ask_y_n_statement import ask_y_n
+    import pccm_names
+    table = "Patient_Information_History"
+    file_row(cursor, file_number)
+    enter = ask_y_n("Enter Patient Biographical Information")
+    if enter:
+        data = bio_info(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("bio_info"), file_number, data)
+    enter = ask_y_n("Enter Patient habits")
+    if enter:
+        data = phys_act(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("phys_act"), file_number, data)
+        data = habits(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("habits"), file_number, data)
+        data = nut_supplements(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("nut_supplements"), file_number, data)
+    enter = ask_y_n("Enter Patient family and reproductive details?")
+    if enter:
+        data = family_details(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("family_details"), file_number, data)
+    enter = ask_y_n("Enter Patient and family medical history?")
+    if enter:
+        data = med_history(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("med_history"), file_number,
+                                       data)
+        data = cancer_history(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("cancer_history"), file_number,
+                                       data)
+        data = family_cancer(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("family_cancer"), file_number,
+                                       data)
+    enter = ask_y_n("Enter Patient Symptoms?")
+    if enter:
+        data = det_by(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("det_by"), file_number, data)
+        data = breast_symptoms(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("breast_symptoms"), file_number,
+                                       data)
+    print_info(cursor, file_number)
+
+def edit_data(conn, cursor, file_number):
+    import add_update_sql
+    import pccm_names as colname
+    from print_gen_info import print_info
+    table = "Patient_Information_History"
+    print("Patient Biographical Information")
+    col_list = colname.names_info("bio_info")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = bio_info(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    col_list = colname.names_info("phys_act") + colname.names_info("habits") + colname.names_info(
+        "nut_supplements")
+    print("Patient habits")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data_phys = phys_act(conn, cursor, file_number)
+        data_hab = habits(file_number)
+        data_nut = nut_supplements(conn, cursor, file_number)
+        data = data_phys + data_hab + data_nut
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Patient family and reproductive details")
+    col_list = colname.names_info("family_details")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = family_details(conn, cursor, file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Patient and family medical history")
+    col_list = colname.names_info("med_history") + colname.names_info("cancer_history") + colname.names_info(
+        "family_cancer")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data_med = med_history(conn, cursor, file_number)
+        data_can = cancer_history(conn, cursor, file_number)
+        data_fam = family_cancer(conn, cursor, file_number)
+        data = data_med + data_can + data_fam
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Patient Symptoms")
+    col_list = colname.names_info("det_by") + colname.names_info("breast_symptoms")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data_det = det_by(file_number)
+        data_symp = breast_symptoms(file_number)
+        data = data_det + data_symp
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print_info(cursor, file_number)

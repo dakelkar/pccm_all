@@ -1,8 +1,13 @@
+from tables.breast_cancer_tables import nut_supp_table, physical_activity_table, med_history_table, cancer_table, \
+    family_cancer_table
+import tables.breast_cancer_tables as breast_cancer_tables
+from sql.add_update_sql import review_input, update_multiple, review_data
+from modules.ask_y_n_statement import ask_option, ask_y_n
+from add_edit.print_gen_info import print_info
+import modules.pccm_names as pccm_names
+import textwrap
+
 def nut_supplements(conn, cursor, file_number):
-    from sql.add_update_sql import review_input
-    from tables.breast_cancer_tables import nut_supp_table
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
     module_name = "nut_supplements"
     check = False
     while not check:
@@ -22,11 +27,6 @@ def nut_supplements(conn, cursor, file_number):
 
 
 def phys_act(conn, cursor, file_number):
-    from sql.add_update_sql import review_input
-    from tables.breast_cancer_tables import physical_activity_table
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
-
     module_name = "phys_act"
     check = False
     while not check:
@@ -45,11 +45,6 @@ def phys_act(conn, cursor, file_number):
 
 
 def med_history(conn, cursor, file_number):
-    from sql.add_update_sql import review_input
-    from tables.breast_cancer_tables import med_history_table
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
-
     module_name = "med_history"
     check = False
     while not check:
@@ -68,11 +63,6 @@ def med_history(conn, cursor, file_number):
 
 
 def cancer_history(conn, cursor, file_number):
-    from sql.add_update_sql import review_input
-    from tables.breast_cancer_tables import cancer_table
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
-
     module_name = "cancer_history"
     check = False
     while not check:
@@ -84,18 +74,14 @@ def cancer_history(conn, cursor, file_number):
             previous_cancer_history_y_n = "No previous history of cancer"
             previous_cancer = ("NA",) * 5
         type_of_cancer_list, year_diagnosis_list, treat_all, type_all, duration_all = previous_cancer
-        data_list = [previous_cancer_history_y_n, type_of_cancer_list, year_diagnosis_list, treat_all, type_all, duration_all]
+        data_list = [previous_cancer_history_y_n, type_of_cancer_list, year_diagnosis_list, treat_all,
+                     type_all, duration_all]
         columns_list = pccm_names.names_info(module_name)
         check = review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 
 def family_details(conn, cursor, file_number):
-    from sql.add_update_sql import review_input
-    import tables.breast_cancer_tables as breast_cancer_tables
-    from modules.ask_y_n_statement import ask_y_n, ask_option
-    import modules.pccm_names as pccm_names
-
     module_name = "family_details"
     check = False
     while not check:
@@ -171,7 +157,8 @@ def family_details(conn, cursor, file_number):
             type_fert = input("Type of fertility treatment used: ")
             detail_fert = input ("Details of fertility treatment used:")
             cycles_fert = input("Number of cycles of fertility treatment taken: ")
-            success_fert = ask_y_n("Did fertility treatment result in successful pregnancy? ", "Pregnancy from Treatment", "No pregnancy from treatment")
+            success_fert = ask_y_n("Did fertility treatment result in successful pregnancy? ",
+                                   "Pregnancy from Treatment", "No pregnancy from treatment")
         else:
             fert_treat = "No Fertility Treatment used"
             type_fert, detail_fert, cycles_fert, success_fert = ("NA", )* 4
@@ -192,10 +179,6 @@ def family_details(conn, cursor, file_number):
     return (tuple(data_list))
 
 def breast_symptoms(file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
-    import textwrap
     module_name = "breast_symptoms"
     check = False
     while not check:
@@ -291,12 +274,7 @@ def breast_symptoms(file_number):
     return (tuple(data_list))
 
 
-
 def habits(file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_y_n, ask_option
-    import modules.pccm_names as pccm_names
-
     module_name = "habits"
     check = False
     while not check:
@@ -319,7 +297,8 @@ def habits(file_number):
             tobacco = "Tobacco consumption"
             exposure_type = ask_option("Mode of exposure to Tobacco", ["Passive", "Active", "Other"])
             if exposure_type =="Passive":
-                tobacco_type_partic = ask_option("Mode of passive consumption", ["Home", "Work", "Commute",  "Social Interactions"])
+                tobacco_type_partic = ask_option("Mode of passive consumption", ["Home", "Work", "Commute",
+                                                                                 "Social Interactions"])
                 if tobacco_type_partic == "Home":
                     tobacco_type_who = input ("What is the specific source?")
                     tobacco_passive = tobacco_type_partic + (" : ") + tobacco_type_who
@@ -328,7 +307,9 @@ def habits(file_number):
                     tobacco_passive = tobacco_type_partic
             else:
                 tobacco_passive = "NA"
-            tobacco_type = ask_option("Type of tobacco use", ["Cigarette", "Beedi", "Gutkha", "Pan Masala", "Jarda/Maava", "Hookah", "Nicotine Patch", "Mishri", "Other"])
+            tobacco_type = ask_option("Type of tobacco use", ["Cigarette", "Beedi", "Gutkha", "Pan Masala",
+                                                              "Jarda/Maava", "Hookah", "Nicotine Patch", "Mishri",
+                                                              "Other"])
             tobacco_age = input("Consumption of tobacco from which age (yrs): ")
             tobacco_freq = input ("Frequency of tobacco consumption: ")
             tobacco_quant = input("Quantity of tobacco consumed per week: ")
@@ -339,19 +320,15 @@ def habits(file_number):
             exposure_type, tobacco_type, tobacco_passive, tobacco_age, tobacco_freq, tobacco_quant, tobacco_duration, \
             tobacco_comments = ("NA",) * 8
         other_del_habits = input("Other Deleterious Habits (if present give details): ")
-        data_list_tob = [tobacco, exposure_type, tobacco_passive,tobacco_type, tobacco_age, tobacco_freq, tobacco_quant, tobacco_duration, tobacco_comments, other_del_habits]
+        data_list_tob = [tobacco, exposure_type, tobacco_passive,tobacco_type, tobacco_age, tobacco_freq,
+                         tobacco_quant, tobacco_duration, tobacco_comments, other_del_habits]
         columns_list = pccm_names.names_info(module_name)
         data_list = data_list_alc + data_list_tob
         check = review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 
-
 def metastasis_symp (file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
-
     module_name = "metastasis_symp"
     check = False
     while not check:
@@ -383,10 +360,6 @@ def metastasis_symp (file_number):
 
 
 def det_by(file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_option
-    import modules.pccm_names as pccm_names
-
     module_name = "det_by"
     check = False
     while not check:
@@ -405,11 +378,6 @@ def det_by(file_number):
 
 
 def family_cancer(conn, cursor, file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
-    from tables.breast_cancer_tables import family_cancer_table
-
     module_name = "family_cancer"
     check = False
     while not check:
@@ -427,10 +395,6 @@ def family_cancer(conn, cursor, file_number):
 
 
 def bio_info(file_number):
-    import sql.add_update_sql as add_update_sql
-    import modules.ask_y_n_statement as ask_y_n_statement
-    import modules.pccm_names as pccm_names
-
     module_name = "bio_info"
     check = False
     while not check:
@@ -439,18 +403,18 @@ def bio_info(file_number):
         aadhaar_card = input("Aadhaar card number (if available): ")
         date_first = input("Date of first visit: ")
         permanent_address = input('Permanent Address :')
-        current_address_check = ask_y_n_statement.ask_option('Current Address', ["Same as Permanent", "Different"])
+        current_address_check = ask_option('Current Address', ["Same as Permanent", "Different"])
         if current_address_check == "Different":
             current_address = input("Current Address: ")
         else:
             current_address = permanent_address
         phone = input('Phone :')
         email_id = input('Email_ID :')
-        gender = ask_y_n_statement.ask_option('Gender', ["Female", "Male", "Other"])
+        gender = ask_option('Gender', ["Female", "Male", "Other"])
         age_yrs = input('Age (yrs) :')
         date_of_birth = input('Date of Birth (mm/dd/yyyy):')
         place_birth = input('Place of Birth :')
-        height = ask_y_n_statement.ask_option("Height unit", ["cm", "feet/inches"])
+        height = ask_option("Height unit", ["cm", "feet/inches"])
         if height == "cm":
             height_cm = input('Height (cm) :')
         else:
@@ -465,100 +429,91 @@ def bio_info(file_number):
         columns_list = pccm_names.names_info(module_name)
         new_data = [mr_number, name, aadhaar_card, date_first, permanent_address, current_address, phone,
                     email_id, gender, age_yrs, date_of_birth, place_birth, height_cm, weight_kg, BMI]
-        check = add_update_sql.review_input(file_number, columns_list, new_data)
+        check = review_input(file_number, columns_list, new_data)
     return (tuple(new_data))
 
 def file_row(cursor, file_number):
-    cursor.execute("INSERT INTO Clinical_Exam(File_number) VALUES ('" + file_number + "')")
-
+    cursor.execute("INSERT INTO Patient_Information_History(File_number) VALUES ('" + file_number + "')")
 
 def add_gen_info(conn, cursor, file_number):
-    from add_edit.print_gen_info import print_info
-    import sql.add_update_sql as add_update_sql
-    from modules.ask_y_n_statement import ask_y_n
-    import modules.pccm_names as pccm_names
     table = "Patient_Information_History"
     file_row(cursor, file_number)
     enter = ask_y_n("Enter Patient Biographical Information")
     if enter:
         data = bio_info(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("bio_info"), file_number, data)
+        update_multiple(conn, cursor, table, pccm_names.names_info("bio_info"), file_number, data)
     enter = ask_y_n("Enter Patient habits")
     if enter:
         data = phys_act(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("phys_act"), file_number, data)
+        update_multiple(conn, cursor, table, pccm_names.names_info("phys_act"), file_number, data)
         data = habits(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("habits"), file_number, data)
+        update_multiple(conn, cursor, table, pccm_names.names_info("habits"), file_number, data)
         data = nut_supplements(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("nut_supplements"), file_number, data)
+        update_multiple(conn, cursor, table, pccm_names.names_info("nut_supplements"), file_number, data)
     enter = ask_y_n("Enter Patient family and reproductive details?")
     if enter:
         data = family_details(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("family_details"), file_number, data)
+        update_multiple(conn, cursor, table, pccm_names.names_info("family_details"), file_number, data)
     enter = ask_y_n("Enter Patient and family medical history?")
     if enter:
         data = med_history(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("med_history"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_info("med_history"), file_number,
                                        data)
         data = cancer_history(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("cancer_history"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_info("cancer_history"), file_number,
                                        data)
         data = family_cancer(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("family_cancer"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_info("family_cancer"), file_number,
                                        data)
     enter = ask_y_n("Enter Patient Symptoms?")
     if enter:
         data = det_by(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("det_by"), file_number, data)
+        update_multiple(conn, cursor, table, pccm_names.names_info("det_by"), file_number, data)
         data = breast_symptoms(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_info("breast_symptoms"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_info("breast_symptoms"), file_number,
                                        data)
     print_info(cursor, file_number)
 
 def edit_data(conn, cursor, file_number):
-    from add_edit.print_gen_info import print_info
-    import sql.add_update_sql as add_update_sql
-    import modules.pccm_names as colname
-
     table = "Patient_Information_History"
     print("Patient Biographical Information")
-    col_list = colname.names_info("bio_info")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    col_list = pccm_names.names_info("bio_info")
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data = bio_info(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
-    col_list = colname.names_info("phys_act") + colname.names_info("habits") + colname.names_info(
+        update_multiple(conn, cursor, table, col_list, file_number, data)
+    col_list = pccm_names.names_info("phys_act") + pccm_names.names_info("habits") + pccm_names.names_info(
         "nut_supplements")
     print("Patient habits")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data_phys = phys_act(conn, cursor, file_number)
         data_hab = habits(file_number)
         data_nut = nut_supplements(conn, cursor, file_number)
         data = data_phys + data_hab + data_nut
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)
     print("Patient family and reproductive details")
-    col_list = colname.names_info("family_details")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    col_list = pccm_names.names_info("family_details")
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data = family_details(conn, cursor, file_number)
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)
     print("Patient and family medical history")
-    col_list = colname.names_info("med_history") + colname.names_info("cancer_history") + colname.names_info(
+    col_list = pccm_names.names_info("med_history") + pccm_names.names_info("cancer_history") + pccm_names.names_info(
         "family_cancer")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data_med = med_history(conn, cursor, file_number)
         data_can = cancer_history(conn, cursor, file_number)
         data_fam = family_cancer(conn, cursor, file_number)
         data = data_med + data_can + data_fam
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)
     print("Patient Symptoms")
-    col_list = colname.names_info("det_by") + colname.names_info("breast_symptoms")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    col_list = pccm_names.names_info("det_by") + pccm_names.names_info("breast_symptoms")
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data_det = det_by(file_number)
         data_symp = breast_symptoms(file_number)
         data = data_det + data_symp
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)
     print_info(cursor, file_number)

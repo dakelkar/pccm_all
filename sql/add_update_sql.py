@@ -114,6 +114,30 @@ def check_file(conn, cursor, table, file_number):
 
 def review_df(df):
    import modules.ask_y_n_statement as ask
-   print (df)
+   print(df.to_string())
    check = ask.ask_y_n("Is data entered correct?")
    return check
+
+def table_check(cursor, table_name):
+    x = cursor.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + table_name + "'")
+    [table_exists] = cursor.fetchall()
+    test = list(table_exists)[0]
+    return test
+
+def view_multiple(conn, table, col_list, file_number):
+    import pandas as pd
+    from modules.ask_y_n_statement import ask_option
+    sql = ('SELECT '+ ", ".join(col_list) +' FROM '+ table + " WHERE File_number = '" +file_number+"'")
+    df = pd.read_sql(sql, conn)
+    df = df.set_index(col_list[0])
+    for index in col_list[1:]:
+        x = 1
+        while x == 1:
+            print(df[index])
+            x = input("Press enter to proceed")
+    enter = ask_option("Do you want to re-enter or add data", ["Re-enter data", "Add data"])
+    return enter
+
+def delete_multiple (cursor, table, file_number):
+    sql = "DELETE FROM " + table + " WHERE File_number = '" + file_number + "'"
+    cursor.execute(sql)

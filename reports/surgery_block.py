@@ -1,11 +1,13 @@
+from tables.radio_tables import lesion_location
+from modules.ask_y_n_statement import ask_option, ask_y_n
+import sql.add_update_sql as add_update_sql
+import modules.pccm_names as pccm_names
+
+
 def file_row(cursor, file_number):
     cursor.execute("INSERT INTO Surgery_Block_Report_Data(File_number) VALUES ('" + file_number + "')")
 
 def surgery_block_information_1(file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_option, ask_y_n
-    import modules.pccm_names as pccm_names
-    from tables.radio_tables import lesion_location
     module_name = "surgery_block_information_1"
     check = False
     while not check:
@@ -53,13 +55,10 @@ def surgery_block_information_1(file_number):
                      surg_no_block, surg_block_source, surg_tumour_block, surg_node_block, surg_normal_block,
                      surg_red_block, surg_date, surg_name, surg_hosp_id, lesion_side_data, nact, surg_type]
         columns_list = pccm_names.names_surgery(module_name)
-        check = review_input(file_number, columns_list, data_list)
+        check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 def surgery_block_information_2 (file_number):
-    from modules.ask_y_n_statement import ask_option, ask_y_n
-    from sql.add_update_sql import review_input
-    import modules.pccm_names as pccm_names
     module_name = "surgery_block_information_2"
     check = False
     while not check:
@@ -82,13 +81,10 @@ def surgery_block_information_2 (file_number):
         data_list = [tumour_size, tumour_grade, surg_diag, dcis_percent, dcis_invasion, per_inv, necrosis,
                      lymph_invasion, margin, report]
         columns_list = pccm_names.names_surgery(module_name)
-        check = review_input(file_number, columns_list, data_list)
+        check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 def surgery_block_information_3 (file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    from sql.add_update_sql import review_input
-    import modules.pccm_names as pccm_names
     module_name = "surgery_block_information_3"
     check = False
     while not check:
@@ -104,7 +100,7 @@ def surgery_block_information_3 (file_number):
         data_list = [sentinel, sent_number_rem, sent_number_pos, ax, ax_number_rem,
                      ax_number_pos, ax_number, ap, ap_number_rem, ap_number_pos, per_spread, supra_inv]
         columns_list = pccm_names.names_surgery(module_name)
-        check = review_input(file_number, columns_list, data_list)
+        check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 
@@ -121,9 +117,6 @@ def node_details (node_name):
     return data
 
 def path_stage(file_number):
-    from modules.ask_y_n_statement import ask_option, ask_y_n
-    from sql.add_update_sql import review_input
-    import modules.pccm_names as pccm_names
     module_name = "path_stage"
     check = False
     while not check:
@@ -187,13 +180,10 @@ def path_stage(file_number):
             clinical_stage = input("Please enter correct clinical stage: ")
         data_list = [pT, pN, M, path_stage, clinical_stage]
         columns_list = pccm_names.names_surgery(module_name)
-        check = review_input(file_number, columns_list, data_list)
+        check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 def add_data(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    import sql.add_update_sql as add_update_sql
-    import modules.pccm_names as pccm_names
     table = "Surgery_Block_Report_Data"
     file_row(cursor, file_number)
     enter = ask_y_n("Enter Surgery Block information?")
@@ -213,3 +203,29 @@ def add_data(conn, cursor, file_number):
         data = path_stage(file_number)
         add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_surgery("path_stage"), file_number, data)
 
+def edit_data(conn, cursor, file_number):
+    table = "Surgery_Block_Report_Data"
+    print("Surgery Block information")
+    col_list = pccm_names.names_surgery("surgery_block_information_1")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = surgery_block_information_1(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print ("Surgery Block information (Tumour Details)")
+    col_list = pccm_names.names_surgery("surgery_block_information_2")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = surgery_block_information_2(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Surgery Block information (Node Details)")
+    col_list = pccm_names.names_surgery("surgery_block_information_3")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = surgery_block_information_3(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+    print("Pathological Stage")
+    col_list = pccm_names.names_surgery("path_stage")
+    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = path_stage(file_number)
+        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)

@@ -1,8 +1,8 @@
-def physical_activity_table(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    from sql.add_update_sql import insert
-    import modules.pccm_names as pccm_names
+import modules.pccm_names as pccm_names
+from modules.ask_y_n_statement import get_rb_lb, ask_y_n, ask_option, join_lists
+from sql.add_update_sql import update_multiple, insert
 
+def physical_activity_table(conn, cursor, file_number):
     table_act = "Physical_Activity"
     columns = ", ".join(pccm_names.names_info("phys_act_table"))
     add_act = True
@@ -20,9 +20,6 @@ def physical_activity_table(conn, cursor, file_number):
     return (type_phys, freq_phys)
 
 def cancer_table(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    from sql.add_update_sql import insert, update_multiple
-
     table_cancer = "Previous_Cancer_History"
     type_of_cancer_list = []
     year_diagnosis_list = []
@@ -77,10 +74,6 @@ def cancer_table(conn, cursor, file_number):
 
 
 def nut_supp_table(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    from sql.add_update_sql import insert
-    import modules.pccm_names as pccm_names
-
     type_nut_list, quant_nut_list, duration_nut_list = [], [], []
     add_supp = True
     table_nut = "Nutritional_Supplements"
@@ -101,9 +94,6 @@ def nut_supp_table(conn, cursor, file_number):
     return (type_nut, quant_nut, duration_nut)
 
 def med_history_table(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    from sql.add_update_sql import insert
-
     add_history = True
     diagnosis_date_list, treatment_list, condition_list = [], [], []
     while add_history:
@@ -124,9 +114,6 @@ def med_history_table(conn, cursor, file_number):
     return (condition_hist, diagnosis_date_hist, treatment_hist)
 
 def family_cancer_table(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n, ask_option
-    from sql.add_update_sql import insert
-
     add_family = True
     type_cancer_list, relation_degree_list, type_relation_list, age_detect_list = [], [], [], []
     all_data = []
@@ -151,9 +138,6 @@ def family_cancer_table(conn, cursor, file_number):
 
 
 def other_symp(conn, cursor, file_number, table):
-    from modules.ask_y_n_statement import get_rb_lb, ask_y_n
-    from sql.add_update_sql import update_multiple
-
     add_symp = True
     all_data = []
     while add_symp:
@@ -196,8 +180,6 @@ def other_symp(conn, cursor, file_number, table):
     return (new_data)
 
 def feed_duration (conn, cursor, file_number, children_number):
-    from modules.ask_y_n_statement import ask_option, join_lists
-    from sql.add_update_sql import insert
     table = "Breast_Feeding"
     child_list, feeding_duration_list, feeding_details_list = [], [], []
     child_number = int(children_number)

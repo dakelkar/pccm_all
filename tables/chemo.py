@@ -26,7 +26,7 @@ def tox_table (file_number, cyc_name, week, drug_cyc):
     import modules.pccm_names as names
     from sql.add_update_sql import review_df as review
     tox_all= pd.DataFrame(columns=names.names_nact("Tox_table"))
-    tox_index = "0"
+    tox_index = 0
     drugs = "/".join(drug_cyc)
     check_tox = False
     while not check_tox:
@@ -40,7 +40,7 @@ def tox_table (file_number, cyc_name, week, drug_cyc):
                     tox = index
                     check = False
                     while not check:
-                        treatment = input("Treatment given for "+ tox_grade +" "+index)
+                        treatment = input("Treatment given for "+ tox_grade +" "+index+" (include all details): ")
                         resp_treatment = ask_y_n_statement.ask_option(("Response to treatment given for " + tox_grade + " "
                                         + index), ["Partial", "Complete", "No Effect", "Other"])
                         data = [file_number, week, cyc_name, drugs, tox, tox_grade, treatment, resp_treatment]

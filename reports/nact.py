@@ -1,164 +1,168 @@
+import modules.ask_y_n_statement as ask_y_n_statement
+import tables.chemo as chemo
+import pandas as pd
+from sql.add_update_sql import review_df, review_input, update_multiple, review_data
+from modules.pccm_names import names_nact as names
+from tables.chemo_tables import drug_add
+
+def file_row(cursor, file_number):
+    cursor.execute("INSERT INTO Neo_Adjuvant_Therapy(File_number) VALUES ('" + file_number + "')")
+
 def nact_regime(file_number):
-    import modules.ask_y_n_statement as ask_y_n_statement
-    import sql.add_update_sql as add_update_sql
-    import modules.pccm_names as pccm_names
-    import tables.chemo as chemo
-    import pandas as pd
-    table = "NACT_Drug_Regimen"
-    cyc_drug = []
+    col_drug = names("NACT_Drug_per_week")
+    drug_per_week = pd.DataFrame(columns=col_drug)
+    col_cycle_all = names("NACT_Drug_Cycle")
+    data_per_cycle = pd.DataFrame(columns=col_cycle_all)
+    col_drug_response = names("NACT_Toxicity")
+    tox_response_all = pd.DataFrame(columns=col_drug_response)
     check = False
-    col_list_tox = "File_number", "Week","Cycle_name", "Toxicity_type", "Toxicity_grade", "Treatment", "Response_Treatment"
-    tox_all = pd.DataFrame(columns=col_list_tox)
-    col_drug = "File_number","Cycle_number", "Week", "Patient_wt_kg", "Drugs", "Dose", "Dose_unit", "Cycle_frequency"
-    drug_per_cyc = pd.DataFrame(columns=col_drug)
-    col_response = "File_number","Cycle_number", "Response_check", "Response_nact"
-    col_drug_response = "File_number", "Cycle_number", "Week", "Drug", "Toxicity", "Toxicity_Grade", "Toxicity_Response", "Toxicity_Treatment"
-    data_tox_response_all = pd.DataFrame(columns=col_drug_response)
-    response_all = pd.DataFrame(columns=col_response)
-    col_data_cycle_weekly = ["Week_number", "Patient Weight", "Drug", "Toxicity_type", "Toxicity_grade", "Treatment", "Response_Treatment"]
-    data_cycle_weekly = pd.DataFrame(columns=col_data_cycle_weekly)
     while not check:
         nact = ask_y_n_statement.ask_y_n("Has neo adjuvant therapy been done for the patient?")
         if nact:
-            date_nact = input ("Date of starting neo-adjuvant therapy: ")
-            plan_nact = input ("Type of NACT plan: ")
-            combo_nact, dose_nact = [list([]) for _ in range(2)]
-            cycle_drug_response = []
-            cycle_number = 0
-            week_number = 0
-            drug_cycle = True
-            tox_response_list = []
-            data_cycle_weekly = []
-            while drug_cycle:
-                cycle_number = cycle_number+1
-                cyc_name = "Cycle " + str(cycle_number)
-                print(cyc_name)
-                week_add = True
-                while week_add:
-                    week_number = week_number +1
-                    week = "Week "+str(week_number)
-                    print (week)
-                    week_check = ask_y_n_statement.ask_y_n("Is week correct?")
-                    if not week_check:
-                        week = "Week"+input("Week number? ")
-                    patient_wt = input("Patient weight (in kg): ")
-                    drug_add = True
-                    drug_cyc, dose_cyc, dose_unit_cyc, cyc_freq_drug = [list([])for _ in range(4)]
-                    while drug_add:
-                        drug = ask_y_n_statement.ask_option("Drug used for NACT "+ cyc_name, chemo.drug_list())
-                        dose = input("Dose of "+drug+ " in "+cyc_name+": ")
-                        dose_unit = input("Dose unit: ")
-                        cyc_freq= input("Cycle Frequency: ")
-                        drug_cyc.append(drug)
-                        dose_unit_cyc.append(dose_unit)
-                        cyc_freq_drug.append(cyc_freq)
-                        data_cycle = [file_number, cycle_number, week, float(patient_wt), drug, float(dose), dose_unit, cyc_freq]
-                        drug_this_cyc = pd.DataFrame([data_cycle], columns=col_drug)
-                        drug_per_cyc = drug_per_cyc.append(drug_this_cyc)
-                        drug_add = ask_y_n_statement.ask_y_n("Add another drug")
-                    tox_response, tox_data = tox_table(file_number, cyc_name, week, drug_cyc)
-                    tox_all = tox_all.append(tox_data)
-                    tox_response_list.append(tox_response)
-                    #tox_data.to_sql(table, conn, index=False, if_exists="append")
-                    tox_week =[]
-                    for index in range(len(tox_response)):
-                        week_data = week + ": " + tox_response[index]
-                        tox_week.append(week_data)
-                    week_drug = week + ": " + "/".join(drug_cyc)
-                    week_weight = week + ": " + "/".join(patient_wt)
-                    data = [week_number, week_weight, week_drug]
-                    week_data = pd.DataFrame([data], columns= ["Week_number", "Patient Weight","Drug"])
-                    week_tox = pd.DataFrame([tox_week], columns=["Toxicity_type", "Toxicity_grade", "Treatment", "Response_Treatment"])
-                    data_week = pd.concat([week_data.reset_index(drop=True), week_tox], axis=1)
-                    data_cycle_weekly.append(data_week)
-                    tox_grade, tox, tox_treatment, tox_response = tox_response
-                    data_tox_response = [file_number, cycle_number, week, "/".join(drug_cyc), tox, tox_grade, tox_treatment, tox_response]
-                    data_tox_response_df = pd.DataFrame([data_tox_response], columns = col_drug_response)
-                    data_tox_response_all = data_tox_response_all.append(data_tox_response_df)
-                    week_add = ask_y_n_statement.ask_y_n("Add another week to "+cyc_name+" ?")
-                data_cycle = ask_y_n_statement.join_lists(data_cycle, "|")
-                response_check = ask_y_n_statement.ask_option("Method used to check response to NACT in this cycle", ["Response not checked", "Other"])
-                if response_check != "Response not checked":
-                    response_nact = ask_y_n_statement.ask_option("Response to NACT treatment",
-                                                                 ["Partial", "Complete", "Progressing", "Static", "Other"])
-                    data = [file_number, cycle_number, response_check, response_nact]
-                    response_df = pd.DataFrame([data], columns = col_response)
-                    response_all = response_all.append(response_df)
-                    data_cycle = data_cycle, [response_check], [response_nact]
+            date_nact = input("Date of starting neo-adjuvant therapy: ")
+            plan_nact = input("Type of NACT plan: ")
+            cycle_number, week_number = (1,)*2
+            week_end, cycle_index, week_index,  = (0,)*3
+            add_cycle = True
+            while add_cycle:
+                check_cycle = False
+                while not check_cycle:
+                    cyc_name = "Cycle " + str(cycle_number)
+                    print(cyc_name)
+                    week_add = True
+                    while week_add:
+                        check_drug_tox = False
+                        while not check_drug_tox:
+                            week = "Week " + str(week_number)
+                            print(week)
+                            week_check = ask_y_n_statement.ask_y_n("Is week correct?")
+                            if not week_check:
+                                week_number = input("Week number? ")
+                                week_number = int(week_number)
+                                week = "Week " + str(week_number)
+                            patient_wt = input("Patient weight (in kg): ")
+                            drug_per_week, drug_cyc = drug_add(file_number, cyc_name, cycle_number, week, patient_wt, drug_per_week)
+                            tox_response = chemo.tox_table(file_number, cyc_name, week, drug_cyc)
+                            tox_grade, tox, tox_treatment, tox_response = tox_response
+                            change_tox = ask_y_n_statement.ask_option("Changes to NACT treatment due to toxicity", ["No change", "NACT regime changed", "NACT stopped"])
+                            if change_tox =="NACT regime changed":
+                                change = input("Please describe changes to NACT regime: ")
+                                change_tox = change_tox+": "+change
+                            data_tox_response = [file_number, cycle_number, week, "/".join(drug_cyc), tox, tox_grade, tox_treatment,
+                                                 tox_response, change_tox]
+                            tox_response_all.loc[week_index] = data_tox_response
+                            check_drug_tox = review_df(tox_response_all.loc[week_index])
+                            week_number = week_number + 1
+                            week_index = week_index + 1
+                        week_add = ask_y_n_statement.ask_y_n("Add another week to " + cyc_name + " ?")
+                    patient_wt_end_cycle = patient_wt
+                    drug_cycle = drug_per_week.query('Cycle_number==' + str(cycle_number))
+                    tox_cycle = tox_response_all.query('Cycle_number==' + str(cycle_number))
+                    data_cycle, drug_dose = chemo.get_cycle_data(drug_cycle, tox_cycle)
+                    drug_week, tox_week, tox_grade_week, tox_treatment_week, tox_response_week, change_tox_week \
+                        = data_cycle
+                    response_check = ask_y_n_statement.ask_option("Method used to check response to NACT in this cycle",
+                                                                  ["Response not checked", "Other"])
+                    if response_check != "Response not checked":
+                        response_nact = ask_y_n_statement.ask_option("Tumour response to NACT treatment",
+                                                                     ["Partial", "Complete", "Progressing", "Static", "Other"])
+                        response_size = input("Tumour Size as assessed by " + response_check+" (cm): ")
+                        date = input("Date of tumour size assessment: ")
+                    else:
+                        response_nact, response_size, date  = ("NA", )*3
+                    week_end = week_number - week_end -1
+                    weeks = str(week_end)+" Weeks"
+                    data_cycle_all = [file_number, cyc_name, weeks, patient_wt_end_cycle, drug_week, tox_week, tox_grade_week,
+                                      tox_treatment_week, tox_response_week, change_tox_week, drug_dose, response_check,
+                                      response_nact, response_size, date]
+                    data_per_cycle.loc[cycle_index] = data_cycle_all
+                    check_cycle = review_df(data_per_cycle.loc[cycle_index])
+                    cycle_number = cycle_number + 1
+                    cycle_index = cycle_index + 1
+                add_cycle = ask_y_n_statement.ask_y_n("Add another cycle? ")
+            trast_nact = ask_y_n_statement.ask_y_n("Trastuzumab used?")
+            if trast_nact:
+                trast_regime = ask_y_n_statement.ask_option("Trastuzumab use was", ["Sequential", "Concurrent"])
+                trast_nact = "Trastuzumab used"
+                trast_courses = input("Number of courses of trastuzumab/herceptin taken: ")
+            else:
+                trast_nact = "Trastuzumab not used"
+                trast_regime, trast_courses = ("NA",)*2
+
+            date_complete = input("Date of completion of NACT")
+            complete_nact = ask_y_n_statement.ask_y_n("Was NACT completed as per schedule?")
+            if complete_nact:
+                reason_incomplete = "NACT completed as per schedule"
+            else:
+                reason_incomplete = ask_y_n_statement.ask_option("Reason for discontinuation", ["Toxicity",
+                "Reluctance of patient", "Progression on chemotherapy", "Advised by treating doctor",
+                "Death due to toxicity", "Death due to progressive disease", "Preferred treatment at another centre",
+                "Death due to unrelated cause", "Patient was unable to afford treatment"])
+                reason_incomplete = "NACT incomplete: "+reason_incomplete
+            menopause = ask_y_n_statement.ask_option("Menopausal Status", ["Pre-menopausal", "Peri-menopausal",
+                                                                           "Post-Menopausal", "Other"])
+            if menopause == "Pre-menopausal":
+                ovary_status = ask_y_n_statement.ask_option("Status of ovarian function after NACT",
+                               ["Menses ongoing", "Amenorrhoea on NACT", "Amenorrhoea post NACT"])
+            else:
+                ovary_status = "Not Pre-Menopausal"
+            number_cycles = data_per_cycle.shape[0]
+            number_weeks = week_number -1
+            drug_dose = []
+            drug_dose_unit_df = drug_per_week.loc[:,("Drugs", "Dose_unit")].drop_duplicates()
+            for index in range(1, 2):
+                dose_ = drug_per_week.loc[:, ("Drugs", "Dose")]
+                dose_sum_cycle = dose_.groupby("Drugs").sum()
+            for index in range(0, len(list(dose_sum_cycle.index))):
+                dose_unit_ = list(drug_dose_unit_df.loc[:, "Dose_unit"])[index]
+                data = list(dose_sum_cycle.index)[index] + ": " + str(
+                    list(dose_sum_cycle.loc[:, "Dose"])[index]) + " " + dose_unit_
+                drug_dose.append(data)
+            drug_admin = "; ".join(drug_dose)
+            hormone_therapy = ask_y_n_statement.ask_y_n("Was hormone therapy given?")
+            if hormone_therapy:
+                hormone_therapy = "Hormone therapy given"
+                therapy_type = ask_y_n_statement.ask_option("Hormone therapy type", ["Sequential", "Concurrent"])
+                therapy_duration = input("What was the duration of therapy? ")
+                therapy_side = ask_y_n_statement.ask_y_n("Were any side effects observed ?")
+                if therapy_side:
+                    therapy_side = input("Please give details of side effects observed: ")
                 else:
-                    response_nact = "NA"
-                    data = [file_number, cycle_number, response_check, response_nact]
-                    response_df = pd.DataFrame([data], columns=col_response)
-                    response_all = response_all.append(response_df)
-                drug_cycle = ask_y_n_statement.ask_y_n ("Add another cycle? ")
-        check = True
-                # extract drug_cycle from unique drug column of drug_per_cyc and add; add cycle size end wek of cycle 1; add dose up per cycle.
-                #table of cycle/weeks per cycle/drugs per cycle/patient wt/???
-                #add
-                # drug_per_cyc.to_sql(table = "??", conn, index=False, if_exists="append")
+                    therapy_side = "NA"
+            else:
+                hormone_therapy = "No hormone therapy given"
+                therapy_type, therapy_duration, therapy_side = ("NA", )*3
+            nact = "Neo Adjuvant therapy given"
+        else:
+            nact = "No NeoAdjuvant Therapy given"
+            date_nact, plan_nact, drug_admin, number_weeks, number_cycles, response_check, response_nact, response_size, \
+            date, ovary_status, reason_incomplete, date_complete, trast_nact, trast_regime, trast_courses, \
+            hormone_therapy, therapy_type, therapy_duration, therapy_side = ("NA",)*19
+        data_list = [nact, date_nact, plan_nact, drug_admin,str(number_weeks), str(number_cycles),
+                     response_check, response_nact, response_size, date, ovary_status, reason_incomplete, date_complete,
+                     trast_nact, trast_regime, trast_courses, hormone_therapy, therapy_type, therapy_duration, therapy_side]
+        col_list = names("Neo_Adjuvant_Therapy")
+        check = review_input(file_number, col_list, data_list)
+    return data_list,  tox_response_all, drug_per_week, data_per_cycle
 
-    return response_all, tox_all, drug_per_cyc, data_tox_response_all
-def add_data(conn, tox_all):
-    import pandas
-    for_tox_table = tox_all[
-        ["File_number", "Week", "Cycle_name", "Toxicity_type", "Toxicity_grade", "Treatment", "Response_Treatment"]]
-    table = "NACT_Toxicity"
-    for_tox_table.to_sql(table, conn, index=False, if_exists="append")
-                #cycle_data_lists = [drug_cyc, dose_cyc, dose_unit_cyc, cyc_freq_drug]
-                #cycle_data_lists = tuple(ask_y_n_statement.join_lists(cycle_data_lists, "; "))
-                #drug, dose, dose_unit, cyc_freq = cycle_data_lists
-                #tox_grade, tox, tox_treatment, tox_response = tox_table(conn, cursor, file_number, cyc_name)
-                #response_check = ask_y_n_statement.ask_option("Method used to check response to NACT in this cycle", ["Response not checked", "Other"])
-                #response_nact = ask_y_n_statement.ask_option("Response to NACT treatment",
-                #                                             ["Partial", "Complete", "Progressing", "Static", "Other"])
-                #data_response = [response_check, response_nact]
-                #response_cyc = pd.DataFrame([data_response], columns=col_drug[6:8])
-                #drug_per_cyc = drug_per_cyc.append(response_cyc)
-                #data_list = [file_number, cyc_name, week, patient_wt, drug, dose, dose_unit, cyc_freq, tox, tox_grade, tox_treatment, tox_response, response_check, response_nact]
-                #col_list = pccm_names.names_nact(table)
-                #check = add_update_sql.review_input(file_number, col_list, data_list)
-                #add_update_sql.insert(conn, cursor, table, ", ".join(col_list), tuple(data_list))
-                #cycle_number = cycle_number + 1
-                #drug_cycle = ask_y_n_statement.ask_y_n("Add another cycle?")
-                #trast_nact = ask_y_n_statement.ask_y_n("Trastuzumab used")
-                #if trast_nact:
-                #    trast_regime = ask_y_n_statement.ask_option("Trastuzumab use was", ["Sequential", "Concurrent"])
-                #    trast_nact = "Trastuzumab used: "+trast_regime
-                #else:
-                #    trast_nact = "Trastuzumab not used"
-                #course_nact = input("Number of cycles of NACT given: ")
+def add_data(conn, cursor, file_number):
+    table = "Neo_Adjuvant_Therapy"
+    file_row(cursor, file_number)
+    data = nact_regime(file_number)
+    data_sql, tox_response_all, drug_per_week, data_per_cycle = data
+    update_multiple(conn, cursor, table, names(table), file_number, data_sql)
+    tox_response_all.to_sql("NACT_Toxicity", conn, index=False, if_exists="append")
+    drug_per_week.to_sql("NACT_Drug_per_week", conn, index=False, if_exists="append")
+    data_per_cycle.to_sql("NACT_Drug_Cycle", conn, index=False, if_exists="append")
 
 
-def tox_table (file_number, cyc_name, week, drug_cyc):
-    import modules.ask_y_n_statement as ask_y_n_statement
-    import tables.chemo as chemo
-    import pandas as pd
-    col_list =  ["File_number", "Week","Cycle_name","Drug_Administered", "Toxicity_type", "Toxicity_grade", "Treatment", "Response_Treatment"]
-    tox_data = pd.DataFrame(columns = col_list)
-    drugs = "/".join(drug_cyc)
-    tox = ask_y_n_statement.ask_y_n("Were there any toxic effects in  " + week + " of "+cyc_name)
-    tox_grade_list, tox_list, tox_treatment, resp_treatment_list = [list([]) for _ in range(4)]
-    if tox:
-        for index in chemo.toxicity():
-            tox_grade = ask_y_n_statement.ask_option(("the grade of "+index+" in "+cyc_name +"? "),
-                        ["Mild", "Moderate", "Severe", "Not Present", "Other"])
-            if tox_grade not in {"Not Present"}:
-                treatment = input("Treatment given for "+ tox_grade +" "+index)
-                resp_treatment = ask_y_n_statement.ask_option(("Response to treatment given for " + tox_grade + " "
-                                + index), ["Partial", "Complete", "Progressing", "Static", "Other"])
-                tox_grade_list.append(tox_grade)
-                tox_list.append(index)
-                tox_treatment.append(treatment)
-                resp_treatment_list.append(resp_treatment)
-                data = [file_number, week, cyc_name, drugs, index, tox_grade, treatment, resp_treatment]
-                tox_this = pd.DataFrame([data], columns=col_list)
-                tox_data = tox_data.append(tox_this)
-    else:
-        tox_grade, tox, treatment, resp_treatment = ("NA", )*4
-        tox_grade_list, tox_list, tox_treatment, resp_treatment_list = [["NA"]]*4
-        data = [file_number, week, cyc_name, drugs, "No toxicity", tox_grade, treatment, resp_treatment]
-        tox_this = pd.DataFrame([data], columns=col_list)
-        tox_data = tox_data.append(tox_this)
-    all_data = [tox_grade_list, tox_list, tox_treatment, resp_treatment_list]
-    response = ask_y_n_statement.join_lists(all_data, "; ")
-    return response, tox_data
+def edit_data(conn, cursor, file_number):
+    table = "Neo_Adjuvant_Therapy"
+    enter = review_data(conn, cursor, table, file_number, names(table))
+    if enter:
+        data = nact_regime(file_number)
+        data_sql, tox_response_all, drug_per_week, data_per_cycle = data
+        update_multiple(conn, cursor, table, names(table), file_number, data_sql)
+        tox_response_all.to_sql("NACT_Toxicity", conn, index=False, if_exists="append")
+        drug_per_week.to_sql("NACT_Drug_per_week", conn, index=False, if_exists="append")
+        data_per_cycle.to_sql("NACT_Drug_Cycle", conn, index=False, if_exists="append")

@@ -254,3 +254,57 @@ def lesion_location(lesion, category = ["Location on Right Breast", "Location on
         lesion_data.append(lesion_lb_data)
     lesion_data = "|".join(lesion_data)
     return lesion_data
+
+def mammo_arch ():
+    mammo_arch = ask_y_n_statement.ask_y_n("Is Architectural distortion present")
+    if mammo_arch:
+        arch_loc = ask_y_n_statement.ask_option("Location of Distortion", ["Right Breast", "Left Breast", "Both"])
+        arch_quad =  lesion_location(arch_loc)
+        arch_depth = ask_y_n_statement.ask_option("Depth of Architectural Distortion",
+                                                  ["Anterior", "Middle", "Posterior", "Other"])
+        arch_dist = ask_y_n_statement.ask_option("Distance from nipple of Architectural Distortion",
+                                                 ["<0.5 cm", ">0.5 cm", "Other"])
+        pect_check = ask_y_n_statement.ask_y_n("Is distance from Pectoralis Major described for Architectural Distortion")
+        if pect_check:
+            arch_pect = input("Distance from Pectoralis Major (cm): ")
+        else:
+            arch_pect = "NA"
+    else:
+        arch_loc = "Not Present"
+        arch_quad, arch_depth, arch_dist, arch_pect = ("NA",) * 4
+    data_list = [arch_loc, arch_quad, arch_depth, arch_dist, arch_pect]
+    return data_list
+
+def mammo_asym():
+    asym = ask_y_n_statement.ask_y_n("Is asymmetry present")
+    if asym:
+        asym_loc = ask_y_n_statement.ask_option("Location of Asymmetry", ["Right Breast", "Left Breast", "Both"])
+        asym_quad = radio_tables.lesion_location(asym_loc)
+        asym_depth = ask_y_n_statement.ask_option("Depth of Asymmetry", ["Anterior", "Middle", "Posterior", "Other"])
+        asym_dist = ask_y_n_statement.ask_option("Distance from nipple of Asymmetry", ["<0.5 cm", ">0.5 cm", "Other"])
+        pect_check = ask_y_n_statement.ask_y_n("Is distance from Pectoralis Major described for Asymmetry")
+        if pect_check:
+            asym_pect = input("Distance from Pectoralis Major (cm): ")
+        else:
+            asym_pect = "NA"
+        mammo_asymm = radio_tables.lesion_location(asym_loc, ["Type of Asymmetry in Right Breast",
+                                                              "Type of Asymmetry in Left Breast"],
+                                                   ["Asymmetry", "Global asymmetry", "Focal asymmetry",
+                                                    "Developing asymmetry", "Other"])
+    else:
+        asym_quad, asym_depth, asym_dist, asym_pect, mammo_asymm = ("NA",) * 5
+        asym_loc = "Not Present"
+    data_list = [asym_loc, asym_quad, asym_depth, asym_dist, asym_pect, mammo_asymm ]
+    return data_list
+
+def mammo_asso_feat():
+    asso_feat = ["Skin Retraction", "Nipple Retraction", "Skin Thickening", "Trabecular Thickening",
+                 "Axillary adenopathy", "Architectural Distortion", "Calcifications"]
+    asso_feat_data = []
+    for index in (asso_feat):
+        print("Associated feature: " + index)
+        print("Detailed description can be added by choosing 'Other'")
+        var = ask_y_n_statement.ask_option(index, ["Present", "Absent", "Other"])
+        asso_feat_data.append(var)
+    return asso_feat_data
+

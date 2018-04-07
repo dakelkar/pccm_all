@@ -1,16 +1,17 @@
+from modules.ask_y_n_statement import ask_option, ask_y_n
+from sql.add_update_sql import review_input, update_multiple, review_data
+import modules.pccm_names as pccm_names
+
 def file_row(cursor, file_number):
     cursor.execute("INSERT INTO Biopsy_Report_Data(File_number) VALUES ('" + file_number + "')")
 
 def biopsy_report_info(file_number):
-    from sql.add_update_sql import review_input
-    import modules.ask_y_n_statement as ask_y_n_statement
-    import modules.pccm_names as pccm_names
     module_name = "biopsy_report_info"
     check = False
     while not check:
-        con_stat = ask_y_n_statement.ask_y_n("Has consent been taken from patient?", "Consent Taken", "No Consent")
+        con_stat = ask_y_n("Has consent been taken from patient?", "Consent Taken", "No Consent")
         if con_stat == "Consent Taken":
-            con_form = ask_y_n_statement.ask_y_n("Is consent form with signature present in file ?",
+            con_form = ask_y_n("Is consent form with signature present in file ?",
                                "Consent form with signature present in folder",
                                "Completed consent form not present in folder")
         else:
@@ -22,26 +23,23 @@ def biopsy_report_info(file_number):
             block_cab = input ("Cabinet No: " )
             block_drawer = input ("Drawer Number: ")
             block_col = input ("Column Number: ")
-            block_pos = ask_y_n_statement.ask_option("Is Block in", ["Front", "Back"])
+            block_pos = ask_option("Is Block in", ["Front", "Back"])
             block_location = block_cab+"-"+block_drawer+"-"+block_col+"-"+block_pos
             print ("Block location is "+ block_location)
-            location = ask_y_n_statement.ask_y_n("Is this correct?")
+            location = ask_y_n("Is this correct?")
         block_current = input ("What is the current location of block? ")
-        biopsy_pccm = ask_y_n_statement.ask_y_n("Is the biopsy report in PCCM custody? ", "In PCCM Custody", "Not in PCCM custody")
+        biopsy_pccm = ask_y_n("Is the biopsy report in PCCM custody? ", "In PCCM Custody", "Not in PCCM custody")
         block_id = input("Biopsy Block ID: ")
         block_number = input("Number of blocks: ")
         block_date = input("Date of Biopsy: ")
         lab_id = input("Biopsy Lab ID: ")
-        biopsy_type = ask_y_n_statement.ask_option("Biopsy Type", ["Direct", "USG Guided", "VAB", "True-cut", "Steriotactic", "Other"])
+        biopsy_type = ask_option("Biopsy Type", ["Direct", "USG Guided", "VAB", "True-cut", "Steriotactic", "Other"])
         data_list = [con_stat, con_form, block_sr, block_location, block_current, biopsy_pccm, block_id,  block_number, block_date, lab_id, biopsy_type]
         columns_list = pccm_names.names_biopsy(module_name)
         check = review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 def tumour_biopsy_data(file_number):
-    from sql.add_update_sql import review_input
-    from modules.ask_y_n_statement import ask_option,ask_y_n
-    import modules.pccm_names as pccm_names
     module_name = "tumour_biopsy_data"
     check = False
     while not check:
@@ -79,9 +77,6 @@ def tumour_biopsy_data(file_number):
     return (tuple(data_list))
 
 def lymphnode_biopsy(file_number):
-    from modules.ask_y_n_statement import ask_option
-    from sql.add_update_sql import review_input
-    import modules.pccm_names as pccm_names
     module_name = "lymphnode_biopsy"
     check = False
     while not check:
@@ -97,47 +92,41 @@ def lymphnode_biopsy(file_number):
     return (tuple(data_list))
 
 def add_data(conn, cursor, file_number):
-    from modules.ask_y_n_statement import ask_y_n
-    import sql.add_update_sql as add_update_sql
-    import modules.pccm_names as pccm_names
-
     file_row(cursor, file_number)
     table = "Biopsy_Report_Data"
     enter = ask_y_n("Enter Biopsy Block Report information?")
     if enter:
         data = biopsy_report_info(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_biopsy("biopsy_report_info"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_biopsy("biopsy_report_info"), file_number,
                                        data)
     enter = ask_y_n("Enter Tumour Biopsy data?")
     if enter:
         data = tumour_biopsy_data(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_biopsy("tumour_biopsy_data"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_biopsy("tumour_biopsy_data"), file_number,
                                        data)
     enter = ask_y_n("Enter Lymphnode Biopsy data?")
     if enter:
         data = lymphnode_biopsy(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, pccm_names.names_biopsy("lymphnode_biopsy"), file_number,
+        update_multiple(conn, cursor, table, pccm_names.names_biopsy("lymphnode_biopsy"), file_number,
                                        data)
 
 def edit_data(conn, cursor, file_number):
-    import sql.add_update_sql as add_update_sql
-    import modules.pccm_names as colname
     table = "Biopsy_Report_Data"
     print("Block Report information")
-    col_list = colname.names_biopsy("biopsy_report_info")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    col_list = pccm_names.names_biopsy("biopsy_report_info")
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data = biopsy_report_info(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)
     print("Tumour Biopsy data")
-    col_list = colname.names_biopsy("tumour_biopsy_data")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    col_list = pccm_names.names_biopsy("tumour_biopsy_data")
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data = tumour_biopsy_data(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)
     print("Lymphnode Biopsy data")
-    col_list = colname.names_biopsy("lymphnode_biopsy")
-    enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)
+    col_list = pccm_names.names_biopsy("lymphnode_biopsy")
+    enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
         data = lymphnode_biopsy(file_number)
-        add_update_sql.update_multiple(conn, cursor, table, col_list, file_number, data)
+        update_multiple(conn, cursor, table, col_list, file_number, data)

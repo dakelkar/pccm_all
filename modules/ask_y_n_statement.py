@@ -1,3 +1,5 @@
+import textwrap
+
 def ask_symptom(symp_state):
     symp_y_n = input("Symptom of " + symp_state + "? (y/n) ")
     if str.lower(symp_y_n) == "y":
@@ -27,7 +29,6 @@ def ask_symptom(symp_state):
 
 
 def get_symptom(symp_state):
-    # from ask_y_n_statement import ask_symptom
     all_data = []
     for index in range(0, len(symp_state)):
         var = ask_symptom(symp_state[index])
@@ -45,7 +46,6 @@ def get_rb_lb(all_data, pos):
 
 
 def ask_option(category, options):
-    import textwrap
     option_list = []
     val = []
     for index in range(0, len(options)):

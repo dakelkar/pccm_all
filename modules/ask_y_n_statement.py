@@ -1,51 +1,13 @@
 import textwrap
 
-def ask_symptom(symp_state):
-    symp_y_n = input("Symptom of " + symp_state + "? (y/n) ")
-    if str.lower(symp_y_n) == "y":
-        symp_breast_right = input("Right Breast y/n: ")
-        if str.lower(symp_breast_right) == "y":
-            symp_breast_right = symp_state
-            symp_duration_right = input("Duration of symptoms in right breast: ")
-        else:
-            symp_breast_right = None
-            symp_duration_right = None
-        symp_breast_left = input("Left Breast y/n: ")
-        if str.lower(symp_breast_left) == "y":
-            symp_breast_left = symp_state
-            symp_duration_left = input("Duration of symptoms in left breast: ")
-        else:
-            symp_breast_left = None
-            symp_duration_left = None
-    else:
-        symp_breast_right = None
-        symp_duration_right = None
-        symp_breast_left = None
-        symp_duration_left = None
-    RB = [symp_breast_right, symp_duration_right]
-    LB = [symp_breast_left, symp_duration_left]
-    data = [RB, LB]
-    return data
-
-
-def get_symptom(symp_state):
-    all_data = []
-    for index in range(0, len(symp_state)):
-        var = ask_symptom(symp_state[index])
-        all_data.append(var)
-    return all_data
-
-
-def get_rb_lb(all_data, pos):
-    data_list = []
-    data_index = len(all_data)
-    for index in range(0, data_index):
-        var = all_data[index][pos]
-        data_list.append(var)
-    return (data_list)
-
-
 def ask_option(category, options):
+    option_remove = ["Data not available", "Other"]
+    for remove in option_remove:
+        try:
+            options.remove(remove)
+        except:
+            options
+    options = options + ["Data not in Report", "Requires Follow-up", "Requires Specialist Input", 'Other']
     option_list = []
     val = []
     for index in range(0, len(options)):
@@ -56,10 +18,10 @@ def ask_option(category, options):
     option_flat = " ".join(option_flat)
     check = False
     while not check:
-        print("Enter " + category)
+        print("\n","Enter " + category, "\n")
         wrapper = textwrap.TextWrapper(width=100)
         string = wrapper.fill(text=option_flat)
-        print(string)
+        print(string, "\n")
         answer = input("Enter option number: ")
         check = answer in set(val)
     ans_int = int(answer) - 1
@@ -70,14 +32,13 @@ def ask_option(category, options):
         option = option_
     return option
 
-
 def ask_y_n(question: object, yes_ans: object = True, no_ans: object = False) -> object:
     option_list = ["1. Yes", "2. No"]
     option_flat = " ".join(option_list)
     check = False
     while not check:
-        print(question)
-        print(option_flat)
+        print("\n",question)
+        print("\n", option_flat, "\n")
         answer = input("Enter option number: ")
         check = answer in {"1", "2"}
     if answer == "1":
@@ -86,9 +47,47 @@ def ask_y_n(question: object, yes_ans: object = True, no_ans: object = False) ->
         option = no_ans
     return option
 
+
 def join_lists(all_data, sep):
     data_return = []
     for index in all_data:
         data_joint = sep.join(index)
         data_return.append(data_joint)
     return data_return
+
+def ask_y_n_na(question, yes_ans = "Yes", no_ans = "No",
+               na_ans = "Requires Follow-up"):
+    option_flat = "1. Yes 2. No 3. " + na_ans
+    check = False
+    while not check:
+        print("\n",question)
+        print("\n", option_flat, "\n")
+        answer = input("Enter option number: ")
+        check = answer in {"1", "2", "3"}
+    if answer == "1":
+        option = yes_ans
+    elif answer == "2":
+        option = no_ans
+    else:
+        option = na_ans
+    return option
+
+def ask_option_y_n(question, yes_ans = "Yes", no_ans = "No",
+               ans_3 = "Requires Follow up", ans_4 = "Requires Specialist Input"):
+    option_list = ["1. Yes", "2. No", "3. Requires Follow up", "4. Requires Specialist Input"]
+    option_flat = " ".join(option_list)
+    check = False
+    while not check:
+        print("\n",question)
+        print("\n", option_flat, "\n")
+        answer = input("Enter option number: ")
+        check = answer in {"1", "2", "3", "4"}
+    if answer == "1":
+        option = yes_ans
+    elif answer == "2":
+        option = no_ans
+    elif answer == "3":
+        option = ans_3
+    else:
+        option = ans_4
+    return option

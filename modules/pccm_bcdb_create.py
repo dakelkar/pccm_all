@@ -3,8 +3,11 @@ from sql.add_update_sql import add_columns, table_check
 from datetime import date
 import os
 import modules.pccm_names as pccm_names
-folder = "d:/repos/pccm_all/main/DB"
-db_name = "PCCM_BreastCancerDB_test2" + str(date.today()) + '.db'
+
+
+folder = "d:/repos/pccm_db/main/DB"
+db_name = "PCCM_BreastCancerDB_test_biopsy_" + str(date.today()) + '.db'
+
 path = os.path.join(folder, db_name)
 
 conn = sqlite3.connect(path)
@@ -12,7 +15,7 @@ cursor = conn.cursor()
 file_number = "File_number"
 table = "Patient_Information_History"
 if table_check(cursor, table) == 0:
-    cursor.execute('CREATE TABLE {tn}({nf})' \
+    cursor.execute('CREATE TABLE {tn}({nf})'\
                    .format(tn=table, nf=file_number))
     module_names = ["bio_info", "phys_act", "habits", "nut_supplements", "family_details", "med_history",
                     "cancer_history", "family_cancer", "det_by", "breast_symptoms"]
@@ -23,20 +26,10 @@ if table_check(cursor, table) == 0:
 table = "Biopsy_Report_Data"
 if table_check(cursor, table) == 0:
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=file_number))
-    module_names = ["biopsy_report_info", "tumour_biopsy_data", "lymphnode_biopsy"]
+    module_names = ["biopsy_report_info", "tumour_biopsy_data"]
     for index in module_names:
-        col_name = pccm_names.names_biopsy(index)
+        col_name = pccm_names.names_biopsy_new(index)
         add_columns(cursor, table, col_name)
-
-table = "Clinical_Exam"
-if table_check(cursor, table) == 0:
-    cursor.execute('CREATE TABLE {tn}({nf})' \
-                   .format(tn=table, nf=file_number))
-    module_names = ["clinical_exam_initial", "nipple_cytology", "other_test"]
-    for index in module_names:
-        col_name = pccm_names.name_clinical(index)
-        add_columns(cursor, table, col_name)
-    #print(", ".join(col_name))
 
 table = "Surgery_Block_Report_Data"
 if table_check(cursor, table) == 0:
@@ -49,7 +42,7 @@ if table_check(cursor, table) == 0:
 
 table = "Radiology"
 if table_check(cursor, table) == 0:
-    module_names = ["mammography", "tomosynthesis", "abvs", "sonomammo",
+    module_names = ["mammography", "abvs", "sonomammo",
                     "mri_breast"]
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=file_number))
     for index in module_names:
@@ -58,7 +51,7 @@ if table_check(cursor, table) == 0:
 
 table = "Surgery_Report"
 if table_check(cursor, table) == 0:
-    module_names = ["clip_information", "surgery_information", "post_surgery"]
+    module_names = ["surgery_information", "node_excision","post_surgery"]
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=file_number))
     for index in module_names:
         col_name = pccm_names.names_surgery_information(index)
@@ -84,11 +77,11 @@ if table_check(cursor, table) == 0:
                "Type_HomeRemedy,Duration_HomeRemedy"
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns4))
 
-table_name5 = "Nutritional_Supplements"
+table = "Nutritional_Supplements"
 if table_check(cursor, table) == 0:
     columns5 = "File_number, Type_nutritional_supplements, Quantity_nutritional_supplements_per_day, " \
                "Duration_nutritional_supplements"
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table_name5, nf=columns5))
+    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns5))
 
 table = "Physical_Activity"
 if table_check(cursor, table) == 0:
@@ -100,64 +93,37 @@ if table_check(cursor, table) == 0:
     columns8 = "File_number, Child_number, Feeding_duration, Breast_usage_feeding"
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns8))
 
-table = "SonnoMammography_Multiple_Mass"
-if table_check(cursor, table) == 0:
-    columns11 = ", ".join(pccm_names.name_clinical(table))
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns11))
-
-table = "Mammography_Multiple_Mass"
-if table_check(cursor, table) == 0:
-    columns12 = ", ".join(pccm_names.name_clinical(table))
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns12))
-
-table = "MRI_Multiple_Mass"
-if table_check(cursor, table) == 0:
-    columns13 = ", ".join(pccm_names.name_clinical(table))
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns13))
-
-table = "Calcification_Mammography"
-if table_check(cursor, table) == 0:
-    columns14 = ", ".join(pccm_names.name_clinical(table))
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=columns14))
-
-table = "NACT_Drug_Cycle"
+table = "NACT_Tox_table"
 if table_check(cursor, table) == 0:
     column = ", ".join(pccm_names.names_nact(table))
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
 
-table = "NACT_Toxicity"
-if table_check(cursor, table) == 0:
-    column = ", ".join(pccm_names.names_nact(table))
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
-
-table = "NACT_Drug_per_week"
+table = "NACT_Drug_Table"
 if table_check(cursor, table) == 0:
     column = ", ".join(pccm_names.names_nact(table))
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
 
 table = "Neo_Adjuvant_Therapy"
 if table_check(cursor, table) == 0:
-    column = ", ".join(pccm_names.names_nact(table))
-    cols_file = "File_number, " + column
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=cols_file))
+    module_names = ["Neo_Adjuvant_Therapy", "clip_information"]
+    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=file_number))
+    for index in module_names:
+        col_name = pccm_names.names_nact(index)
+        add_columns(cursor, table, col_name)
 
-table = "Chemotherapy"
+table = "Adjuvant_ChemoTherapy"
 if table_check(cursor, table) == 0:
     column = ", ".join(pccm_names.names_chemotherapy(table))
     cols_file = "File_number, " + column
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=cols_file))
 
-table = "Chemo_Toxicity"
+
+table = "Chemo_Tox_table"
 if table_check(cursor, table) == 0:
     column = ", ".join(pccm_names.names_chemotherapy(table))
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
 
-table = "Chemo_Drug_per_week"
-if table_check(cursor, table) == 0:
-    column = ", ".join(pccm_names.names_chemotherapy(table))
-    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
-
-table = "Chemo_Drug_Cycle"
+table = "Chemo_Drug_Table"
 if table_check(cursor, table) == 0:
     column = ", ".join(pccm_names.names_chemotherapy(table))
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
@@ -174,7 +140,7 @@ if table_check(cursor, table) == 0:
     cols_file = "File_number, " + column
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=cols_file))
 
-table = "HormoneTherapy_Recurrence_Survival"
+table = "HormoneTherapy_Survival"
 if table_check(cursor, table) == 0:
     column = "File_number"
     cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))

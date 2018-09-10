@@ -6,35 +6,32 @@ def add_insert():
     import os
     import textwrap
     from modules.pccm_names import db_tables
-    drive = "d:\\"
-    folders = "repos\pccm_all\main\DB"
-    file = "PCCM_BreastCancerDB_test22018-04-07.db"
-    path = os.path.join(drive, folders, file)
+    folders = "d:/repos/pccm_db/main/DB"
+    file = 'PCCM_BreastCancerDB_test_biopsy_2018-09-08.db'
+    #file = 'PCCM_BreastCancerDB_all_data_rituja_surgery_data.db'
+    path = os.path.join(folders, file)
     if os.path.isfile(path):
         conn = sqlite3.connect(path)
         cursor = conn.cursor()
-        folder_next = True
-        files_added = []
         user_name = input("Please input username/user_id: ")
+        folder_next = True
+        files_table_added = []
         while folder_next:
             check = False
             while not check:
                 file_number = input("File Number: ")
                 print("File Number: " + file_number)
                 check = ask_y_n_statement.ask_y_n("Is this file number correct")
-            table = ask_y_n_statement.ask_option("Table", db_tables())
-            add_update_sql.check_file(conn, cursor, table, file_number)
-            files_added.append(file_number)
             check_table = True
             while check_table:
                 table = ask_y_n_statement.ask_option("Table", db_tables())
-                add_update_sql.check_file(conn, cursor, table, file_number)
-                check_table = ask_y_n_statement.ask_y_n("Add another table?")
-            files_added.append(file_number)
+                file_table = file_number + "-" + table
+                files_table_added.append(file_table)
+                check_table = add_update_sql.check_file(conn, cursor, table, file_number, user_name)
             folder_next = ask_y_n_statement.ask_y_n("Add/update another record?")
-        data = "Folders added/edited by " +user_name+" in this session are: " + ", ".join(files_added)
+        data = "Folders added/edited by " +user_name+" in this session are: " + "; ".join(files_table_added)
         file_name = user_name+ datetime.now().strftime('%Y_%m_%d_at_%H_%M')+".txt"
-        path = os.path.join(drive, folders, file_name)
+        path = os.path.join(folders, file_name)
         f = open(path, 'w')
         f.write(data)
         f.close()

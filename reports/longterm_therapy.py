@@ -1,6 +1,8 @@
 import modules.ask_y_n_statement as ask_y_n_statement
 from sql.add_update_sql import review_input, update_multiple, review_data
 import modules.pccm_names as names
+from datetime import datetime
+
 
 def hormone (file_number):
     check = False
@@ -16,18 +18,26 @@ def hormone (file_number):
             if hormone_recieved:
                 hormone_recieved = "Hormone therapy recieved"
                 hormone_date = input("Date of starting hormone therapy: ")
-                hormone_type = ask_y_n_statement.ask_option("Type of hormone therapy", ["Tamoxifen", "Anastrazole", "Injectables", "Letrozole", "Others"])
+                hormone_type = ask_y_n_statement.ask_option("Type of hormone therapy", ["Tamoxifen", "Anastrazole",
+                                                             "Injectables", "Letrozole", "Others"])
                 if hormone_type == "Injectables":
                     details = input ("Please provide details of injectables recieved: ")
                     hormone_type = hormone_type +": "+ details
                 hormone_duration = input("Duration of hormone therapy (years): ")
-                hormone_disc = ask_y_n_statement.ask_option("Reason for discontinuing hormone therapy",
-                                                            ["Completion of planned course", "Adverse Effects",
-                                                             "Stopped by patient", "Progression of disease", "Others"])
-                hormone_ovary = ask_y_n_statement.ask_option("Type of ovarian surpression used", ["Surgery", "Drug"])
-                if hormone_ovary == "Drug":
-                    details = input("Please provide details of drug used: ")
-                    hormone_ovary = hormone_ovary + ": "+details
+                hormone_disc = ask_y_n_statement.ask_option("What is the current status of hormone therapy. "
+                                                            "Give specific reasons if discontinued prematurely "
+                                                            "(or not taken at all)",
+                                                            ['Therapy is ongoing', "Completion of planned course",
+                                                             "Adverse Effects","Stopped by patient",
+                                                             "Progression of disease","Other"])
+                ovary = ask_y_n_statement.ask_y_n_na("Has ovarian surpression been used?")
+                if ovary == 'Yes':
+                    hormone_ovary = ask_y_n_statement.ask_option("Type of ovarian surpression used", ["Surgery", "Drug"])
+                    if hormone_ovary == "Drug":
+                        details = input("Please provide details of drug used: ")
+                        hormone_ovary = hormone_ovary + ": "+details
+                else:
+                    hormone_ovary = ovary
                 hormone_outcome = input ("Outcome of hormone therapy: ")
                 hormone_follow_up = input("Follow up after hormone therapy: ")
                 hormone_recur = ask_y_n_statement.ask_y_n("Was there recurrence after hormone therapy?", "Recurrence",
@@ -43,7 +53,7 @@ def hormone (file_number):
     return data_list
 
 
-def metastasis(file_number):
+def metastasis(file_number, user_name):
     check = False
     while not check:
         met_has = ask_y_n_statement.ask_y_n("Has the patient been examined for metastatic disease?")
@@ -68,11 +78,11 @@ def metastasis(file_number):
                                                                               "with disease"])
             status = status+": "+type_survivor
         if status == "Deceased":
-            type_death = ask_y_n_statement.ask_option("Cause of death", ["due to disease", "due to unrelated causes"])
-            status = status + ", " + type_death
-        data_list = [met_has, date_last,time_recur, nature_recur, distant_site, status]
-        col_list = ["Metastasis_exam", "Date_last_followup","Time_to_recurrence", "Nature_of_recurrence", "Distant_site",
-                    "Patient_status_last_followup"]
+            type_death = ask_y_n_statement.ask_option("Cause of death", ["due to disease", "due to unrelated causes", "not known"])
+            status = status + ": " + type_death
+        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
+        data_list = [met_has, date_last,time_recur, nature_recur, distant_site, status, user_name, last_update]
+        col_list = names.names_longterm("metastasis")
         check = review_input(file_number, col_list, data_list)
     return data_list
 
@@ -80,9 +90,10 @@ def metastasis(file_number):
 def file_row(cursor, file_number):
     cursor.execute("INSERT INTO HormoneTherapy_Recurrence_Survival(File_number) VALUES ('" + file_number + "')")
 
-def add_data(conn, cursor, file_number):
-    file_row(cursor, file_number)
-    table = "HormoneTherapy_Recurrence_Survival"
+
+def add_data(conn, cursor, file_number, user_name):
+    #file_row(cursor, file_number)
+    table = "HormoneTherapy_Survival"
     enter = ask_y_n_statement.ask_y_n("Enter Hormone Therapy Details?")
     if enter:
         col_list = names.names_longterm(module_name= "hormone")
@@ -91,11 +102,12 @@ def add_data(conn, cursor, file_number):
     enter = ask_y_n_statement.ask_y_n("Enter Recurrence and follow-up status?")
     if enter:
         col_list = names.names_longterm(module_name="metastasis")
-        data = metastasis(file_number)
+        data = metastasis(file_number, user_name)
         update_multiple(conn, cursor, table, col_list, file_number, data)
 
-def edit_data(conn, cursor, file_number):
-    table = "HormoneTherapy_Recurrence_Survival"
+
+def edit_data(conn, cursor, file_number, user_name):
+    table = "HormoneTherapy_Survival"
     print("Hormone Therapy Details")
     col_list = names.names_longterm(module_name="hormone")
     enter = review_data(conn, cursor, table, file_number, col_list)
@@ -106,5 +118,5 @@ def edit_data(conn, cursor, file_number):
     col_list = names.names_longterm(module_name="metastasis")
     enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:
-        data = metastasis(file_number)
+        data = metastasis(file_number, user_name)
         update_multiple(conn, cursor, table, col_list, file_number, data)

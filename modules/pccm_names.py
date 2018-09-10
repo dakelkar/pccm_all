@@ -22,7 +22,7 @@ def names_info(module_name):
     elif module_name == "breast_symptoms":
         col_list = ["RB_symptoms", "RB_symptoms_duration", "LB_symptoms", "LB_symptoms_duration", "RB_Other_Symptoms",
                     "RB_Other_Symptoms_duration", "LB_Other_Symptoms", "LB_Other_Symptoms_duration",
-                    "Metastasis_Symptoms"]
+                    "Metastasis_Symptoms", "update_by", "last_update"]
     elif module_name == "habits":
         col_list = ["Diet", "Alcohol_y_n", "Alcohol_Consumption_age_yrs", "Quantity_alcohol_per_week",
                     "Duration_alcohol", "Comments_alcohol", "Tobacco_y_n", "Exposure_Mode", "Type_Passive",
@@ -34,8 +34,69 @@ def names_info(module_name):
         col_list = ["FamilyCancer_history_y_n", "Type_DegreeRelation_TypeRelation_Age_FamilyCancer"]
     elif module_name == "bio_info":
         col_list = ["MR_number", "Name", "Aadhaar_Card", "FirstVisit_Date", "Permanent_Address", "Current_Address",
-                    "Phone", "Email_ID", "Gender", "Age_yrs", "Date_of_Birth", "Place_Birth", "Height_cm", "Weight_kg",
-                    "BMI"]
+                    "Phone", "Email_ID", "Gender", "Age_at_First_Visit_yrs", "Diagnosis_Age_yrs","Date_of_Birth",
+                    "Place_Birth", "Height_cm", "Weight_kg","BMI"]
+    elif module_name == "general_table":
+        col_list = ["File_number, Condition, Diagnosis_date, Treatment"]
+    elif module_name == "family_cancer":
+        col_list = ['File_number, Type_Cancer, Relation_to_Patient, Type_Relation, Age_at_detection_yrs']
+    elif module_name == "previous_cancer":
+        col_list = ["File_number, Type_Cancer, Year_diagnosis, Surgery, Type_Surgery, Duration_Surgery, Radiation,"
+                    "Type_Radiation,Duration_Radiation,Chemotherapy,Type_Chemotherapy,Duration_Chemotherapy,Hormone,"
+                    "Type_Hormone,Duration_Hormone,Alternative,Type_Alternative,Duration_Alternative,HomeRemedy,"
+                    "Type_HomeRemedy,Duration_HomeRemedy"]
+    elif module_name == "nut_sup":
+        col_list = ["File_number, Type_nutritional_supplements, Quantity_nutritional_supplements_per_day, "
+                    "Duration_nutritional_supplements"]
+    elif module_name == "phys_act_table":
+        col_list = ["File_number, Type_activity, Frequency_activity"]
+    elif module_name == "breast_feed":
+        col_list = ["File_number, Child_number, Feeding_duration, Breast_usage_feeding"]
+    elif module_name == 'bio_info_without_personal_info':
+        col_list = ["FirstVisit_Date", "Gender", "Age_at_First_Visit_yrs", "Diagnosis_Age_yrs","Date_of_Birth",
+                    "Height_cm", "Weight_kg","BMI"]
+    else:
+        col_list = "File_number"
+    return col_list
+
+def names_info_form_version(module_name):
+    if module_name == "nut_supplements":
+        col_list = ["Nutritional_supplements_y_n", "Type_Nutritional_supplements", "Quantity_Nutritional_supplements",
+                    "Duration_Nutritional_supplements"]
+    elif module_name == "phys_act":
+        col_list = ["Physical_Activity_y_n", "Type_Physical_Activity", "Frequency_Physical_Activity"]
+    elif module_name == "med_history":
+        col_list = ["Any_Other_Medical_History_y_n", "Type_Any_Other_Medical_History",
+                    "Diagnosis_Date_Any_Other_Medical_History", "Treatment_Any_Other_Medical_History"]
+    elif module_name == "cancer_history":
+        col_list = ["Previous_Cancer_History_y_n", "Type_Previous_Cancer", "Year_Diagnosed_Previous_Cancer",
+                    "Treatment_Previous_Cancer", "Treatment_Type_Previous_Cancer", "Treatment_Duration_Previous_Cancer"]
+    elif module_name == "family_details":
+        col_list = ["Marital_Status", "Siblings", "Sisters", "Brothers", "Children", "Daughters", "Sons",
+                    "Menarche_yrs", "Menopause_Status", "Age_at_Menopause_yrs", "Date_last_menstrual_period",
+                    "Period_Type", "Number_pregnancies", "Pregnancy_to_term", "Number_abortions", "Age_first_child",
+                    "Age_first_pregnancy", "Age_last_child", "Age_last_pregnancy", "Two_births_in_year",
+                    "Breast_feeding", "Child_Breast_feeding", "Duration_Breast_feeding", "Breast_Usage_Breast_feeding",
+                    "Fertility_treatment_y_n", "Type_fertility_treatment", "Details_fertility_treatment",
+                    "Cycles_fertility_treatment", "Success_fertility_treatment", "Type_birth_control_used",
+                    "Details_birth_control", "Duration_birth_control"]
+    elif module_name == "breast_symptoms":
+        col_list = ["RB_symptoms", "RB_symptoms_duration", "LB_symptoms", "LB_symptoms_duration", "RB_Other_Symptoms",
+                    "RB_Other_Symptoms_duration", "LB_Other_Symptoms", "LB_Other_Symptoms_duration",
+                    "Metastasis_Symptoms", "update_by", "last_update"]
+    elif module_name == "habits":
+        col_list = ["Diet", "Alcohol_y_n", "Alcohol_Consumption_age_yrs", "Quantity_alcohol_per_week",
+                    "Duration_alcohol", "Comments_alcohol", "Tobacco_y_n", "Exposure_Mode", "Type_Passive",
+                    "Type_tobacco", "Tobacco_consumption_age_yrs", "Tobacco_Frequency", "Quantity_tobacco_per_week",
+                    "Duration_tobacco", "Comments_tobacco", "Other_Deleterious_Habits"]
+    elif module_name == "det_by":
+        col_list = ["Current_Breast_Cancer_Detected_By", "Current_Breast_Cancer_Detected_Date"]
+    elif module_name == "family_cancer":
+        col_list = ["FamilyCancer_history_y_n", "Type_DegreeRelation_TypeRelation_Age_FamilyCancer"]
+    elif module_name == "bio_info":
+        col_list = ["MR_number", "Name", "Aadhaar_Card", "FirstVisit_Date", "Permanent_Address", "Current_Address",
+                    "Phone", "Email_ID", "Gender", "Age_at_First_Visit_yrs", "Diagnosis_Age_yrs","Date_of_Birth",
+                    "Place_Birth", "Height_cm", "Weight_kg","BMI"]
     elif module_name == "general_table":
         col_list = ["File_number, Condition, Diagnosis_date, Treatment"]
     elif module_name == "family_cancer":
@@ -68,7 +129,7 @@ def name_clinical(module_name):
                     'Palpable_supraclavicular_nodes_size_CE', 'Palpable_supraclavicular_nodes_fixity_CE',
                     'Contralateral_Breast_CE', 'Edema_arm_CE', 'RightArm_Circumference_cm_CE',
                     'RightArm_UpperLimbVolume_cc_CE', 'RightArm_ElbowDistance_cm_CE', 'LeftArm_Circumference_cm_CE',
-                    'LeftArm_UpperLimbVolume_cc_CE', 'LeftArm_ElbowDistance_cm_CE']
+                    'LeftArm_UpperLimbVolume_cc_CE', 'LeftArm_ElbowDistance_cm_CE', 'Follow_up_advised_CE',"update_by", "last_update"]
     elif module_name == "nipple_cytology":
         col_list = ["Nipple_Cytology", "Date_Nipple_Cytology", "Number_Nipple_Cytology", "Report_Nipple_Cytology"]
     elif module_name == "other_test":
@@ -76,133 +137,32 @@ def name_clinical(module_name):
                     "Details_Visceral_Metastasis_CECT_Abd_Thorax", "PET_Scan", "Visceral_Metastasis_PET_Scan", "Detail_Visceral_Metastasis_PET_Scan",
                     "Skeletal_Metastasis_PET_Scan", "Detail_Skeletal_Metastasis_PET_Scan", "Bone_Scan", "Skeletal_Metastasis_Bone_Scan",
                     "Detail_Skeletal_Metastasis_Bone_Scan"]
-    elif module_name == "mammography":
-        col_list = ['Location_Mammography', 'First_Mammography', 'LatestDate_Mammography', 'Number_Mammography',
-                    'PreviousDate_Mammography', 'Diagnosis_Mammography', 'Date_Diagnosis_Mammography',
-                    'AccessionNumber_Mammography', 'BreastDensity_Mammography', 'Mass_Number_Mammography',
-                    'Mass_Location_Mammography', 'Mass_Location_Quadrant_Mammography',
-                    'Mass_Depth_Mammography', 'Mass_Distance_Nipple_Mammography','Mass_Pect_Major_cm_Mammography',
-                    'Mass_Shape_Mammography', 'Mass_Margin_Mammography', 'Mass_Density_Mammography', 'Calcification_Groups_Mammography',
-                    'Calcification_Location_Mammography', 'Calcification_Location_Quadrant_Mammography','Calcification_Depth_Mammography'
-                    ,'Calcification_Nipple_Distance_Mammography', 'Calcification_Pect_Major_cm_Mammography',
-                    'Calcification_Description_Mammography', 'Calcification_Type_Mammography',
-                    'Calcification_Distribution_Mammography', 'Architecture_Mammography',
-                    'ArchitecturalDistortion_Location_Mammography', 'ArchitecturalDistortion_Quadrant_Mammography',
-                    'ArchitecturalDistortion_Depth_Mammography','ArchitecturalDistortion_Distance_Nipple_Mammography','ArchitecturalDistortion_Pect_major_cm_Mammography',
-                    'Asymmetry_Location_Mammography', 'Asymmetry_Quadrant_Mammography','Asymmetry_Depth_Mammography',
-                    'Asymmetry_Nipple_Distance_Mammography','Asymmetry_Pect_major_cm_Mammography','Asymmetry_Type_Mammography',
-                    'IntraMammaryLN_Mammography', 'SkinLesion_Mammography',
-                    'Asso_features_Skin_retraction_Mammography', 'Asso_features_Nipple_retraction_Mammography',
-                    'Asso_features_Skin_thickening_Mammography', 'Asso_features_Trabecular_thickening_Mammography',
-                    'Asso_features_Axillary_adenopathy_Mammography', 'Asso_features_Architectural_distortion_Mammography',
-                    'Asso_features_Calcifications_Mammography','Category_BI_RADS_Mammography', 'Detail_BI_RADS_Mammography']
-    elif module_name == "tomosynthesis":
-        col_list = ["Tomosynthesis_3D", "Date_Tomosynthesis", "Accession_Tomosynthesis"]
-    elif module_name == "abvs":
-        col_list = ["Automated_Breast_Volume_Scanner_ABVS", "Date_ABVS", "Accession_ABVS", "Lesion_ABVS",
-                    "Lesion_Location_ABVS", "Size_ABVS", "Distance_ABVS", "Distance_PectMajor_ABVS", "Diagnosis_ABVS"]
-    elif module_name == "sonomammo":
-        col_list = ['SonoMammography', 'Date_SonoMammography', 'AccessionNumber_SonoMammography',
-                    'Tissue_Type_Sonomammography', 'Mass_Number_Sonomamography',
-                    'Mass_Location_Sonomamography', 'Mass_Location_Quadrant_Sonomamography',
-                    'Mass_Location_Clock_Sonomamography', 'Mass_Depth_cm_Sonomamography',
-                    'Mass_Distance_Nipple_Sonomamography', 'Mass_Pect_Major_cm_Sonomamography', 'Mass_Shape_Sonomamography',
-                    'Mass_Orientation_Sonomamography', 'Mass_Margin_Sonomamography', 'Mass_Echo_Sonomamography',
-                    'Mass_Posterior_Sonomamography', 'Calicification_Sonomamography',
-                    'Calicification_Type_Sonomamography', 'Architectural_Distortion_Sonomamography',
-                    'Duct_Changes_Sonomamography', 'Skin_Changes_Sonomamography', 'Edema_Sonomamography',
-                    'Vascularity_Sonomamography', 'Elasticity_Sonomamography', 'Node_Intramammary_Sonomamography',
-                    'Node_Axillary_Sonomamography', 'Node_Axillary_Cortex_Sonomamography',
-                    'Node_Axillary_Hilum_Sonomamography', 'Node_Axillary_Vascularity_Sonomamography',
-                    'Location_Solitary_Dilated_Suct_Sonomamography', 'Diameter_mm_Solitary_Dilated_Suct_Sonomamography',
-                    'Mass_Solitary_Dilated_Suct_Sonomamography', 'Strain_Shear_Wave_Sonomammography','VTQ_m_persec_Sonomammography',
-                    'Other_Features_Sonomamography', 'Category_BI_RADS_SonoMammography', 'Detail_BI_RADS_SonoMammography']
-    elif module_name == "mri_breast":
-        col_list = ['MRI_Breast', 'Date_MRI_Breast', 'AccessionNumber_MRI_Breast', 'Fibroglandular_Tissue_MRI_Breast',
-                    'Background_Paranchymal_Enhancement_Level_MRI_Breast',
-                    'Background_Paranchymal_Enhancement_Symmetry_MRI_Breast', 'Focus_MRI_Breast', 'Mass_MRI_Breast',
-                    'Number_Mass_MRI_Breast', 'Mass_Location_MRI_Breast', 'Mass_Location_Quadrant_MRI_Breast',
-                    'Mass_Shape_MRI_Breast', 'Mass_Margin_MRI_Breast', 'Mass_Internal_Enhancement_Char_MRI_Breast',
-                    'Asso_features_Nipple_retraction_MRI_Breast', 'Asso_features_Nipple_invasion_MRI_Breast',
-                    'Asso_features_Skin_retraction_MRI_Breast', 'Asso_features_Skin_thickening_MRI_Breast',
-                    'Asso_features_Axillary_adenopathy_MRI_Breast',
-                    'Asso_features_PectoralisMuscle_Invasion_MRI_Breast', 'Asso_features_ChestWall_Invasion_MRI_Breast',
-                    'Asso_features_Architectural_distortion_MRI_Breast', 'Asso_features_Skin_Invasion_MRI_Breast',
-                    'Fat_Lesion_MRI_Breast', 'Kinetics_Initial_MRI_Breast', 'Kinetics_Delayed_MRI_Breast',
-                    'Non_Enhanced_Features_MRI_Breast', 'Implant_MRI_Breast', 'Lesion_MRI_Breast',
-                    'Lesion_Location_MRI_Breast', 'Lesion_Depth_MRI_Breast', 'Lesion_Size_MRI_Breast',
-                    'DistancefromSkin_MRI_Breast', 'DistanceFromPectMaj_MRI_Breast', 'Category_BI_RADS_MRI_Breast',
-                    'Detail_BI_RADS_MRI_Breast']
-    elif module_name == "SonnoMammography_Multiple_Mass":
-        col_list = ["File_number", "Mass_ID", 'Mass_Location', 'Mass_Location_Quadrant', 'Mass_Location_Clock',
-                    'Mass_Depth_cm', 'Mass_Distance_Nipple', 'Mass_Pect_Major_cm', 'Mass_Shape', 'Mass_Orientation',
-                    'Mass_Margin', 'Mass_Echo', 'Mass_Posterior']
-    elif module_name == "Mammography_Multiple_Mass":
-        col_list = ["File_number", "Mass_ID", 'Mass_Location', 'Mass_Location_Quadrant', 'Mass_Depth',
-                    'Mass_Distance_Nipple', 'Mass_Pect_Major_cm','Mass_Shape', 'Mass_Margin', 'Mass_Density']
-    elif module_name == "Calcification_Mammography":
-        col_list = ["File_number", "Calcification_ID", 'Calcification_Location', 'Calcification_Location_Quadrant',
-                    'Calcification', 'Calcification_Type', 'Calcification_Distribution']
-    elif module_name == "MRI_Multiple_Mass":
-        col_list = ["File_number", "Mass_ID", 'Mass_Location', 'Mass_Location_Quadrant', 'Mass_Shape', 'Mass_Margin',
-                    'Mass_Internal_Enhancement_Char']
     else:
         col_list = "File_number"
     return col_list
 
 def names_radio(module_name):
     if module_name == "mammography":
-        col_list = ['Location_Mammography', 'First_Mammography', 'LatestDate_Mammography', 'Number_Mammography',
-                    'PreviousDate_Mammography', 'Diagnosis_Mammography', 'Date_Diagnosis_Mammography',
-                    'AccessionNumber_Mammography', 'BreastDensity_Mammography', 'Mass_Number_Mammography',
-                    'Mass_Location_Mammography', 'Mass_Location_Quadrant_Mammography',
-                    'Mass_Depth_Mammography', 'Mass_Distance_Nipple_Mammography','Mass_Pect_Major_cm_Mammography',
-                    'Mass_Shape_Mammography', 'Mass_Margin_Mammography', 'Mass_Density_Mammography',
-                    'Calcification_Groups_Mammography', 'Calcification_Location_Mammography',
-                    'Calcification_Location_Quadrant_Mammography','Calcification_Depth_Mammography'
-                    ,'Calcification_Nipple_Distance_Mammography', 'Calcification_Pect_Major_cm_Mammography',
-                    'Calcification_Description_Mammography', 'Calcification_Type_Mammography',
-                    'Calcification_Distribution_Mammography', 'Architecture_Mammography',
-                    'ArchitecturalDistortion_Location_Mammography', 'ArchitecturalDistortion_Quadrant_Mammography',
-                    'ArchitecturalDistortion_Depth_Mammography','ArchitecturalDistortion_Distance_Nipple_Mammography',
-                    'ArchitecturalDistortion_Pect_major_cm_Mammography', 'Asymmetry_Location_Mammography',
-                    'Asymmetry_Quadrant_Mammography','Asymmetry_Depth_Mammography',
-                    'Asymmetry_Nipple_Distance_Mammography','Asymmetry_Pect_major_cm_Mammography',
-                    'Asymmetry_Type_Mammography', 'IntraMammaryLN_Mammography', 'SkinLesion_Mammography',
-                    'Asso_features_Skin_retraction_Mammography', 'Asso_features_Nipple_retraction_Mammography',
-                    'Asso_features_Skin_thickening_Mammography', 'Asso_features_Trabecular_thickening_Mammography',
-                    'Asso_features_Axillary_adenopathy_Mammography',
-                    'Asso_features_Architectural_distortion_Mammography',
-                    'Asso_features_Calcifications_Mammography','Category_BI_RADS_Mammography',
-                    'Detail_BI_RADS_Mammography']
-    elif module_name == "tomosynthesis":
-        col_list = ["Tomosynthesis_3D", "Date_Tomosynthesis", "Accession_Tomosynthesis"]
+        col_list = ['Mammography','Mammography_Date', 'Mammography_Place', 'Mammography_Indication', 'Mammography_Breast',
+                    'Mammography_MassNumber', 'Mammography_MassLocation', 'Mammography_MassShape',
+                    'Mammography_MassMargin', 'Mammography_MassNipple_cm', 'Mammography_MassSize' ,
+                    'Mammography_MassSize_unit', 'Mammography_CalcificationNumber', 'Mammography_CalcificationLocation',
+                    'Mammography_Skin_Lesion','Mammography_CalcificationType', 'Mammography_Birad','Mammography_Impression',
+                    'Tomography_y_n']
     elif module_name == "abvs":
         col_list = ["Automated_Breast_Volume_Scanner_ABVS", "Date_ABVS", "Accession_ABVS", "Lesion_ABVS",
                     "Lesion_Location_ABVS", "Size_ABVS", "Distance_ABVS", "Distance_PectMajor_ABVS", "Diagnosis_ABVS"]
     elif module_name == "sonomammo":
-        col_list = ['SonoMammography', 'Date_SonoMammography', 'AccessionNumber_SonoMammography',
-                    'Tissue_Type_Sonomammography', 'Mass_Number_Sonomamography',
-                    'Mass_Location_Sonomamography', 'Mass_Location_Quadrant_Sonomamography',
-                    'Mass_Location_Clock_Sonomamography', 'Mass_Depth_cm_Sonomamography',
-                    'Mass_Distance_Nipple_Sonomamography', 'Mass_Pect_Major_cm_Sonomamography',
-                    'Mass_Shape_Sonomamography', 'Mass_Orientation_Sonomamography', 'Mass_Margin_Sonomamography',
-                    'Mass_Echo_Sonomamography', 'Mass_Posterior_Sonomamography', 'Calicification_Sonomamography',
-                    'Calicification_Type_Sonomamography', 'Architectural_Distortion_Sonomamography',
-                    'Duct_Changes_Sonomamography', 'Skin_Changes_Sonomamography', 'Edema_Sonomamography',
-                    'Vascularity_Sonomamography', 'Elasticity_Sonomamography', 'Node_Intramammary_Sonomamography',
-                    'Node_Axillary_Sonomamography', 'Node_Axillary_Cortex_Sonomamography',
-                    'Node_Axillary_Hilum_Sonomamography', 'Node_Axillary_Vascularity_Sonomamography',
-                    'Location_Solitary_Dilated_Suct_Sonomamography', 'Diameter_mm_Solitary_Dilated_Suct_Sonomamography',
-                    'Mass_Solitary_Dilated_Suct_Sonomamography', 'Strain_Shear_Wave_Sonomammography',
-                    'VTQ_m_persec_Sonomammography', 'Other_Features_Sonomamography', 'Category_BI_RADS_SonoMammography',
-                    'Detail_BI_RADS_SonoMammography']
+        col_list = ['SonoMammography', 'Sonomammo_Date', 'Sonomammo_Breast', 'Sonomammo_Mass', 'Sonomammo_Mass_Number',
+                    'Sonomammo_Mass_Location', 'Sonomammo_Mass_Clock','Sonomammo_Mass_Shape', 'Sonomammo_Mass_Margin',
+                    'Sonomammo_Mass_Echo', 'Sonomammo_Mass_Size', 'Sonomammo_Mass_Size_Unit', 'Sonomammo_Calc', 'Sonomammo_Calc_Type',
+                    'Sonomammo_Vascularity', 'Sonomammo_Birad', 'Sonomammo_Impression', "update_by", "last_update"]
     elif module_name == "mri_breast":
-        col_list = ['MRI_Breast', 'Date_MRI_Breast', 'AccessionNumber_MRI_Breast', 'Fibroglandular_Tissue_MRI_Breast',
+        col_list = ['MRI', 'Date_MRI_Breast', 'AccessionNumber_MRI_Breast', 'MRI_Breast', 'Fibroglandular_Tissue_MRI_Breast',
                     'Background_Paranchymal_Enhancement_Level_MRI_Breast',
                     'Background_Paranchymal_Enhancement_Symmetry_MRI_Breast', 'Focus_MRI_Breast', 'Mass_MRI_Breast',
-                    'Number_Mass_MRI_Breast', 'Mass_Location_MRI_Breast', 'Mass_Location_Quadrant_MRI_Breast',
-                    'Mass_Shape_MRI_Breast', 'Mass_Margin_MRI_Breast', 'Mass_Internal_Enhancement_Char_MRI_Breast',
+                    'Number_Mass_MRI_Breast', 'Mass_Location_MRI_Breast','Mass_Shape_MRI_Breast',
+                    'Mass_Margin_MRI_Breast', 'Mass_Internal_Enhancement_Char_MRI_Breast',
                     'Asso_features_Nipple_retraction_MRI_Breast', 'Asso_features_Nipple_invasion_MRI_Breast',
                     'Asso_features_Skin_retraction_MRI_Breast', 'Asso_features_Skin_thickening_MRI_Breast',
                     'Asso_features_Axillary_adenopathy_MRI_Breast',
@@ -212,96 +172,85 @@ def names_radio(module_name):
                     'Non_Enhanced_Features_MRI_Breast', 'Implant_MRI_Breast', 'Lesion_MRI_Breast',
                     'Lesion_Location_MRI_Breast', 'Lesion_Depth_MRI_Breast', 'Lesion_Size_MRI_Breast',
                     'DistancefromSkin_MRI_Breast', 'DistanceFromPectMaj_MRI_Breast', 'Category_BI_RADS_MRI_Breast',
-                    'Detail_BI_RADS_MRI_Breast']
-    elif module_name == "SonnoMammography_Multiple_Mass":
-        col_list = ["File_number", "Mass_ID", 'Mass_Location', 'Mass_Location_Quadrant', 'Mass_Location_Clock',
-                    'Mass_Depth_cm', 'Mass_Distance_Nipple', 'Mass_Pect_Major_cm', 'Mass_Shape', 'Mass_Orientation',
-                    'Mass_Margin', 'Mass_Echo', 'Mass_Posterior']
-    elif module_name == "Mammography_Multiple_Mass":
-        col_list = ["File_number", "Mass_ID", 'Mass_Location', 'Mass_Location_Quadrant', 'Mass_Depth',
-                    'Mass_Distance_Nipple', 'Mass_Pect_Major_cm','Mass_Shape', 'Mass_Margin', 'Mass_Density']
+                    'user_name_mri', 'last_update_mri']
+    else:
+        col_list = "File_number"
+    return col_list
+
+def names_radio_df (module_name):
+    if module_name == "SonnoMammography_Mass":
+        col_list = ["Mass_ID", 'Mass_Location', 'Mass_Location_Clock','Mass_Shape', 'Mass_Margin', 'Mass_Echo',
+                    'Mass_Size', 'Mass_Size_Unit']
+    elif module_name == "Mammography_Mass":
+        col_list = ["Mass_ID", 'Mass_Location', 'Mass_Shape', 'Mass_Margin', 'Mass_Distance_Nipple',
+                    'Mass_Size', 'Mass_Size_Unit']
     elif module_name == "Calcification_Mammography":
-        col_list = ["File_number", "Calcification_ID", 'Calcification_Location', 'Calcification_Location_Quadrant',
-                    'Calcification', 'Calcification_Type', 'Calcification_Distribution']
-    elif module_name == "MRI_Multiple_Mass":
-        col_list = ["File_number", "Mass_ID", 'Mass_Location', 'Mass_Location_Quadrant', 'Mass_Shape', 'Mass_Margin',
+        col_list = ["File_number", "Calcification_ID", 'Calcification_Location', 'Calcification_Type']
+    elif module_name == "MRI_Mass":
+        col_list = ["Mass_ID", 'Mass_Location', 'Mass_Shape', 'Mass_Margin',
                     'Mass_Internal_Enhancement_Char']
     else:
         col_list = "File_number"
     return col_list
 
+
 def names_biopsy (module_name):
     if module_name == "biopsy_report_info":
-        col_list = ["Consent_Status_Biopsy", "Consent_form_status_biopsy", "Block_SR_Number_Biopsy", "Block_Location_ID_Biopsy","Block_Current_Location_Biopsy",
-                    "Biopsy_Report_in_PCCM", "Biopsy_Block_ID", "No_of_blocks_Biopsy", "Date_of_Biopsy", "Lab_ID_Biopsy", "Biopsy_Type"]
+        col_list = ["Consent_Status_Biopsy", "Consent_form_status_biopsy", "Block_SR_Number_Biopsy",
+                    "Block_Location_ID_Biopsy","Block_Current_Location_Biopsy", "Biopsy_Report_in_PCCM",
+                    "Biopsy_Block_ID", "No_of_blocks_Biopsy", "Date_of_Biopsy", "Lab_ID_Biopsy", "Biopsy_Type"]
     elif module_name == "tumour_biopsy_data":
-        col_list = ["Tumour_biopsy_diagnosis", "Tumour_biopsy_diagnosis_grade", "Lymphovascular_emboli_biopsy","DCIS_biopsy","Tumour_biopsy_ER",
-                    "Tumour_biopsy_ER_Percent", "Tumour_biopsy_PR", "Tumour_biopsy_PR_Percent", "Tumour_biopsy_HER2",
-                    "Tumour_biopsy_HER2_Grade", "Tumour_biopsy_FISH", "Tumour_biopsy_Ki67_Percent"]
+        col_list = ["Tumour_biopsy_diagnosis", "Tumour_biopsy_diagnosis_grade", "Lymphovascular_emboli_biopsy",
+                    "DCIS_biopsy", "IHC_report_custody_biopsy", "Tumour_biopsy_ER", "Tumour_biopsy_ER_Percent", "Tumour_biopsy_PR",
+                    "Tumour_biopsy_PR_Percent", "Tumour_biopsy_HER2", "Tumour_biopsy_HER2_Grade", "Tumour_biopsy_FISH",
+                    "Tumour_biopsy_Ki67_Percent"]
     elif module_name == "lymphnode_biopsy":
-        col_list = ["Lymph_Node_biopsy_FNAC", "Lymph_Node_biopsy_location", "Lymph_Node_biopsy_diagnosis"]
+        col_list = ["Lymph_Node_biopsy_FNAC", "Lymph_Node_biopsy_location", "Lymph_Node_biopsy_diagnosis", "update_by",
+                    "last_update"]
     else:
         col_list = "File_number"
     return col_list
 
 def names_surgery (module_name):
     if module_name == "surgery_block_information_1":
-        col_list =  ["Consent_Status_Surgery", "Consent_form_status_Surgery", "Block_SR_Number_Surgery",
-                     "Block_Location_ID_Surgery","Block_Current_Location_Surgery",
-                    "Surgical_Block_ID", "Surgery_Block_Location", "Surgery_No_of_blocks", "Block_Pathology_Lab",
-                    "Tumor_block_ref", "Nodes_block_ref", "Ad_Normal_block_ref", "Reduction_tissue_block_ref",
-                    "Date_of_Surgery", "Name_Surgeon", "Hospital_ID", "Lesion_Side", "NACT_treatment","Type_surgery"]
+        col_list =  ['Block_Type','Block_SR_Number', 'Block_ID_Surgery_Block', 'Number_Blocks_Surgery_Block',
+                     'Breast_Cancer_Yes_No_Surgery_Block', 'Pathology_Report_available_Yes_No_Surgery_Block',
+                     'Pathology_Lab_Surgery_Block', 'Date_Surgery', 'Name_Surgeon', 'Hospital_ID', 'Lesion_Side',
+                     'NACT','Type_Surgery']
     elif module_name == "surgery_block_information_2":
-        col_list = ["Tumour_size_Surgery_Block_Report", "Grade_Surgery_Block_Report", "Diagnosis_Surgery_Block_Report",
-                    "DCIS_Percent_Surgery_Block_Report", "DCIS_Invasion_Surgery_Block_Report",
-                    "Perineural_Invasion_Surgery_Block_Report", "Necrosis_Surgery_Block_Report",
-                    "Lymphovascular_Invasion_Surgery_Block_Report", "Margins_Surgery_Block_Report",
-                    "Surgery_Block_Report"]
+        col_list = ['Tumor_block_ref_Surgery_Block', 'Nodes_block_ref_Surgery_Block',
+                    'Ad_Normal_block_ref_Surgery_Block', 'Reduction_tissue_block_ref_Surgery_Block',
+                    'Tumour_size_Surgery_Block', 'Tumour_size_unit_Surgery_Block', 'Tumour_Grade_Surgery_Block',
+                    'Diagnosis_Surgery_Block', 'DCIS_Percent_Surgery_Block', 'DCIS_Invasion_Surgery_Block',
+                    'Perineural_Invasion_Yes_No_Surgery_Block', 'Necrosis_Yes_No_Surgery_Block', 'Vascular_Invasion_Percent_Surgery_Block',
+                    'Lymphocyte Invasion_Percent_Surgery_Block','Percent_Stroma_Surgery_Block', 'Margins_free_involved_Surgery_Block',
+                    'Margin_Involved_Surgery_Block', 'Margin_Involved_Type_Surgery_Block',
+                    'Pathological_complete_remission_Yes_No']
     elif module_name == "surgery_block_information_3":
-        col_list = ["Sentinel_Node_Block_Report", "Sentinel_Node_Number_Removed", "Sentinel_Node_Number_Positive",
-                    "Axillary_Node_Block_Report", "Axillary_Node_Number_Removed", "Axillary_Node_Number_Positive",
-                    "Axillary_LNR_Block_Report", "Apical_Node_Block_Report", "Apical_Node_Number_Removed",
-                    "Apical_Node_Number_Positive", "Perinodal_Spread_Node_Block_Report",
-                    "Supraclavicular_Involved_Node_Block_Report"]
+        col_list = ['Tumor_ER_Surgery_Block', 'Tumor_ER_percent_Surgery_Block', 'Tumor_PR_Surgery_Block',
+                    'Tumor_PR_percent_Surgery_Block', 'Tumor_HER2_Surgery_Block','Tumor_HER2_grade_Surgery_Block',
+                    'Tumor_FISH_Surgery_Block', 'Tumor_Ki67_percent_Surgery_Block', 'Sentinel_Node_Status_Surgery_Block',
+                    'Sentinel_Node_Removed_Surgery_Block', 'Sentinel_Node_Positive_Surgery_Block',
+                    'Axillary_Node_Status_Surgery_Block', 'Axillary_Node_Removed', 'Axillary_Node_Positive',
+                    'Axillary_Node_Number_Surgery_Block', 'Apical_Node_Status_Surgery_Block', 'Apical_Node_Removed',
+                    'Apical_Node_Positive', 'Perinodal_Spread_Node_Yes_No_Surgery_Block',
+                    'Supraclavicular_Involved_Node_Yes_No_Surgery_Block']
     elif module_name == "path_stage":
-        col_list = ["Pathological_Staging_pT", "Pathological_Staging_pN", "Pathological_Staging_M",
-                    "Pathological_Staging_P_Stage", "Clinical_Staging"]
+        col_list = ['Pathological_Staging_pT_Surgery_Block', 'Pathological_Staging_pN_Surgery_Block',
+                    'Pathological_Staging_M_Surgery_Block', 'Pathological_Staging_P_Stage_Surgery_Block',
+                    'Node_number_Surgery_Block', 'Clinical_Staging_Surgery_Block', "Clinical_Staging",
+                    "update_by", "last_update"]
+    elif module_name == 'block_type_list':
+        col_list = ["Tumour", "Node", "Adjacent Normal", "Reduction Tissue"]
+    elif module_name == 'block_data':
+        col_list =  ['file_number','block_id', 'block_reference','block_type', 'block_description']
+    elif module_name =='diagnosis':
+        col_list = ['Ductal carcinoma in situ(DCIS)', 'Invasive Ductal Carcinoma', 'Lobular Carcinoma in Situ (LCS)',
+                    'Invasive Lobular Carcinoma (ILC)', 'Granulamatous Mastitis', 'Papillary Carcinoma',
+                    'Phylloid Carcinoma', 'Invasive Mammary Carcinoma',  'Invasive Breast Carcinoma']
     else:
         col_list = "File_number"
     return col_list
-
-def names_block(module_name):
-    if module_name == "block_report_info":
-        col_list = ["Consent_Status_BR", "Consent_form_status_BR", "Block_SR_Number", "Biopsy_Block_ID", "No_of_blocks",
-                    "Date_of_Biopsy", "Lab_ID", "Biopsy_Type"]
-    elif module_name == "tumour_biopsy_data":
-        col_list = ["Tumour_biopsy_diagnosis", "Tumour_biopsy_diagnosis_grade", "Tumour_biopsy_ER",
-                    "Tumour_biopsy_ER_Percent", "Tumour_biopsy_PR", "Tumour_biopsy_PR_Percent", "Tumour_biopsy_HER2",
-                    "Tumour_biopsy_HER2_Grade", "Tumour_biopsy_FISH", "Tumour_biopsy_Ki67_Percent"]
-
-    elif module_name == "surgery_info":
-        col_list = ["Surgical_Block_ID", "Surgery_Block_Location", "Surgery_No_of_blocks", "Block_Source",
-                    "Tumor_block_ref", "Nodes_block_ref", "Ad_Normal_block_ref", "Reduction_tissue_block_ref",
-                    "Date_of_Surgery", "Name_Surgeon", "Hospital_ID", "Lesion_Side", "Type_surgery", "Response_surgery"]
-    elif module_name == "surgery_block":
-        col_list = ["Tumour_size_Surgery_Block_Report", "Grade_Surgery_Block_Report", "Diagnosis_Surgery_Block_Report",
-                    "DCIS_Percent_Surgery_Block_Report", "DCIS_Invasion_Surgery_Block_Report",
-                    "Perineural_Invasion_Surgery_Block_Report", "Necrosis_Surgery_Block_Report",
-                    "Lymphovascular_Invasion_Surgery_Block_Report", "Margins_Surgery_Block_Report",
-                    "Surgery_Block_Report"]
-    elif module_name == "node_block":
-        col_list = ["Sentinel_Node_Block_Report", "Sentinel_Node_Number_Removed", "Sentinel_Node_Number_Positive",
-                    "Sentinel_Node_Block_Report_Number", "Axillary_Node_Block_Report", "Axillary_Node_Number_Removed",
-                    "Axillary_Node_Number_Positive", "Axillary_Node_Block_Report_Number", "Apical_Node_Block_Report",
-                    "Apical_Node_Number_Removed", "Apical_Node_Number_Positive", "Apical_Node_Block_Report_Number",
-                    "Perinodal_Spread_Node_Block_Report", "Supraclavicular_Involved_Node_Block_Report"]
-    elif module_name == "path_stage":
-        col_list = ["Pathological_Staging_pT", "Pathological_Staging_pN", "Pathological_Staging_M",
-                    "Pathological_Staging_P_Stage", "Clinical_Staging"]
-    else:
-        col_list = "Module not found"
-    return col_list
-
 
 def info_print_all(module_name):
     if module_name == "Print_edit":
@@ -325,6 +274,7 @@ def info_print_all(module_name):
                        "Duration of symptoms in Left Breast", "Other Symptoms in Right Breast",
                        "Duration of other symptoms in Right Breast", "Other Symptoms in Left Breast",
                        "Duration of other symptoms in Left Breast", "Metastasis Symptoms"]
+        update = ["Updated By", "Date and time of Update"]
         habits = ["Diet", "Alcohol Consumption", "Alcohol Consumption since age (yrs)",
               "Quantity of alcohol consumed per week", "Duration of alcohol consumption", "Additional comments",
               "Tobacco", "Mode of Exposure to Tobacco", "Type of Passive Tobacco Exposure",
@@ -334,10 +284,10 @@ def info_print_all(module_name):
         det_by = ["Current Breast Cancer Detected By", "Date of Current Breast Cancer Detection"]
         family_cancer = ["Family Cancer History",
                      "Type of Cancer | Degree of Relation | Type of Relation | Age at diagnosis"]
-        bio_info = ["Medical Record Number", "Name", "Aadhaar Card Number", "Date of First Visit", "Permanent Address",
-                "Current Address", "Phone Number", "Email ID", "Gender", "Age (yrs)", "Date of Birth",
+        bio_info = ["Medical Record Number", "Name", "Aadhaar Card Number", "Date of First Visit","Permanent Address",
+                "Current Address", "Phone Number", "Email ID", "Gender", "Current Age (yrs)", "Age at Cancer Diagnosis","Date of Birth",
                 "Place of Birth", "Height (cm)", "Weight (kg)", "BMI"]
-        col_list = bio_info + nut_supp + phys_act + habits + family_details + med_history + cancer_history + family_cancer + det_by + breast_symptoms
+        col_list = bio_info + nut_supp + phys_act + habits + family_details + med_history + cancer_history + family_cancer + det_by + breast_symptoms+update
     elif module_name == "det_by":
         col_list = ["Current Breast Cancer Detected By", "Date of Current Breast Cancer Detection"]
     elif module_name == "nut_supplements":
@@ -364,7 +314,7 @@ def info_print_all(module_name):
         col_list = ["Right Breast symptoms", "Duration of symptoms in Right Breast", "Left Breast symptoms",
                 "Duration of symptoms in Left Breast", "Other Symptoms in Right Breast",
                 "Duration of other symptoms in Right Breast", "Other Symptoms in Left Breast",
-                "Duration of other symptoms in Left Breast", "Metastasis Symptoms"]
+                "Duration of other symptoms in Left Breast", "Metastasis Symptoms", "Updated By", "Date and time of update"]
     elif module_name == "habits":
         col_list = ["Diet", "Alcohol Consumption", "Alcohol Consumption since age (yrs)",
                 "Quantity of alcohol consumed per week", "Duration of alcohol consumption", "Additional comments",
@@ -377,82 +327,88 @@ def info_print_all(module_name):
                 "Type of Cancer | Degree of Relation | Type of Relation | Age at diagnosis"]
     elif module_name == "bio_info":
         col_list = ["Medical Record Number", "Name", "Aadhaar Card Number", "Date of First Visit", "Permanent Address",
-                "Current Address", "Phone Number", "Email ID", "Gender", "Age (yrs)", "Date of Birth",
-                "Place of Birth", "Height (cm)", "Weight (kg)", "BMI"]
+                "Current Address", "Phone Number", "Email ID", "Gender", "Current Age (yrs)", "Age at diagnosis (yrs)",
+                "Date of Birth", "Place of Birth", "Height (cm)", "Weight (kg)", "BMI"]
     else:
         col_list = "Module not found"
     return col_list
 
 def names_nact(module_name):
-    if module_name == "NACT_Drug_Cycle":
-        col_list = ["File_number", "Cycle_name", "Length_Cycle", "Patient_Weight", "Drugs", "Toxicity",
-                    "Toxicity_grade", "Toxicity_treatment", "Toxicity_treatment_response",
-                    "ChangedTreatment_Toxicity", "Drug_dose", "NACT_response_checked", "Tumour_Response_to_NACT",
-                    "TumourSize_after_cycle", "Date_assessment"]
-    elif module_name =="Tox_table":
-        col_list = ["File_number", "Week", "Cycle_name", "Drug_Administered", "Toxicity_type", "Toxicity_grade",
-                    "Treatment", "Response_Treatment"]
-    elif module_name == "NACT_Toxicity":
-        col_list = ["File_number", "Cycle_number", "Week", "Drug", "Toxicity", "Toxicity_Grade", "Toxicity_Treatment",
-                    "Toxicity_Response", "ChangedTreatment_Toxicity"]
-    elif module_name == "NACT_Drug_per_week":
-        col_list = ["File_number","Cycle_number", "Week", "Patient_wt_kg", "Drugs", "Dose", "Dose_unit", "Cycle_frequency"]
-    elif module_name == "Neo_Adjuvant_Therapy":
-        col_list = [ "NACT_status", "Date_start_NACT", "NACT_plan", "Drugs_TotalDose_administered",
-                    "Time_NACT_treatment_weeks", "Number_Cycles_NACT", "Tumour_Response_Check_Method",
-                    "Tumour_Response_NACT", "Tumour_size_cm", "Date_tumour_size_checked", "Ovarion_function_status",
-                    "NACT_completion_status", "NACT_end_date", "Trastuzumab_use_NACT", "Trastuzumab_regime_NACT",
-                    "Trastuzumab_courses_taken_NACT", "Hormone_therapy_NACT", "Hormone_therapy_type_NACT",
-                    "Hormone_therapy_duration", "Horomone_therapy_side_effects"]
-    else:
+   if module_name =="NACT_Tox_table":
+        col_list = ["File_number", "Drug_Administered", "Toxicity_type", "Toxicity_grade",
+                    "Treatment", "Response_Treatment", "Cycle_Toxicity", "ChangedTreatment_Toxicity"]
+   elif module_name == "NACT_Drug_Table":
+        col_list = ['File_number', 'Number_cycle', 'Drug', 'Drug_dose', 'Dose_unit', 'Cycle_frequency_per_week']
+   elif module_name == "Neo_Adjuvant_Therapy":
+        col_list = ['NACT_status',  "Place_NACT",  'Details_NACT', 'Plan_NACT',  "Date_start_NACT", "Patient_weight_NACT",
+                    "Drugs_Administered", 'Number_Cycles_NACT',  "Drugs_TotalDose", 'Drugs_unit', "Toxicity_Type",
+                    "Toxicity_Grade",  "Toxicity_Treatment",  "Toxicity_Response",  "Toxicity_at_Cycle",
+                    "NACT_change_due_to_Toxicity",  "Tumour_Response_Check_Method",  "Tumour_Response_NACT",
+                    "Tumour_size_cm",  "Date_tumour_size_checked",  "NACT_completion_status",  "NACT_end_date",
+                    "Trastuzumab_use_NACT",  "Trastuzumab_regime_NACT", 'Trastuzumab_courses_taken_NACT',
+                    "Hormone_therapy_NACT",  "Hormone_therapy_type_NACT", 'Hormone_therapy_duration',
+                    "Horomone_therapy_side_effects",  "update_by",  "last_update"]
+   elif module_name == "clip_information":
+        col_list = ["Clip_number", "Clip_date", "Clip_Insertion_After_Cycle"]
+   else:
         col_list = "File_number"
-    return col_list
+   return col_list
 
 def names_chemotherapy(module_name):
-    if module_name == "Chemotherapy":
-        col_list = ["Chemo_status", "Date_startChemo", "Chemo_plan", "Drugs_TotalDose_administered",
-                    "Time_Chemo_treatment_weeks", "Number_Cycles_Chemo", "Tumour_Response_Check_Method",
-                    "Tumour_Response_Chemo", "Tumour_size_cm", "Date_tumour_size_checked", "Ovarion_function_status",
-                    "Chemo_completion_status", "Chemo_end_date", "Trastuzumab_use_Chemo", "Trastuzumab_regime_Chemo",
-                    "Trastuzumab_courses_taken_Chemo", "Hormone_therapy_Chemo", "Hormone_therapy_type_Chemo",
-                    "Hormone_therapy_duration", "Horomone_therapy_side_effects"]
-    elif module_name == "Chemo_Toxicity":
-        col_list = ["File_number", "Cycle_number", "Week", "Drug", "Toxicity", "Toxicity_Grade", "Toxicity_Treatment",
-                    "Toxicity_Response", "ChangedTreatment_Toxicity"]
-    elif module_name == "Chemo_Drug_per_week":
-        col_list = ["File_number", "Cycle_number", "Week", "Patient_wt_kg", "Drugs", "Dose", "Dose_unit",
-                    "Cycle_frequency"]
-    elif module_name == "Chemo_Drug_Cycle":
-        col_list = ["File_number", "Cycle_name", "Length_Cycle", "Patient_Weight", "Drugs", "Toxicity",
-                    "Toxicity_grade", "Toxicity_treatment", "Toxicity_treatment_response",
-                    "ChangedTreatment_Toxicity", "Drug_dose", "NACT_response_checked", "Tumour_Response_to_NACT",
-                    "TumourSize_after_cycle", "Date_assessment"]
+    if module_name == "Chemo_Tox_table":
+        col_list = ["File_number", "Drug_Administered", "Toxicity_type", "Toxicity_grade",
+                    "Treatment", "Response_Treatment", "Cycle_Toxicity", "ChangedTreatment_Toxicity"]
+    elif module_name == "Chemo_Drug_Table":
+        col_list = ['File_number', 'Number_cycle', 'Drug', 'Drug_dose', 'Dose_unit', 'Cycle_frequency_per_week']
+    elif module_name == "Adjuvant_ChemoTherapy":
+        col_list = ['Chemotherapy_status', "Place_Chemotherapy", 'Details_Chemotherapy', 'Plan_Chemotherapy',
+                    "Date_start_Chemotherapy","Patient_weight_Chemotherapy" ,"Drugs_Administered",
+                    'Number_Cycles_Chemotherapy', "Drugs_TotalDose", 'Drugs_unit', "Toxicity_Type",
+                    "Toxicity_Grade", "Toxicity_Treatment", "Toxicity_Response", "Toxicity_at_Cycle",
+                    "Chemotherapy_change_due_to_Toxicity", "Chemotherapy_completion_status",
+                    "Chemotherapy_end_date", "Trastuzumab_use_Chemotherapy", "Trastuzumab_regime_Chemotherapy",
+                    'Trastuzumab_courses_taken_Chemotherapy', 'Ovary_Status', "Hormone_therapy_Chemotherapy",
+                    "Hormone_therapy_type_Chemotherapy", 'Hormone_therapy_duration_Chemotherapy',
+                    "Horomone_therapy_side_effects_Chemotherapy", "update_by", "last_update"]
+    elif module_name == "Tox_table":
+        col_list = ["File_number", "Drug_Administered", "Toxicity_type", "Toxicity_grade",
+                    "Treatment", "Response_Treatment", "Cycle_Toxicity", "ChangedTreatment_Toxicity"]
     else:
         col_list = "File_number"
     return col_list
 
 
 def names_surgery_information(module_name):
-    if module_name == "clip_information":
-        col_list = ["Clip_number", "Clip_date", "NACT_cycle"]
-    elif module_name == "surgery_information":
-        col_list = ["Date_Surgery", "Hospital_Surgery", "Patient_Hospital_ID", "Date_Admission", "Hospital_Ward",
-                    "Name_Anaesthetist", "Name_Surgeon", "Lesion_location", "Surgery", "Incision", "Reconstruction",
-                    "Mammoplasty", "Mammoplasty_Guide", "Contralateral_Surgery", "Surgery_Notes"]
+    if module_name == "surgery_information":
+         col_list = ["Surgery_Date","Surgery_Hospital","Surgery_Patient_Hospital_ID","Surgery_Date_Admission",
+                    "Surgery_Hospital_Ward","Surgery_Name_Anaesthetist","Surgery_Name_Surgeon","Surgery_Lesion_location",
+                    "Surgery_Type","Surgery_Incision","Surgery_Type_Subtype","Surgery_Type_Level_Subtype",
+                    "Oncoplastic_Surgery_Type","Oncoplastic_Surgery_Flap","Oncoplastic_Surgery_Plan",
+                    'Oncoplastic_Surgery_Tumour_filled_by','Oncoplastic_Surgery_NAC_Graft','Oncoplastic_Surgery_Primary_Pedicle',
+                    'Oncoplastic_Surgery_Secondary_Pedicle','Reconstruction_Surgery_Implant_Type','Reconstruction_Surgery_Implant_Size',
+                    'Contralateral_Surgery','Contralateral_Surgery_Type','Contralateral_Surgery_Type_Details',
+                    "Surgery_Notes"]
+    elif module_name == "node_excision":
+        col_list = ["Guide_Node_Excision_Surgery", "Frozen_Samples_Surgery", "Gross_Tumour_Size_Surgery", "Skin_Surgery",
+                    "Nodes_Type_Surgery", "Number_Nodes_Surgery", "Level_Nodes_Surgergy",
+                    "Sentinel_Node_Labelling_Method_Surgery", "Blue_Node", "Hot_Node", "Blue_Hot_Node", "Non_Blue_Hot_Node",
+                    "Palpable_Node"]
     elif module_name == "post_surgery":
         col_list = ["Chemotherapy_plan", "Radiotherapy_plan", "Other_plans", "Drain_removal_date", "Total_drain_days",
-                    "Post_surgery_complications","Recurrence", "OPD_notes"]
+                    "Days_post_surgery_complications", "Post_surgery_complications", "Treatment_post_surgery_"
+                    "complications", "Days_post_surgery_recurrence", "Recurrence_Site", "OPD_notes","update_by",
+                    "last_update"]
     else:
         col_list = "File_number"
     return col_list
 
 def names_radiation():
     col_list = ["Radiation_received", "Radiation_date", "Radiation_type", "IMRT_DCRT", "Radiation_acute_toxicity",
-                    "Radiation_Delayed_Toxicity", "Radiation_finish_date", "Radiation_location", "Radiation_Oncologist"]
+                    "Radiation_Delayed_Toxicity", "Radiation_finish_date", "Radiation_location", "Radiation_Oncologist", "update_by", "last_update"]
     return col_list
 def name_follow_up():
     col_list = ["Follow_up_Period", "Follow_up_notes", "Follow_up_Mammography", "Follow_up_USG", "Follow_up_other_test",
-                "Follow_up_other_result"]
+                "Follow_up_other_result", "update_by", "last_update"]
     return col_list
 
 def names_longterm(module_name):
@@ -462,7 +418,7 @@ def names_longterm(module_name):
                     "Horomone_recurrence"]
     elif module_name == "metastasis":
         col_list = ["Metastasis_exam", "Date_last_followup","Time_to_recurrence", "Nature_of_recurrence", "Distant_site",
-                    "Patient_status_last_followup"]
+                    "Patient_status_last_followup", "update_by", "last_update"]
     else:
         col_list = "File_number"
     return col_list
@@ -470,6 +426,45 @@ def names_longterm(module_name):
 
 def db_tables ():
     db_tables = ["Patient_Information_History", "Biopsy_Report_Data", "Clinical_Exam", "Radiology", "Neo_Adjuvant_Therapy",
-                 "Surgery_Report","Surgery_Block_Report_Data", "Chemotherapy", "Radiotherapy",
-                 "HormoneTherapy_Recurrence_Survival","Follow_up_Data"]
+                 "Surgery_Report","Surgery_Block_Report_Data", "Adjuvant_ChemoTherapy", "Radiotherapy",
+                 "HormoneTherapy_Survival","Follow_up_Data"]
     return db_tables
+
+def mutation_tables(table):
+    if table == "Germline_Mutations":
+        col_list = ['germline_mutation_tested', 'sample_used', 'technology', 'sequenced_at_facility',
+                    'confirmed_by_re-testing','does_retesting_confirm_mutation_y_n', 'restesting_method', 'gene',
+                    'exon_number', 'nucleotide_position', 'nucleotide_before', 'nucleotide_after', 'aminoa_position',
+                    'amino_acid_before', 'amino_acid_after', 'variation_dna', 'zygosity', 'clinical_significance',
+                    'inheritance', 'transcript', 'cdna', 'effect_on_mrna', 'protein', 'effect_on_protein',
+                    'protein_databases_reference', 'ethnicities','variants_in_vicinity', 'remarks']
+    elif table == "Somatic_Mutations":
+        col_list = ['somatic_mutation_tested', 'sample_used', 'percent_tumor_in_the_sample',
+                    'percent_tumor_identification_done_by', 'technology_used_for_germline_mutation_sequencing',
+                    'facility_somatic_mutation_sequenced_at', 'somatic_mutation_sequenced_confirmed_by_re-testing',
+                    'accession_number', 'run_id', 'panel', 'variant_call_id', 'gene', 'gsyntax', 'psyntax',
+                    'selected_psyntax', 'mutation_type', 'variant_classification', 'consequence', 'vaf',
+                    'frequency_from_data', 'dbsnp_frequency','exac_frequency', 'nhlbi_frequency', 'domain', 'pathways',
+                    'ethnicities', 'variants', 'remarks']
+    else:
+        col_list = 'File_number'
+    return col_list
+
+def names_biopsy_new (module_name):
+    if module_name == "biopsy_report_info":
+        col_list = ['Biopsy_report_PCCM_yes_no','IHC_report_PCCM_yes_no','Breast_Biopsy',"Block_SR_Number_Biopsy",
+                    "Block_Location_ID_Biopsy", "Biopsy_Block_ID", "No_of_blocks_Biopsy", "Date_of_Biopsy",
+                    "Lab_ID_Biopsy", "Biopsy_Type", "Tumour_biopsy_diagnosis", "Tumour_biopsy_diagnosis_grade",
+                    "Lymphovascular_emboli_biopsy_yes_no", "DCIS_biopsy_yes_no"]
+    elif module_name == "tumour_biopsy_data":
+        col_list = ["Tumour_biopsy_ER", "Tumour_biopsy_ER_Percent", "Tumour_biopsy_PR",
+                    "Tumour_biopsy_PR_Percent", "Tumour_biopsy_HER2", "Tumour_biopsy_HER2_Grade", "Tumour_biopsy_FISH",
+                    "Tumour_biopsy_Ki67_Percent","Lymph_Node_biopsy_FNAC", "Lymph_Node_biopsy_location",
+                    "Lymph_Node_biopsy_diagnosis", "update_by", "last_update"]
+    elif module_name == 'biopsy_report_info_df':
+        col_list = ["Block_SR_Number_Biopsy", "Block_Location_ID_Biopsy", "Biopsy_Block_ID", "No_of_blocks_Biopsy",
+                    "Date_of_Biopsy", "Lab_ID_Biopsy", "Biopsy_Type","Tumour_biopsy_diagnosis",
+                    "Tumour_biopsy_diagnosis_grade", "Lymphovascular_emboli_biopsy_yes_no", "DCIS_biopsy_yes_no"]
+    else:
+        col_list = "File_number"
+    return col_list

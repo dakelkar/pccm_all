@@ -1,10 +1,11 @@
 import modules.ask_y_n_statement as ask_y_n_statement
-from sql.add_update_sql import review_df, view_multiple, delete_multiple
+from sql.add_update_sql import review_df, view_multiple, delete_multiple, delete_rows
 import modules.pccm_names as names
 import pandas as pd
+from datetime import datetime
 
 
-def follow_up(file_number):
+def follow_up(file_number, user_name):
     follow = True
     follow_index = 0
     col_list = ["File_number"] + names.name_follow_up()
@@ -41,7 +42,9 @@ def follow_up(file_number):
                 all_data = [other_type_list, other_result_list]
                 all_data = ask_y_n_statement.join_lists(all_data, "; ")
                 other_type, other_result = all_data
-            data_list = [file_number, time_follow, follow_notes, follow_mammo, follow_usg, other_type, other_result]
+            last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
+            data_list = [file_number, time_follow, follow_notes, follow_mammo, follow_usg, other_type, other_result,
+                         user_name, last_update]
             follow_up_data.loc[follow_index] = data_list
             check = review_df(follow_up_data.loc[follow_index])
         follow_index = follow_index + 1
@@ -51,18 +54,31 @@ def follow_up(file_number):
     return follow_up_data
 
 
-def add_data(conn, file_number):
-    data = follow_up(file_number)
+def add_data(conn, file_number, user_name):
+    data = follow_up(file_number, user_name)
     data.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
 
-def edit_data(conn, cursor, file_number):
+
+def edit_data(conn, cursor, file_number, user_name):
     table = "Follow_up_Data"
     col_list = names.name_follow_up()
     enter = view_multiple(conn, table, col_list, file_number)
-    if enter =="Add data":
-        add_data(conn, file_number)
+    if enter == "Add data":
+        data = follow_up(file_number, user_name)
+        data.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
     if enter == "Re-enter data":
-        warn = ask_y_n_statement.ask_y_n("ALL ENTERED DATA WILL BE LOST. DO YOU WANT TO PROCEED?")
-        if warn:
-            delete_multiple(cursor, table, file_number)
-            add_data(conn, file_number)
+        table = "Follow_up_Data"
+        col_list = ["File_number"] + names.name_follow_up()
+        sql = ('SELECT ' + ", ".join(col_list[:-2]) + " FROM '" + table + "' WHERE File_number = '"+file_number+"'")
+        df = pd.read_sql(sql, conn)
+        follow_up_period = list(df.loc[:, "Follow_up_Period"])
+        delete_data = True
+        while delete_data:
+            check_delete = False
+            while not check_delete:
+                col_data = ask_y_n_statement.ask_option("Which entry do you want to modify?", follow_up_period)
+                check_delete = ask_y_n_statement.ask_y_n("Are you sure you want to delete data for follow-up period "+col_data)
+            delete_rows(cursor, table,"Follow_up_Period", col_data)
+            add_data(conn, file_number, user_name)
+            delete_data = ask_y_n_statement.ask_y_n("Do you want to re-enter another follow up period")
+

@@ -91,7 +91,8 @@ def edit_few(conn, cursor, table, col_list, file_number, data_list):
             update_single(conn, cursor, table, col_list[index], file_number, data)
     return False
 
-def check_file(conn, cursor, table, file_number):
+
+def check_file(conn, cursor, table, file_number, user_name):
     import modules.ask_y_n_statement as ask_y_n_statement
     import add_edit.add_new as add_new
     import add_edit.edit_record as edit_record
@@ -99,18 +100,19 @@ def check_file(conn, cursor, table, file_number):
     cursor.execute(sql, (file_number, ))
     data = cursor.fetchall()
     if len(data) == 0:
-        cursor.execute("INSERT INTO " + table + "(File_number) VALUES ('" + file_number + "')")
+        if table != "Follow_up_Data":
+            cursor.execute("INSERT INTO " + table + "(File_number) VALUES ('" + file_number + "')")
         print(file_number + " does not exist in table " + table + ". Enter new record")
-        add_new.add_new(conn, cursor, file_number, table)
+        add_new.add_new(conn, cursor, file_number, table, user_name)
     else:
         todo = ask_y_n_statement.ask_option(file_number + " already exists in table " + table + ".",
                                             ["Edit record", "Add new record for same file number", "Edit None"])
         if todo == "Edit record":
-            edit_record.edit_record(conn, cursor, file_number, table)
-        elif todo =="Add new record for same file number":
+            edit_record.edit_record(conn, cursor, file_number, table, user_name)
+        elif todo == "Add new record for same file number":
             print("Add additional record module TBD")
-        else:
-            print ("Proceeding to next table")
+    ask = ask_y_n_statement.ask_y_n("Add another table?")
+    return ask
 
 def review_df(df):
    import modules.ask_y_n_statement as ask
@@ -118,11 +120,13 @@ def review_df(df):
    check = ask.ask_y_n("Is data entered correct?")
    return check
 
+
 def table_check(cursor, table_name):
     x = cursor.execute("SELECT count(*) FROM sqlite_master WHERE type='table' AND name='" + table_name + "'")
     [table_exists] = cursor.fetchall()
     test = list(table_exists)[0]
     return test
+
 
 def view_multiple(conn, table, col_list, file_number):
     import pandas as pd
@@ -138,6 +142,41 @@ def view_multiple(conn, table, col_list, file_number):
     enter = ask_option("Do you want to re-enter or add data", ["Re-enter data", "Add data"])
     return enter
 
-def delete_multiple (cursor, table, file_number):
+
+def delete_multiple(cursor, table, file_number):
     sql = "DELETE FROM " + table + " WHERE File_number = '" + file_number + "'"
     cursor.execute(sql)
+
+
+def delete_rows(cursor, table, col_name, col_data):
+    sql = "DELETE FROM " + table + " WHERE "+col_name+" = '" + col_data + "'"
+    cursor.execute(sql)
+
+def review_df_row(df):
+    import modules.ask_y_n_statement as ask
+    check_row = len(df)-1
+    print(df.iloc[check_row].to_string())
+    check = ask.ask_y_n("Is data entered correct?")
+    if check:
+        return check, df
+    else:
+        df = df.drop(df.index[check_row])
+        return check, df
+
+def get_sql_data(file_number, conn, module, table):
+    import modules.table_dicts as table_dicts
+    import pandas as pd
+    columns = []
+    cols = table_dicts.db_dict(table, module)
+    columns = columns + cols
+    col_list = table_dicts.create_col_list(columns)
+    sql = ('SELECT ' + ", ".join(col_list) + " FROM '" + str(table) + "' WHERE File_number = '" + file_number + "'")
+    df = pd.read_sql(sql, conn)
+    return df
+
+def get_value (col_name, table, file_number, cursor):
+    sql = ('SELECT '+col_name+' FROM ' +table+' WHERE File_number = \'' + file_number + "'")
+    cursor.execute(sql)
+    value_ = cursor.fetchall()
+    value = value_[0][0]
+    return value

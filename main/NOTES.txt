@@ -1,0 +1,13 @@
+folder_number 55/17
+
+1. Patient_Information_History - NO ISSUES
+2. Biopsy_Report_Data - no issues
+3. Clinical_Exam - data not in folder
+4. Radiology - data could be not be read
+5. Neo_Adjuvant_Therapy - all data not available in folder - need to go to specialist.
+6. Surgery_Report - all data not available in folder. Only discharge summary is present in folder.
+7. Surgery_Block_Report_Data  - no issues
+8. Chemotherapy - all data not available in folder - need to go to specialist.
+9. Radiotherapy - no issues
+10. HormoneTherapy_Recurrence_Survival 
+11. Follow_up_Data

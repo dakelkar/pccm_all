@@ -44,11 +44,13 @@ Thumbs.db
 
 # Folders
 /.vs
-/main/DB
+
 
 #File types
 /*.xlsx
 /*.db
+/*.txt
+/*.docx
 /.xls
 
 #specific files

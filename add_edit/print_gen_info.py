@@ -1,11 +1,11 @@
-def print_info(cursor, file_number):
+def print_info(cursor, file_number, folders):
     import docx
     from datetime import date
     import modules.pccm_names as pccm_names
     import os.path
     module_name = ["bio_info", "nut_supplements", "phys_act", "habits", "family_details", "med_history", "cancer_history",
                     "family_cancer", "det_by", "breast_symptoms"]
-    folder = "d:/repos/pccm_db/main/Gen_Info_Docs"
+    folder = folders +'/Gen_Info_Docs'
     file_name = "Folder_" + (file_number.replace("/", "_")) + ".docx"
     path = os.path.join(folder, file_name)
     p_date_to_print = date.today().strftime('%d-%b-%Y')

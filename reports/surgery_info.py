@@ -19,12 +19,15 @@ def surgery_information(file_number):
         reconstruction_surgery_implant_size, contralateral_surgery, contralateral_surgery_type, \
         contralateral_surgery_type_details, surgery_notes = (" ", )*25
         surgery_date = input("Date of surgery: ")
-        surgery_hospital = input("Name of hospital: ")
+        surgery_hospital = ask_option("Name of hospital", ['Ruby Hall Clinic', 'RHC Wanowarie','Jehangir Hospital',
+                                                           'Oyster and Pearl', 'Inamdar Hospital'])
         surgery_patient_hospital_id = input("Patient ID at the hospital: ")
         surgery_hospital_ward = input("Name of hospital ward: ")
         surgery_date_admission = input("Date of admission: ")
-        surgery_name_anaesthetist = input("Name of Anaesthetist: ")
-        surgery_name_surgeon = input("Name of the Surgeon/s: ")
+        surgery_name_anaesthetist = ask_option("Name of Anaesthetist", ["Dr.Sachin Arbhi", "Dr. Sandhya Sathe",
+                                                                        'Dr. Sagar Sanjay', 'Dr. Amol Ramekar',
+                                                                        "Dr. Nita D'Souza"])
+        surgery_name_surgeon = ask_option("Name of the Surgeon/s", ["Dr. C. B. Koppiker"])
         lesion = ask_option("Location of lesion", ["Right Breast", "Left Breast", "Both Breasts", "Other","Not known"])
         if lesion in {"Right Breast", "Left Breast", "Both Breasts"}:
            surgery_lesion_location = lesion_location(lesion)

@@ -1,8 +1,8 @@
 import reports
 
-def edit_record(conn, cursor, file_number, table, user_name):
+def edit_record(conn, cursor, file_number, table, user_name, folders):
     if table =="Patient_Information_History":
-        reports.gen_info_tables.edit_data(conn, cursor, file_number, user_name)
+        reports.gen_info_tables.edit_data(conn, cursor, file_number, user_name, folders)
     elif table =="Biopsy_Report_Data":
         biopsy = reports.BiopsyData(table, file_number, cursor, user_name, conn)
         biopsy.edit_data()

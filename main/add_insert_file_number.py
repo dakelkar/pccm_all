@@ -6,9 +6,20 @@ def add_insert():
     import os
     import textwrap
     from modules.pccm_names import db_tables
+
+
     folders = "d:/repos/pccm_db/main/DB"
     file = 'PCCM_BreastCancerDB_test_biopsy_2018-09-08.db'
     #file = 'PCCM_BreastCancerDB_all_data_rituja_surgery_data.db'
+    check_path = False
+    while not check_path:
+        print ('Database file '+file+ ' in folder '+folders+' is being used')
+        check_location = ask_y_n_statement.ask_y_n('Is this correct?')
+        if not check_location:
+            file = input('Please enter database file name: ')
+            folders = input('Please enter database folder name: ')
+        else:
+            check_path = True
     path = os.path.join(folders, file)
     if os.path.isfile(path):
         conn = sqlite3.connect(path)
@@ -27,11 +38,12 @@ def add_insert():
                 table = ask_y_n_statement.ask_option("Table", db_tables())
                 file_table = file_number + "-" + table
                 files_table_added.append(file_table)
-                check_table = add_update_sql.check_file(conn, cursor, table, file_number, user_name)
+                check_table = add_update_sql.check_file(conn, cursor, table, file_number, user_name, folders)
             folder_next = ask_y_n_statement.ask_y_n("Add/update another record?")
         data = "Folders added/edited by " +user_name+" in this session are: " + "; ".join(files_table_added)
         file_name = user_name+ datetime.now().strftime('%Y_%m_%d_at_%H_%M')+".txt"
-        path = os.path.join(folders, file_name)
+        folder_txt = folders +'/log'
+        path = os.path.join(folder_txt, file_name)
         f = open(path, 'w')
         f.write(data)
         f.close()

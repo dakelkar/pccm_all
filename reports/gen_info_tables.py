@@ -482,7 +482,7 @@ def bio_info(file_number):
 def file_row(cursor, file_number):
     cursor.execute("INSERT INTO Patient_Information_History(File_number) VALUES ('" + file_number + "')")
 
-def add_gen_info(conn, cursor, file_number, user_name):
+def add_gen_info(conn, cursor, file_number, user_name, folders):
     table = "Patient_Information_History"
     #file_row(cursor, file_number)
     enter = ask_y_n("Enter Patient Biographical Information")
@@ -521,9 +521,9 @@ def add_gen_info(conn, cursor, file_number, user_name):
         data = breast_symptoms(file_number, user_name)
         update_multiple(conn, cursor, table, pccm_names.names_info("breast_symptoms"), file_number,
                                        data)
-    print_info(cursor, file_number)
+    print_info(cursor, file_number, folders)
 
-def edit_data(conn, cursor, file_number, user_name):
+def edit_data(conn, cursor, file_number, user_name, folders):
     table = "Patient_Information_History"
     print("Patient Biographical Information")
     col_list = pccm_names.names_info("bio_info")
@@ -569,4 +569,4 @@ def edit_data(conn, cursor, file_number, user_name):
         data_symp = breast_symptoms(file_number,user_name)
         data = data_det + data_symp
         update_multiple(conn, cursor, table, col_list, file_number, data)
-    print_info(cursor, file_number)
+    print_info(cursor, file_number, folders)

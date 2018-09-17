@@ -29,8 +29,8 @@ class BiopsyData:
             ihc_report_pccm = ask.ask_y_n_na("Is the IHC report available?", yes_ans="IHC_report_PCCM_yes", no_ans="IHC_report_PCCM_no",
                                             na_ans="IHC Not Done")
             breast_biopsy = biopsy_report_pccm
-            data_list = ('Biopsy_report_PCCM_no',) * 11
-            data_list_df[0] = [data_list]
+            data_list = [biopsy_report_pccm] * 11
+            data_list_df.loc[biopsy_report_pccm] = data_list
             if biopsy_report_pccm == 'Biopsy_report_PCCM_yes':
                 data_list_df, breast_biopsy = BiopsyData.biopsy_details(self)
             data_all = BlockDescription.rb_lb_data(data_list_df, self.df_cols)
@@ -44,22 +44,23 @@ class BiopsyData:
         module_name = "tumour_biopsy_data"
         df_cols = names(module_name)
         data_list_df = pd.DataFrame(columns=df_cols)
+        columns_list = names(module_name)
         try:
             ihc_biopsy = sql.get_value(col_name='IHC_report_PCCM_yes_no', table=self.table, file_number=self.file_number,
                                        cursor=self.cursor)
         except:
             ihc_biopsy = ask.ask_y_n_na("Is the IHC report available?", yes_ans="IHC_report_PCCM_yes",
                                              no_ans="IHC_report_PCCM_no", na_ans="IHC Not Done")
-        if ihc_biopsy in {"IHC_report_PCCM_no", 'IHC Not Done'}:
-            data_list = (ihc_biopsy,)*8
-        else:
-            check = False
-            while not check:
+        check = False
+        while not check:
+            if ihc_biopsy in {"IHC_report_PCCM_no", 'IHC Not Done'}:
+                data_list = [ihc_biopsy]*8
+            else:
                 try:
-                    sql_search = ('SELECT Breast_Biopsy FROM Biopsy_Report_Data WHERE File_number = \'' + self.file_number + "'")
-                    self.cursor.execute(sql_search)
-                    breast_biopsy_ = self.cursor.fetchall()
-                    breast_biopsy = breast_biopsy_[0][0]
+                        sql_search = ('SELECT Breast_Biopsy FROM Biopsy_Report_Data WHERE File_number = \'' + self.file_number + "'")
+                        self.cursor.execute(sql_search)
+                        breast_biopsy_ = self.cursor.fetchall()
+                        breast_biopsy = breast_biopsy_[0][0]
                 except:
                     breast_biopsy = ask.ask_option('Breast that biopsy has been done for', ['Right Breast', 'Left Breast', "Bilateral"])
                 breasts = BlockDescription.breast_list(breast_biopsy)
@@ -97,11 +98,10 @@ class BiopsyData:
                         check_breast = sql.review_input(self.file_number, self.df_cols, df_data)
                     data_list_df.loc[breast] = df_data
                 data_list = BlockDescription.rb_lb_data(data_list_df, self.df_cols)
-                columns_list = names(module_name)
-                check = sql.review_input(self.file_number, columns_list, data_list)
-                data_list = tuple(data_list)
-            last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
-            data_list = data_list, last_update, self.user_name
+            check = sql.review_input(self.file_number, columns_list, data_list)
+            data_list = tuple(data_list)
+        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
+        data_list = data_list, last_update, self.user_name
         return data_list
 
     def biopsy_details (self):

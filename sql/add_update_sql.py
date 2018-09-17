@@ -92,7 +92,7 @@ def edit_few(conn, cursor, table, col_list, file_number, data_list):
     return False
 
 
-def check_file(conn, cursor, table, file_number, user_name):
+def check_file(conn, cursor, table, file_number, user_name, folders):
     import modules.ask_y_n_statement as ask_y_n_statement
     import add_edit.add_new as add_new
     import add_edit.edit_record as edit_record
@@ -103,12 +103,12 @@ def check_file(conn, cursor, table, file_number, user_name):
         if table != "Follow_up_Data":
             cursor.execute("INSERT INTO " + table + "(File_number) VALUES ('" + file_number + "')")
         print(file_number + " does not exist in table " + table + ". Enter new record")
-        add_new.add_new(conn, cursor, file_number, table, user_name)
+        add_new.add_new(conn, cursor, file_number, table, user_name,folders)
     else:
         todo = ask_y_n_statement.ask_option(file_number + " already exists in table " + table + ".",
                                             ["Edit record", "Add new record for same file number", "Edit None"])
         if todo == "Edit record":
-            edit_record.edit_record(conn, cursor, file_number, table, user_name)
+            edit_record.edit_record(conn, cursor, file_number, table, user_name, folders)
         elif todo == "Add new record for same file number":
             print("Add additional record module TBD")
     ask = ask_y_n_statement.ask_y_n("Add another table?")

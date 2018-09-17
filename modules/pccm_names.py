@@ -407,7 +407,7 @@ def names_radiation():
                     "Radiation_Delayed_Toxicity", "Radiation_finish_date", "Radiation_location", "Radiation_Oncologist", "update_by", "last_update"]
     return col_list
 def name_follow_up():
-    col_list = ["Follow_up_Period", "Follow_up_notes", "Follow_up_Mammography", "Follow_up_USG", "Follow_up_other_test",
+    col_list = ["Follow_up_Period", "Follow_up_status", "Follow_up_Mammography", "Follow_up_USG", "Follow_up_other_test",
                 "Follow_up_other_result", "update_by", "last_update"]
     return col_list
 

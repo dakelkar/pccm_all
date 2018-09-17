@@ -5,8 +5,8 @@ import os
 import modules.pccm_names as pccm_names
 
 
-folder = "d:/repos/pccm_db/main/DB"
-db_name = "PCCM_BreastCancerDB_test_biopsy_" + str(date.today()) + '.db'
+folder = "d:/OneDrive/repos/pccm_db/main/DB"
+db_name = "PCCM_BreastCancerDB_Rituja_" + str(date.today()) + '.db'
 
 path = os.path.join(folder, db_name)
 

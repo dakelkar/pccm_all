@@ -1,9 +1,9 @@
 import reports
 
 
-def add_new(conn, cursor, file_number, table, user_name):
+def add_new(conn, cursor, file_number, table, user_name, folders):
     if table =="Patient_Information_History":
-        reports.gen_info_tables.add_gen_info(conn, cursor, file_number, user_name)
+        reports.gen_info_tables.add_gen_info(conn, cursor, file_number, user_name, folders)
     elif table =="Biopsy_Report_Data":
         biopsy = reports.BiopsyData(cursor, conn)
         #to change and remove defaults

@@ -6,7 +6,7 @@ import modules.pccm_names as pccm_names
 
 
 folder = "d:/OneDrive/repos/pccm_db/main/DB"
-db_name = "PCCM_BreastCancerDB_Rituja_" + str(date.today()) + '.db'
+db_name = "PCCM_BreastCancerDB_Test_" + str(date.today()) + '.db'
 
 path = os.path.join(folder, db_name)
 
@@ -150,5 +150,5 @@ if table_check(cursor, table) == 0:
         add_columns(cursor, table, col_name)
 
 conn.commit()
-print (path +(" file created"))
+print(path + " file created")
 conn.close()

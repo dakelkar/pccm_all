@@ -21,14 +21,14 @@ def tox_table (file_number, drug_cyc, tox_all):
                         ("Response to treatment given for " + tox_grade + " " + tox_present),
                         ["Partial", "Complete", "No Effect", "Other"])
                     cyc_tox = input("Cycle at which toxicity occurred: ")
-                    change_tox = ask_y_n_statement.ask_option("Changes to NACT treatment",
+                    change_tox = ask_y_n_statement.ask_option("Changes to treatment",
                                                               ["No change",
-                                                               "NACT regime changed due to toxicity",
-                                                               "NACT stopped  due to toxicity",
-                                                               "NACT changed due to other reasons",
-                                                               "NACT stopped due to other reasons"])
-                    if change_tox == "NACT regime changed due to toxicity" or change_tox == "NACT changed due to other reasons":
-                        change = input("Please describe changes to NACT regime: ")
+                                                               "Therapy changed due to toxicity",
+                                                               "Therapy stopped  due to toxicity",
+                                                               "Therapy changed due to other reasons",
+                                                               "Therapy stopped due to other reasons"])
+                    if change_tox == "Therapy changed due to toxicity" or change_tox == "Therapy changed due to other reasons":
+                        change = input("Please describe changes to Therapy: ")
                         change_tox = change_tox + ": " + change
                     check = False
                     while not check:
@@ -75,3 +75,19 @@ def drug_table_enter(file_number, drug_table):
             drug_index = drug_index + 1
         drug_add = ask_y_n_statement.ask_y_n("Add another drug")
     return drug_table
+
+def hormone_therapy_chemo():
+    hormone_therapy = ask_y_n_statement.ask_y_n_na("Was hormone therapy given?")
+    if hormone_therapy == 'Yes':
+        hormone_therapy = "Hormone therapy given"
+        therapy_type = ask_y_n_statement.ask_option("Hormone therapy type", ["Sequential", "Concurrent"])
+        therapy_duration = input("What was the duration of therapy? ")
+        therapy_side = ask_y_n_statement.ask_y_n_na("Were any side effects observed ?")
+        if therapy_side == 'Yes':
+            therapy_side = input("Please give details of side effects observed: ")
+    elif hormone_therapy == 'No':
+        hormone_therapy = "No hormone therapy given"
+        therapy_type, therapy_duration, therapy_side = (hormone_therapy,) * 3
+    else:
+        therapy_type, therapy_duration, therapy_side = (hormone_therapy, )*3
+    return  hormone_therapy, therapy_type, therapy_duration, therapy_side

@@ -8,16 +8,18 @@ def add_insert():
     from modules.pccm_names import db_tables
 
 
-    folders = "d:/repos/pccm_db/main/DB"
-    file = 'PCCM_BreastCancerDB_test_biopsy_2018-09-08.db'
+    folders = "d:/pccm_db/main/DB"
+    file = 'PCCM_BreastCancerDB_2018-09-08.db'
     #file = 'PCCM_BreastCancerDB_all_data_rituja_surgery_data.db'
     check_path = False
     while not check_path:
-        print ('Database file '+file+ ' in folder '+folders+' is being used')
+        print ('\nDatabase file '+file+ ' in folder '+folders+' is being used\n')
         check_location = ask_y_n_statement.ask_y_n('Is this correct?')
         if not check_location:
-            file = input('Please enter database file name: ')
-            folders = input('Please enter database folder name: ')
+            print ("\n File is currently set as "+file)
+            file = input('Please enter database file name (with .db extension): ')
+            print("\n Folder is currently set as " + folders)
+            folders = input('Please enter database folder name (full path as given above): ')
         else:
             check_path = True
     path = os.path.join(folders, file)

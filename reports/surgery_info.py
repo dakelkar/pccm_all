@@ -119,6 +119,7 @@ def surgery_information(file_number):
             surgery_type_subtype = ask_option("Type of surgery", ['Non Sling – Conventional IBRS',
                                                           'Sling ALDS',
                                                           'Advanced Sling (AALDS)',
+                                                          'LD Flap',
                                                           'LD Flap + Implant',
                                                           'TDAP + Implant',
                                                           'LICAP + Implant'])

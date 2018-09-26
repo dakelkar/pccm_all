@@ -1,4 +1,5 @@
 import textwrap
+import datetime
 
 def ask_option(category, options):
     option_remove = ["Data not available", "Other"]
@@ -91,3 +92,25 @@ def ask_option_y_n(question, yes_ans = "Yes", no_ans = "No",
     else:
         option = ans_4
     return option
+
+def check_date(date_string):
+    checked_date = False
+    while not checked_date:
+        isValidDate = True
+        error = '\nDate entered is not valid\n'
+        inputDate = input(date_string)
+        try:
+            day, month, year = inputDate.split('/')
+            try:
+                datetime.datetime(int(year), int(month), int(day))
+            except ValueError:
+                print(error)
+                isValidDate = False
+        except ValueError:
+            print (error)
+            isValidDate = False
+        if (isValidDate):
+            checked_date = datetime.datetime.today() > datetime.datetime(int(year), int(month), int(day))
+            if not checked_date:
+                print (error)
+    return inputDate

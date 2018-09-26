@@ -175,7 +175,7 @@ def get_sql_data(file_number, conn, module, table):
     return df
 
 def get_value (col_name, table, file_number, cursor):
-    sql = ('SELECT '+col_name+' FROM ' +table+' WHERE File_number = \'' + file_number + "'")
+    sql = "SELECT "+col_name+" FROM " +table+" WHERE File_number = '" + file_number + "'"
     cursor.execute(sql)
     value_ = cursor.fetchall()
     value = value_[0][0]

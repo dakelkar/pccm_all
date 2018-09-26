@@ -22,13 +22,13 @@ def nact_test(file_number, user_name):
                                                      "Follow-up required")
             nact = "NACT given"
             if details_nact == "Follow-up required":
-                plan_nact, date_start_nact, patient_wt, cyc_number, drug_cyc, drug_doses, drug_units, tox_type, \
-                tox_grade, tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, nact_response, nact_size, \
+                plan_nact, date_start_nact, patient_wt, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq,tox_type, \
+                tox_grade, tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, nact_response, nact_size, nact_size_unit, \
                 nact_size_date, trast_nact, trast_regime, trast_courses,date_complete, reason_incomplete, \
-                hormone_therapy,  therapy_type, therapy_duration, therapy_side = (details_nact,)*26
+                hormone_therapy,  therapy_type, therapy_duration, therapy_side = (details_nact,)*28
             elif details_nact == "Details Available":
-                plan_nact = input("What is the plan of NACT (for eg., 4 cycles AC + 12 cycles Paclitaxel):")
-                date_start_nact = input("Date of starting neo-adjuvant therapy: ")
+                plan_nact = input("What is the plan of NACT (for eg., 4 cycles AC followed by 12 cycles Paclitaxel):")
+                date_start_nact = ask_y_n_statement.check_date("Date of starting neo-adjuvant therapy: ")
                 patient_wt = input("Weight of patient at start of therapy (in kgs): ")
                 check_wt = ask_y_n_statement.ask_y_n("Is weight at any other time point mentioned in report "
                                                          "(with date, if given)?")
@@ -56,11 +56,12 @@ def nact_test(file_number, user_name):
                     tox_details.append(list(tox_detail))
                 tox_details = ask_y_n_statement.join_lists(tox_details, "; ")
                 file_number_tox, drug_tox, tox_type, tox_grade, tox_treat, tox_response, tox_cycle, change_tox = tox_details
-                nact_response_by = input("Response to NACT measured by: ")
+                nact_response_by = ask_y_n_statement.ask_option("Response to NACT measured by",['Mammography', 'SonoMammography'])
                 nact_response = ask_y_n_statement.ask_option("Response of tumour",
                                                              ["Partial", "Complete", "No Effect", "Other"])
-                nact_size = input("Tumour size (cm) after treatment")
-                nact_size_date=input("Date tumour size checked")
+                nact_size = input("Tumour size (without unit, e.g., 2 x 4 x 5) after treatment: ")
+                nact_size_unit = ask_y_n_statement.ask_option("Tumour size unit", ['mm', 'cm'])
+                nact_size_date=ask_y_n_statement.check_date("Date tumour size checked: ")
                 trast_nact = ask_y_n_statement.ask_y_n("Trastuzumab used?")
                 if trast_nact:
                     trast_regime = ask_y_n_statement.ask_option("Trastuzumab use was", ["Sequential", "Concurrent"])
@@ -68,8 +69,8 @@ def nact_test(file_number, user_name):
                     trast_courses = input("Number of courses of trastuzumab/herceptin taken: ")
                 else:
                     trast_nact, trast_regime, trast_courses, therapy_side = ("Trastuzumab not used", )*4
-                date_complete = input("Date of completion of NACT")
-                complete_nact = ask_y_n_statement.ask_y_n("Was NACT completed as per schedule?")
+                date_complete = ask_y_n_statement.check_date("Date of completion of NACT: ")
+                complete_nact = ask_y_n_statement.ask_y_n("Was NACT completed as per schedule? ")
                 if complete_nact:
                     reason_incomplete = "NACT completed as per schedule"
                 else:
@@ -92,24 +93,24 @@ def nact_test(file_number, user_name):
                 else:
                     therapy_type, therapy_duration, therapy_side = (hormone_therapy, )*3
             else:
-                plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, tox_type, tox_grade, \
-                tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, nact_response, nact_size, \
+                plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq,tox_type, tox_grade, \
+                tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, nact_response, nact_size, nact_size_unit, \
                 nact_size_date, trast_nact, trast_regime, trast_courses, hormone_therapy,  therapy_type, \
-                therapy_duration, therapy_side, date_complete, reason_incomplete, patient_wt = (details_nact,)*26
+                therapy_duration, therapy_side, date_complete, reason_incomplete, patient_wt = (details_nact,)*27
         elif nact == 'No':
-            place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, tox_type, tox_grade, \
-            tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, nact_size, nact_size_date, \
+            place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq,tox_type, tox_grade, \
+            tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, nact_size, nact_size_unit, nact_size_date, \
             trast_nact, trast_regime, trast_courses, hormone_therapy,  therapy_type, therapy_duration, therapy_side,\
-            date_complete, reason_incomplete, details_nact, nact, patient_wt = ("NACT not given",)*29
+            date_complete, reason_incomplete, details_nact, nact, patient_wt = ("NACT not given",)*31
         else:
-            place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units,  tox_type, tox_grade, \
-            tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, nact_size, nact_size_date, \
+            place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units,  drug_freq, tox_type, tox_grade, \
+            tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, nact_size, nact_size_unit, nact_size_date, \
             trast_nact, trast_regime, trast_courses, hormone_therapy,  therapy_type, therapy_duration,\
-            therapy_side, date_complete, reason_incomplete, details_nact, patient_wt = (nact,)*28
+            therapy_side, date_complete, reason_incomplete, details_nact, patient_wt = (nact,)*30
         last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [nact,  place_nact,  details_nact,  plan_nact,  date_start_nact, patient_wt, drug_cyc,  cyc_number,
-                     drug_doses,  drug_units, tox_type, tox_grade, tox_treat, tox_response, tox_cycle,  change_tox,
-                     nact_response_by,  nact_response, nact_size, nact_size_date,  reason_incomplete,  date_complete,
+                     drug_freq, drug_doses,  drug_units, tox_type, tox_grade, tox_treat, tox_response, tox_cycle,  change_tox,
+                     nact_response_by,  nact_response, nact_size, nact_size_unit, nact_size_date,  reason_incomplete,  date_complete,
                      trast_nact, trast_regime,  trast_courses,  hormone_therapy,   therapy_type,  therapy_duration,
                      therapy_side,  user_name,  last_update]
         col_list = names("Neo_Adjuvant_Therapy")
@@ -122,7 +123,7 @@ def clip_information(file_number):
         clip = ask_y_n_statement.ask_y_n("Was Clip inserted for surgery?")
         if clip:
             clip_number = input("Number of clips inserted: ")
-            clip_date = input("Date of clip insertion: ")
+            clip_date = ask_y_n_statement.check_date("Date of clip insertion: ")
             clip_cycle = input("Clip inserted after cycle? ")
         else:
             clip_date, clip_number, clip_cycle = ("NA", )*3

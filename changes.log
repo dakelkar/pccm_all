@@ -1,0 +1,15 @@
+.LOG
+24/9/2018
+Created new module to test date entry. added to NACT and ACT modules. Removed hormone therapy from ACT module.
+
+
+3:58 PM 10/3/2018
+Changed date entry test to accept NA
+Error in NACT and ACT modules due to increase in variables
+Changed follow-up module : created new function in add_edit_sql
+ - print_df
+ - edit_table
+
+and edit_follow_up function. Hasnt been tested by actual db entry. will do that thursday with rituja/rohini after meeting.
+
+git commit

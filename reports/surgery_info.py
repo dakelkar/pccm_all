@@ -116,13 +116,10 @@ def surgery_information(file_number):
                 oncoplastic_surgery_secondary_pedicle, reconstruction_surgery_implant_type, \
                 reconstruction_surgery_implant_size, surgery_type_level_subtype = (other,) * 10
         elif surgery_type == "Implant Based Reconstruction":
-            surgery_type_subtype = ask_option("Type of surgery", ['Non Sling – Conventional IBRS',
-                                                          'Sling ALDS',
-                                                          'Advanced Sling (AALDS)',
-                                                          'LD Flap',
-                                                          'LD Flap + Implant',
-                                                          'TDAP + Implant',
-                                                          'LICAP + Implant'])
+            surgery_type_subtype = ask_option("Type of surgery", ['Non Sling – Conventional IBRS', 'Sling ALDS',
+                                                                  'Advanced Sling (AALDS)', 'LD Flap',
+                                                                  'LD Flap + Implant', 'TDAP + Implant',
+                                                                  'LICAP + Implant', 'Implant'])
             reconstruction_surgery_implant_type = ask_option("Type of implant used", ["Fixed Volume", "Dual Lumen"])
             if reconstruction_surgery_implant_type == "Fixed Volume":
                 fixed_type = ask_option("Type of fixed volume implant", ["Smooth", "Textured", "Microtextured"])

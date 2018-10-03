@@ -1,7 +1,7 @@
 from additional_tables.breast_cancer_tables import nut_supp_table,physical_activity_table,med_history_table,cancer_table,\
     feed_duration,family_cancer_table
 from sql.add_update_sql import review_input, update_multiple, review_data
-from modules.ask_y_n_statement import ask_option, ask_y_n, ask_y_n_na
+from modules.ask_y_n_statement import ask_option, ask_y_n, ask_y_n_na, check_date
 from add_edit.print_gen_info import print_info
 import modules.pccm_names as pccm_names
 import textwrap
@@ -122,7 +122,7 @@ def family_details(conn, cursor, file_number):
             lmp = "Last menstrual period " + menopause_age + " yrs"
             period_type = "NA"
         else:
-            lmp = input("Date of last menstrual period: ")
+            lmp = check_date("Date of last menstrual period: ")
             category = "Type of Period"
             options = ["Regular", "Irregular", "Other"]
             period_type = ask_option(category, options)
@@ -298,9 +298,9 @@ def breast_symptoms(file_number, user_name):
             if met_flat == []:
                 data_met = "No Metastatis Symptoms"
         else:
-            data_list_other = ["Requires Follow-up", ] * 4
-            data_list_symp = ["Requires Follow-up", ] * 4
-            data_met = "Requires Follow-up"
+            data_list_other = ["Symptoms at presentation not in report", ] * 4
+            data_list_symp = ["Symptoms at presentation not in report", ] * 4
+            data_met = "Symptoms at presentation not in report"
         columns_list = pccm_names.names_info(module_name)
         last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = data_list_symp + data_list_other + [data_met, user_name, last_update]
@@ -408,7 +408,7 @@ def det_by(file_number):
         if determined_by == "Screening Camp":
             sc_id = input("Screening Camp ID: ")
             determined_by = "Screening Camp ID " + sc_id
-        det_date = input("Date of current breast cancer detection: ")
+        det_date = check_date("Date of current breast cancer detection: ")
         columns_list =pccm_names.names_info(module_name)
         data_list = [determined_by, det_date]
         check = review_input(file_number, columns_list, data_list)
@@ -442,7 +442,7 @@ def bio_info(file_number):
         mr_number = input('MR number :')
         name = input('Name :')
         aadhaar_card = input("Aadhaar card number (if available): ")
-        date_first = input("Date of first visit: ")
+        date_first = check_date("Date of first visit: ")
         permanent_address = input('Permanent Address :')
         current_address_check = ask_option('Current Address', ["Same as Permanent", "Different"])
         if current_address_check == "Different":
@@ -454,7 +454,7 @@ def bio_info(file_number):
         gender = ask_option('Gender', ["Female", "Male", "Other"])
         age_yrs = input('Age at first visit (yrs) :')
         age_diag = input('Age at diagnosis (yrs): ')
-        date_of_birth = input('Date of Birth (dd/mm/yyyy):')
+        date_of_birth = check_date('Date of Birth (dd/mm/yyyy):')
         place_birth = input('Place of Birth :')
         height = ask_option("Height unit", ["cm", "feet/inches", "Height not available"])
         if height == "Height not available":

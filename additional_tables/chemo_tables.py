@@ -69,7 +69,7 @@ def drug_table_enter(file_number, drug_table):
                 drug_dose = float(dose) * int(number_cycle)
             except:
                 drug_dose = 'PLEASE RE-ENTER DATA, DOSE AND NUMBER OF CYCLES MUST BE DIGITS ONLY'
-            data_drug = [file_number, number_cycle, drug, str(drug_dose), dose_unit, cyc_freq_week]
+            data_drug = [file_number, drug, number_cycle, cyc_freq_week, str(drug_dose), dose_unit]
             drug_table.loc[drug_index] = data_drug
             check_drug, drug_table = review_df_row(drug_table)
             drug_index = drug_index + 1

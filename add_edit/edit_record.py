@@ -16,7 +16,8 @@ def edit_record(conn, cursor, file_number, table, user_name, folders):
     elif table == "Surgery_Report":
         reports.surgery_info.edit_data(conn, cursor, file_number, user_name)
     elif table == "Surgery_Block_Report_Data":
-        reports.surgery_block.edit_data(conn, cursor, file_number, user_name)
+        surgery_block = reports.SurgeryBlockData(conn, cursor, file_number, user_name)
+        surgery_block.edit_data()
     elif table == "Adjuvant_ChemoTherapy":
         reports.chemotherapy.edit_data(conn, cursor, file_number, user_name)
     elif table == "Radiotherapy":

@@ -45,20 +45,16 @@ class BiopsyData:
         columns_list = names(module_name)
         df_cols = columns_list[:-2]
         data_list_df = pd.DataFrame(columns=df_cols)
-        try:
-            ihc_biopsy = sql.get_value(col_name='IHC_report_PCCM_yes_no', table=self.table,
-                                       file_number=self.file_number, cursor=self.cursor)
-        except sqlite3.Error:
-            ihc_biopsy = ask.ask_y_n_na("Is the IHC report available?", yes_ans="IHC_report_PCCM_yes",
-                                        no_ans="IHC_report_PCCM_no", na_ans="IHC Not Done")
+        ihc_biopsy = sql.get_value(col_name='IHC_report_PCCM_yes_no', table=self.table,
+                                   file_number=self.file_number, cursor=self.cursor, error_statement=
+                                   "Is the IHC report available? If yes enter IHC_report_PCCM_yes, "
+                                   "if no enter IHC_report_PCCM_no, if not done enter IHC Not Done")
         check = False
         while not check:
-            try:
-                breast_biopsy = sql.get_value(col_name='Breast_Biopsy', table=self.table,
-                                              file_number=self.file_number, cursor=self.cursor)
-            except sqlite3.Error:
-                breast_biopsy = ask.ask_option('Breast that biopsy has been done for',
-                                               ['Right Breast', 'Left Breast', 'Unilateral', "Bilateral"])
+            breast_biopsy = sql.get_value(col_name='Breast_Biopsy', table=self.table,
+                                          file_number=self.file_number, cursor=self.cursor, error_statement=
+                                          'Breast that biopsy has been done for (enter Right Breast, Left Breast, '
+                                          'Unilateral or Bilateral')
             breasts = BlockDescription.breast_list(breast_biopsy)
             for breast in breasts:
                 check_breast = False

@@ -16,7 +16,8 @@ def add_new(conn, cursor, file_number, table, user_name, folders):
     elif table == "Surgery_Report":
         reports.surgery_info.add_data(conn, cursor, file_number, user_name)
     elif table == "Surgery_Block_Report_Data":
-        reports.surgery_block.add_data(conn,cursor,file_number, user_name)
+       surgery_block = reports.SurgeryBlockData(conn, cursor, file_number, user_name)
+       surgery_block.add_data()
     elif table == "Adjuvant_ChemoTherapy":
         reports.chemotherapy.add_data(conn, cursor, file_number, user_name)
     elif table == "Radiotherapy":

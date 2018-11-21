@@ -469,10 +469,13 @@ def bio_info(file_number):
                 height_inch = float(input("Height (inches)"))
                 height_inch = height_inch + 12 * height_feet
                 height_cm = str(height_inch * 2.54)
-            weight_kg = input('Weight (kg) :')
-            height = float(height_cm) / 100
-            weight = float(weight_kg)
-            BMI = str(round(weight / (height * height)))
+            weight_kg = input('Weight (kg) (if available else enter NA) :')
+            try:
+                weight = float(weight_kg)
+                height = float(height_cm) / 100
+                BMI = str(round(weight / (height * height)))
+            except ValueError:
+                BMI = 'NA'
         columns_list = pccm_names.names_info(module_name)
         new_data = [mr_number, name, aadhaar_card, date_first, permanent_address, current_address, phone,
                     email_id, gender, age_yrs, age_diag,date_of_birth, place_birth, height_cm, weight_kg, BMI]

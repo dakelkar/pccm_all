@@ -1,5 +1,5 @@
 import modules.ask_y_n_statement as ask_y_n_statement
-from sql.add_update_sql import review_df_row, view_multiple, delete_multiple, delete_rows
+from sql.add_update_sql import review_df_row, view_multiple, print_df, delete_rows, edit_table
 from modules.pccm_names import name_follow_up as names
 import pandas as pd
 from datetime import datetime
@@ -55,10 +55,10 @@ def follow_up(file_number, user_name):
             data_list = [file_number, time_follow, follow_status, follow_mammo_date, follow_mammo, follow_usg_date,
                          follow_usg, other_type_date,other_type, other_result, user_name, last_update]
             follow_up_data.loc[follow_index] = data_list
-            check = review_df_row(follow_up_data)
+            check, follow_up_data = review_df_row(follow_up_data)
         follow_index = follow_index + 1
         follow_up_period = list(follow_up_data.loc[:, "Follow_up_Period"])
-        print("Follow up periods added: "+"; ".join(follow_up_period))
+        print("\n Follow up periods added: " + "; ".join(follow_up_period) + '\n')
         follow = ask_y_n_statement.ask_y_n("Add another follow-up period?")
     return follow_up_data
 
@@ -75,14 +75,15 @@ def edit_data(conn, cursor, file_number, user_name):
     if enter == "Add data":
         data = follow_up(file_number, user_name)
         data.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
-    if enter == "Edit data":
-        table = "Follow_up_Data"
+    elif enter == "Edit data":
         col_list = ["File_number"] + names()
-        sql = ('SELECT ' + ", ".join(col_list[:-2]) + " FROM '" + table + "' WHERE File_number = '"+file_number+"'")
+        sql = ('SELECT ' + ", ".join(col_list) + " FROM '" + table + "' WHERE File_number = '"+file_number+"'")
         df = pd.read_sql(sql, conn)
-        sql.print_df(df)
+        print_df(df)
         check_delete = False
         while not check_delete:
-            check_delete, df = sql.edit_table(df, id_col='Follow_up_Period', df_col=names())
+            check_delete, df = edit_table(df, id_col='Follow_up_Period', df_col=names())
         delete_rows(cursor, table,"File_number", file_number)
-        add_data(conn, file_number, user_name)
+        df.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
+    else:
+        print('\n No edits will be made to this table\n')

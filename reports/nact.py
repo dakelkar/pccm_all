@@ -13,21 +13,21 @@ def nact_test(file_number, user_name):
     toxicity = pd.DataFrame(columns=col_tox)
     check = False
     while not check:
-        nact = ask_y_n_statement.ask_y_n_na("Has neo adjuvant therapy been done for the patient?")
+        nact = ask_y_n_statement.ask_y_n_na("Has neo adjuvant therapy been done for the patient (Please check for "
+                                            "chemotherapy and/hormone therapy)?")
         if nact == 'Yes':
             place_nact = ask_y_n_statement.ask_y_n_na("Has neo adjuvant therapy been done at PCCM?", "At PCCM",
                                                       "Outside", "Not Certain, requires follow-up")
             details_nact = ask_y_n_statement.ask_y_n("Are neo adjuvant therapy details available?", "Details Available",
                                                      "Follow-up required")
-            nact = "NACT given"
             if details_nact == "Follow-up required":
-                plan_nact, date_start_nact, patient_wt, cyc_number, drug_cyc, drug_doses, drug_units, \
-                drug_freq,tox_type, tox_grade, tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, \
-                nact_response, nact_size, nact_size_unit, nact_size_date, trast_nact, trast_regime, \
-                trast_courses, date_complete, reason_incomplete, hormone_therapy,  therapy_type, therapy_duration, \
-                therapy_side = (details_nact,)*28
+                plan_nact, date_start_nact, patient_wt, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq, \
+                tox_type, tox_grade, tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, nact_response, \
+                nact_size, nact_size_unit, nact_size_date, trast_nact, trast_regime, trast_courses, date_complete, \
+                reason_incomplete, hormone_therapy,  therapy_type, therapy_duration, therapy_side = (details_nact,)*28
             elif details_nact == "Details Available":
-                plan_nact = input("What is the plan of NACT (for eg., 4 cycles AC followed by 12 cycles Paclitaxel):")
+                plan_nact = input("What is the plan of NACT (for eg., 4 cycles AC followed by 12 cycles Paclitaxel; "
+                                  "Include hormone therapy plan here):")
                 date_start_nact = ask_y_n_statement.check_date("Date of starting neo-adjuvant therapy: ")
                 patient_wt = input("Weight of patient at start of therapy (in kgs): ")
                 check_wt = ask_y_n_statement.ask_y_n("Is weight at any other time point mentioned in report "
@@ -88,7 +88,7 @@ def nact_test(file_number, user_name):
                                                                       "Preferred treatment at another centre",
                                                                       "Death due to unrelated cause",
                                                                       "Patient was unable to afford treatment"])
-                    reason_incomplete = "NACT incomplete: "+reason_incomplete
+                    reason_incomplete = "NACT incomplete: " + reason_incomplete
                 hormone_therapy = ask_y_n_statement.ask_y_n_na("Was hormone therapy given?")
                 if hormone_therapy == 'Yes':
                     hormone_therapy = "Hormone therapy given"
@@ -97,29 +97,37 @@ def nact_test(file_number, user_name):
                     therapy_side = ask_y_n_statement.ask_y_n_na("Were any side effects observed ?")
                     if therapy_side == 'Yes':
                         therapy_side = input("Please give details of side effects observed: ")
+                    nact_naht = ask_y_n_statement.ask_y_n('Was chemotherapy given in addition to hormone therapy?')
+                    if nact_naht:
+                        nact = 'NACT and NAHT given'
+                    else:
+                        nact = 'NAHT given'
                 elif hormone_therapy == 'No':
                     hormone_therapy = "No hormone therapy given"
+                    nact = "NACT given"
                     therapy_type, therapy_duration, therapy_side = (hormone_therapy,) * 3
                 else:
-                    therapy_type, therapy_duration, therapy_side = (hormone_therapy, )*3
+                    therapy_type, therapy_duration, therapy_side = (hormone_therapy,) * 3
+                    nact = "NACT given"
             else:
-                plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq,tox_type, \
-                tox_grade, tox_treat, tox_response, tox_cycle, change_tox,nact_response_by, nact_response, nact_size, \
+                plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq, tox_type, \
+                tox_grade, tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, nact_size, \
                 nact_size_unit, nact_size_date, trast_nact, trast_regime, trast_courses, hormone_therapy,  \
                 therapy_type, therapy_duration, therapy_side, date_complete, reason_incomplete, patient_wt \
                     = (details_nact,)*28
         elif nact == 'No':
-            place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq,tox_type, \
+            place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units, drug_freq, tox_type, \
             tox_grade, tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, \
             nact_size, nact_size_unit, nact_size_date, trast_nact, trast_regime, trast_courses, hormone_therapy,  \
             therapy_type, therapy_duration, therapy_side, date_complete, reason_incomplete, details_nact, nact, \
-            patient_wt = ("NACT not given",)*31
+            patient_wt = ("NACT/NAHT not given",)*31
         else:
             place_nact, plan_nact, date_start_nact, cyc_number, drug_cyc, drug_doses, drug_units,  drug_freq, tox_type,\
             tox_grade, tox_treat, tox_response, tox_cycle, change_tox, nact_response_by, nact_response, \
             nact_size, nact_size_unit, nact_size_date, trast_nact, trast_regime, trast_courses, hormone_therapy,  \
             therapy_type, therapy_duration, therapy_side, date_complete, reason_incomplete, details_nact, patient_wt \
                 = (nact,)*30
+
         last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [nact,  place_nact,  details_nact,  plan_nact,  date_start_nact, patient_wt, drug_cyc,
                      cyc_number, drug_freq, drug_doses,  drug_units, tox_type, tox_grade, tox_treat, tox_response,

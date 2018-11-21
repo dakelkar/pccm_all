@@ -106,15 +106,13 @@ class BiopsyData:
                 biopsy_date = ask.check_date("Date of Biopsy: ")
                 biopsy_lab_id = input("Biopsy Lab ID/SID: ")
                 print('Please input all data for ' + breast + ' block only')
-                biopsy_type = ask.ask_option("Biopsy Type",
-                                             ["Direct", "USG Guided", "VAB", "Tru-cut", "Steriotactic", 'Core',
-                                              'Excision', 'FNAC', "Other"])
+                biopsy_type = ask.ask_option("Biopsy Type", ["VAB", "Trucut", 'Excision', 'FNAC'])
                 category = "Tumour biopsy diagnosis"
-                options = ['Benign', "Ductal carcinoma in situ(DCIS) with microinvasion",
-                           "Ductal carcinoma in situ(DCIS) without microinvasion", "Lobular Carcinoma in Situ (LCS)",
+                options = ['Benign', "Ductal carcinoma in situ (DCIS)", "Lobular Carcinoma in situ (LCS)",
                            "Invasive Ductal Carcinoma (IDC)", "Invasive Lobular Carcinoma (ILC)",
-                           "Granulamatous Mastitis", "Papillary Carcinoma", "Phylloid Carcinoma",
-                           "Invasive Mammary Carcinoma", "Invasive Breast Carcinoma", "Other"]
+                           "Mastitis", "Papillary Carcinoma", "Phylloid Carcinoma",
+                           "Invasive Mammary Carcinoma", "Invasive Breast Carcinoma"]
+                biopsy_nontes = input('Notes (description or indications of diagnosis): ')
                 tumour_diagnosis = ask.ask_option(category, options)
                 tumour_grade = ask.ask_option("Tumour Biopsy Diagnosis", ["I", "II", "III"])
                 lymph_emboli = ask.ask_y_n_na(question="Are Lymphovascular emboli seen?",

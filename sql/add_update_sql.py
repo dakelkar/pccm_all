@@ -136,7 +136,7 @@ def view_multiple(conn, table, col_list, file_number):
     sql = ('SELECT '+ ", ".join(col_list) +' FROM '+ table + " WHERE File_number = '" +file_number+"'")
     df = pd.read_sql(sql, conn)
     print_df(df)
-    enter = ask_option("Do you want to add or edit data", ["Add data", 'Edit data'])
+    enter = ask_option("Do you want to add or edit data", ["Add data", 'Edit data', 'Do not add or edit'])
     return enter
 
 
@@ -207,7 +207,9 @@ def edit_table(df, id_col, df_col):
                 while to_do:
                     print(df.loc[index, :])
                     col_change = ask.ask_option("Name of column to change", df_col)
-                    new_val = input("Enter correct value for " + col_change + ' for ' + id)
+                    old_val = df.loc[index, col_change]
+                    print(old_val + '\n')
+                    new_val = input("Enter correct value for " + col_change + ' for ' + id + ": ")
                     df.loc[index, col_change] = new_val
                     print(df.iloc[index].to_string() + '\n')
                     to_do = ask.ask_y_n("Make more changes to " + id_col + ' ' + id + '?')

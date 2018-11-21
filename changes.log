@@ -13,3 +13,7 @@ Changed follow-up module : created new function in add_edit_sql
 and edit_follow_up function. Hasnt been tested by actual db entry. will do that thursday with rituja/rohini after meeting.
 
 git commit
+6:12 PM 11/8/2018
+edit_follow_up function.tested with actual db entry. to demo to rituja/rohini on 9th.
+6:51 PM 11/20/2018
+added function to write details of new ffpe blocks to a db. To check why file number column is added at beginning.

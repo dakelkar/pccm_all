@@ -19,7 +19,8 @@ def table_module_dict (table):
         "Adjuvant_ChemoTherapy": ['Adjuvant_ChemoTherapy'],
         "Radiotherapy": [],
         "HormoneTherapy_Survival": ["hormone", "metastasis"],
-        "Follow_up_Data": []
+        "Follow_up_Data": [],
+        'Block_list': []
     }
     module_list = table_module.get(table)
     return module_list
@@ -38,7 +39,8 @@ def table_module_research (table):
         "Adjuvant_ChemoTherapy": ['Adjuvant_ChemoTherapy'],
         "Radiotherapy": [],
         "HormoneTherapy_Survival": ["hormone", "metastasis"],
-        "Follow_up_Data": []
+        "Follow_up_Data": [],
+        'Block_list': []
     }
     module_list = table_module.get(table)
     return module_list
@@ -53,6 +55,9 @@ def db_dict (table, module):
                  "Adjuvant_ChemoTherapy": names.names_chemotherapy(module),
                  "Radiotherapy": names.names_radiation(),
                  "HormoneTherapy_Survival": names.names_longterm(module),
-                 "Follow_up_Data": names.name_follow_up()}
+                 "Follow_up_Data": names.name_follow_up(),
+                 'Block_list': names.name_ffpe_csv()
+                }
+
     cols = db_tables.get(table)
     return cols

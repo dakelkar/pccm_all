@@ -436,10 +436,15 @@ def names_longterm(module_name):
         col_list = "File_number"
     return col_list
 
+def name_ffpe_csv():
+    col_list = ["patient_name", "block_sr_number", 'block_location_id',"block_current_location",
+                'file_number', "received_pccm_date", "block_id", 'block_series','no_of_blocks',
+                "block_type", "input_file_name"]
+    return col_list
 def db_tables():
     tables = ["Patient_Information_History", "Biopsy_Report_Data", "Clinical_Exam", "Radiology", "Neo_Adjuvant_Therapy",
               "Surgery_Report", "Surgery_Block_Report_Data", "Adjuvant_ChemoTherapy", "Radiotherapy",
-              "HormoneTherapy_Survival", "Follow_up_Data"]
+              "HormoneTherapy_Survival", "Follow_up_Data", 'Block_list']
     return tables
 
 

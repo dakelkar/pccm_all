@@ -5,8 +5,8 @@ import os
 import modules.pccm_names as pccm_names
 
 
-folder = "d:/OneDrive/repos/pccm_db/main/DB"
-db_name = "PCCM_BreastCancerDB_" + str(date.today()) + '.db'
+folder = "d:/repos/pccm_db/main/DB"
+db_name = "PCCM_BreastCancerDB_check_FFPE_dk_" + str(date.today()) + '.db'
 
 path = os.path.join(folder, db_name)
 
@@ -152,6 +152,13 @@ if table_check(cursor, table) == 0:
         add_columns(cursor, table, col_name)
     print(table + ' created')
 
+table = 'Block_list'
+if table_check(cursor, table) == 0:
+    column = ", ".join(pccm_names.name_ffpe_csv())
+    cursor.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))
+    print(table + ' created')
 conn.commit()
 print(path + " file created")
 conn.close()
+
+

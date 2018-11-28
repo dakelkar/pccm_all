@@ -139,3 +139,27 @@ def edit_table(df, id_col, df_col):
                 to_do = ask_y_n("Make more changes to " + id_col + ' ' + id + '?')
             to_correct = False
             return to_correct, df
+
+
+def ask_list(category, options):
+    option_list = []
+    val = []
+    i=1
+    for option in options:
+        var = [(str(i) + ". " + option)]
+        val.append(str(i))
+        option_list.append(var)
+        i = i+1
+    option_flat = [item for sublist in option_list for item in sublist]
+    option_flat = " ".join(option_flat)
+    check = False
+    while not check:
+        print("\n", "Enter " + category, "\n")
+        wrapper = textwrap.TextWrapper(width=100)
+        string = wrapper.fill(text=option_flat)
+        print(string, "\n")
+        answer = input("Enter option number: ")
+        check = answer in set(val)
+    ans_int = int(answer) - 1
+    option = options[ans_int]
+    return option

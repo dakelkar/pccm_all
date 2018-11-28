@@ -471,19 +471,26 @@ def mutation_tables(table):
 
 def names_biopsy_new(module_name):
     if module_name == "biopsy_report_info":
-        col_list = ['Biopsy_report_PCCM_yes_no', 'IHC_report_PCCM_yes_no', 'Breast_Biopsy', "Block_SR_Number_Biopsy",
-                    "Block_Location_ID_Biopsy", "Biopsy_Block_ID", "No_of_blocks_Biopsy", "Date_of_Biopsy",
-                    "Lab_ID_Biopsy", "Biopsy_Type", "Tumour_biopsy_diagnosis", "Tumour_biopsy_diagnosis_grade",
-                    "Lymphovascular_emboli_biopsy_yes_no", "DCIS_biopsy_yes_no"]
+        col_list = ['file_number','block_sr_number', 'block_location_id', 'block_current_location',
+                    'blocks_received_at_pccm_date', "reason_for_biopsy",'biopsy_site','biopsy_report_in_pccm_custody',
+                    "biopsy_ihc_report_in_pccm_custody", "biopsy_block_id", "no_of_blocks", "date_of_biopsy",
+                    'biospy_block_source',"lab_id_sid", "biopsy_type", 'biopsy_diagnosis', 'diagnosis_comments',
+                    'tumour_biopsy_diagnosis_grade','lymphovascular_emboli', 'dcis_biopsy']
     elif module_name == "tumour_biopsy_data":
-        col_list = ["Tumour_biopsy_ER", "Tumour_biopsy_ER_Percent", "Tumour_biopsy_PR",
-                    "Tumour_biopsy_PR_Percent", "Tumour_biopsy_HER2", "Tumour_biopsy_HER2_Grade", "Tumour_biopsy_FISH",
-                    "Tumour_biopsy_Ki67_Percent", "Lymph_Node_biopsy_FNAC", "Lymph_Node_biopsy_location",
-                    "Lymph_Node_biopsy_diagnosis", "update_by", "last_update"]
+        col_list = ["tumour_biopsy_er", "tumour_biopsy_er_percent", "tumour_biopsy_pr",
+                    "tumour_biopsy_pr_percent", "tumour_biopsy_her2", "tumour_biopsy_her2_grade", "tumour_biopsy_fish",
+                    "tumour_biopsy_ki67_percent", "lymph_node_biopsy_fnac", "lymph_node_biopsy_location",
+                    "lymph_node_biopsy_diagnosis", "update_by", "last_update"]
     elif module_name == 'biopsy_report_info_df':
         col_list = ["Block_SR_Number_Biopsy", "Block_Location_ID_Biopsy", "Biopsy_Block_ID", "No_of_blocks_Biopsy",
                     "Date_of_Biopsy", "Lab_ID_Biopsy", "Biopsy_Type", "Tumour_biopsy_diagnosis",
                     "Tumour_biopsy_diagnosis_grade", "Lymphovascular_emboli_biopsy_yes_no", "DCIS_biopsy_yes_no"]
     else:
         col_list = "File_number"
+    return col_list
+
+def names_biopsy_x(module_name):
+    if module_name == 'biopsy_details':
+        col_list = ['biopsy_date', 'biopsy_source', 'biopsy_lab_id', 'biopsy_type', 'biopsy_diagnosis',
+                    'biopsy_comments', 'tumour_grade', 'lymph_emboli', 'dcis_biopsy']
     return col_list

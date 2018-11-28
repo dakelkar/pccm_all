@@ -217,3 +217,16 @@ def edit_table(df, id_col, df_col):
                 change_row = ask.ask_y_n("Change another row?")
             to_correct = False
     return to_correct, df
+
+def get_block_id_multiple (col_name, table, file_number, block_type, cursor):
+    #mutliple results for block_id with multiple entries and 1 block_type
+    try:
+        sql = "SELECT "+ col_name +" FROM " +table+" WHERE file_number = '" + file_number + "' AND block_type = '"\
+              + block_type + "'"
+        cursor.execute(sql)
+        values = cursor.fetchall()
+        value = [value[0] for value in values]
+    except:
+        value = 'NA'
+    return value
+

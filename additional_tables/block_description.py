@@ -137,24 +137,25 @@ class BlockDescription():
         return block_location
 
     @staticmethod
-    def ihc_report():
+    def ihc_report(ihc_type):
         tumour_er = ask.ask_option("ER Status", ["ER_positive", "ER_negative"])
         if tumour_er == "ER_positive":
-            tumour_er_percent = input("ER Percent (number only), Enter 'Data not in Report' if %age not available: ")
+            tumour_er_percent = input("ER Percent (number only), Enter 'ER_Percent_not_done' if %age not available: ")
         else:
             tumour_er_percent = tumour_er
         tumour_pr = ask.ask_option("PR Status", ["PR_positive", "PR_negative"])
         if tumour_pr == "PR_positive":
-            tumour_pr_percent = input("PR Percent (number only), Enter 'Data not in Report' if %age not available: ")
+            tumour_pr_percent = input("PR Percent (number only), Enter 'PR_Percent_not_done' if %age not available: ")
         else:
             tumour_pr_percent = tumour_pr
         tumour_her2 = ask.ask_option("HER2 Status", ["HER2_positive", "HER2_negative",
                                                      "HER2_equivocal"])
         tumour_her2_grade = input("HER2 Grade: ")
         tumour_fish = ask.ask_option("FISH", ["FISH_positive", "FISH_negative", "FISH Not Done"])
-        tumour_ki67 = input("Ki67 Percent, Number only, Enter 'Not Done' if test not done: ")
+        tumour_ki67 = input("Ki67 Percent, Number only, Enter 'Ki76_not_done' if test not done: ")
         data = tumour_er, tumour_er_percent, tumour_pr, tumour_pr_percent, tumour_her2, tumour_her2_grade, tumour_fish,\
                tumour_ki67
+        data = [ihc_type + "_" + item for item in data]
         return data
 
     @staticmethod

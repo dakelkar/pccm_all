@@ -63,3 +63,21 @@ for index in range (0, len(data)):
     data_list.append(update_by)
     data_list.append(last_update)
     sql.insert(conn_all, cursor_all, table, columns, data_list)
+
+
+# get col_names from older pccm_names files:
+# 2018-09-28
+import modules.pccm_names as pccm_names
+import sql.add_update_sql as sql
+#read from excel with same col names and distribution as in table
+table = 'Follow_up_Data'
+file_to_read = "D:/OneDrive/iiser_data/Prashanti_docs/Database_files/2018_10_09/Rituja_data/" \
+               "PCCM_BreastCancerDB_Rituja_2018-10-11_2018-10-11.xlsx"
+data = pd.read_excel(file_to_read, header=0, dtype = 'object' ,usecols= 'A:L', sheet_name='Follow_up_Data')
+col_list = ["File_number"]
+col_list = col_list + pccm_names.name_follow_up()
+columns = ", ".join(col_list)
+for index in range (0, len(data)):
+    data_list = list(data.loc[index])
+    sql.insert(conn_all, cursor_all, table, columns, tuple(data_list))
+

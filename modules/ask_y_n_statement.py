@@ -1,4 +1,5 @@
 import textwrap
+import datetime
 
 def ask_option(category, options):
     option_remove = ["Data not available", "Other"]
@@ -90,4 +91,75 @@ def ask_option_y_n(question, yes_ans = "Yes", no_ans = "No",
         option = ans_3
     else:
         option = ans_4
+    return option
+
+def check_date(date_string):
+    checked_date = False
+    while not checked_date:
+        isValidDate = True
+        error = '\nDate entered is not valid\nDate must be in dd/mm/yyyy format or NA\n'
+        inputDate = input('\n' + date_string + '\n')
+        if inputDate !='NA':
+            try:
+                day, month, year = inputDate.split('/')
+                try:
+                    datetime.datetime(int(year), int(month), int(day))
+                except ValueError:
+                    print(error)
+                    isValidDate = False
+            except ValueError:
+                print (error)
+                isValidDate = False
+            if (isValidDate):
+                checked_date = datetime.datetime.today() > datetime.datetime(int(year), int(month), int(day))
+                if not checked_date:
+                    print (error)
+        else:
+            checked_date= ask_y_n('Date is NA. Is that correct?')
+    return inputDate
+
+def edit_table(df, id_col, df_col):
+    print(df)
+    check = ask_y_n("Are entries correct?")
+    if not check:
+        to_correct = ask_y_n("Correct entire table?")
+        if to_correct:
+            return to_correct, df
+        else:
+            id_list = list(df[id_col])
+            to_do = True
+            while to_do:
+                id = input("Enter " + id_col + "to change: ")
+                index = id_list.index(id)
+                print(df.loc[index, :])
+                col_change = ask_option("Name of column to change", df_col)
+                new_val = input("Enter correct value for " + col_change + ' for ' + id)
+                df.loc[index, col_change] = new_val
+                print(df)
+                to_do = ask_y_n("Make more changes to " + id_col + ' ' + id + '?')
+            to_correct = False
+            return to_correct, df
+
+
+def ask_list(category, options):
+    option_list = []
+    val = []
+    i=1
+    for option in options:
+        var = [(str(i) + ". " + option)]
+        val.append(str(i))
+        option_list.append(var)
+        i = i+1
+    option_flat = [item for sublist in option_list for item in sublist]
+    option_flat = " ".join(option_flat)
+    check = False
+    while not check:
+        print("\n", "Enter " + category, "\n")
+        wrapper = textwrap.TextWrapper(width=100)
+        string = wrapper.fill(text=option_flat)
+        print(string, "\n")
+        answer = input("Enter option number: ")
+        check = answer in set(val)
+    ans_int = int(answer) - 1
+    option = options[ans_int]
     return option

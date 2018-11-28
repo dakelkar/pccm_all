@@ -1,5 +1,5 @@
 import modules.pccm_names as pccm_names
-from modules.ask_y_n_statement import ask_y_n, ask_option, join_lists
+from modules.ask_y_n_statement import ask_y_n, ask_option, join_lists, check_date
 import sql.add_update_sql as sql
 
 def physical_activity_table(conn, cursor, file_number):
@@ -99,7 +99,7 @@ def med_history_table(conn, cursor, file_number):
     while add_history:
         condition = input("Condition : ")
         condition_list.append(condition)
-        diagnosis_date = input("Date of diagnosis: ")
+        diagnosis_date = check_date("Date of diagnosis: ")
         diagnosis_date_list.append(diagnosis_date)
         treatment = input("Treatment: ")
         treatment_list.append(treatment)

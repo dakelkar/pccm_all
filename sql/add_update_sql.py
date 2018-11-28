@@ -1,3 +1,5 @@
+import sqlite3
+
 def update_single(conn, cursor, table, column, file_number, var):
     # update a single column in a sql db. Key is file_number.
     sql_update = "UPDATE " + table + " SET " + column + "= ? WHERE File_number = '" + file_number + "'"
@@ -133,13 +135,8 @@ def view_multiple(conn, table, col_list, file_number):
     from modules.ask_y_n_statement import ask_option
     sql = ('SELECT '+ ", ".join(col_list) +' FROM '+ table + " WHERE File_number = '" +file_number+"'")
     df = pd.read_sql(sql, conn)
-    df = df.set_index(col_list[0])
-    for index in col_list[1:]:
-        x = 1
-        while x == 1:
-            print(df[index])
-            x = input("Press enter to proceed")
-    enter = ask_option("Do you want to re-enter or add data", ["Re-enter data", "Add data"])
+    print_df(df)
+    enter = ask_option("Do you want to add or edit data", ["Add data", 'Edit data', 'Do not add or edit'])
     return enter
 
 
@@ -174,9 +171,62 @@ def get_sql_data(file_number, conn, module, table):
     df = pd.read_sql(sql, conn)
     return df
 
-def get_value (col_name, table, file_number, cursor):
-    sql = ('SELECT '+col_name+' FROM ' +table+' WHERE File_number = \'' + file_number + "'")
-    cursor.execute(sql)
-    value_ = cursor.fetchall()
-    value = value_[0][0]
+def get_value (col_name, table, file_number, cursor, error_statement):
+    try:
+        sql = "SELECT "+col_name+" FROM " +table+" WHERE File_number = '" + file_number + "'"
+        cursor.execute(sql)
+        value_ = cursor.fetchall()
+        value = value_[0][0]
+    except:
+        value = input(error_statement)
     return value
+
+def print_df(df):
+    rows = (df.shape)[0]
+    for row in range(0, rows):
+        print(df.iloc[row].to_string() + '\n')
+
+def edit_table(df, id_col, df_col):
+    import modules.ask_y_n_statement as ask
+    rows = (df.shape)[0]
+    for row in range(0,rows):
+        print(df.iloc[row].to_string()+'\n')
+    to_correct = ask.ask_y_n("Are entries correct?")
+    if not to_correct:
+        to_correct = ask.ask_y_n("Re-enter entire table?")
+        if to_correct:
+            return to_correct, df
+        else:
+            change_row = True
+            while change_row:
+                id_list = list(df[id_col])
+                print(id_list)
+                id = input("Enter " + id_col + " to change: ")
+                index = id_list.index(id)
+                to_do = True
+                while to_do:
+                    print(df.loc[index, :])
+                    col_change = ask.ask_option("Name of column to change", df_col)
+                    old_val = df.loc[index, col_change]
+                    print(old_val + '\n')
+                    new_val = input("Enter correct value for " + col_change + ' for ' + id + ": ")
+                    df.loc[index, col_change] = new_val
+                    print(df.iloc[index].to_string() + '\n')
+                    to_do = ask.ask_y_n("Make more changes to " + id_col + ' ' + id + '?')
+                print_df(df)
+                change_row = ask.ask_y_n("Change another row?")
+            to_correct = False
+    return to_correct, df
+
+def get_block_id_multiple (col_name, table, file_number, block_type, cursor):
+    #mutliple results for block_id with multiple entries and 1 block_type
+    try:
+        sql = "SELECT "+ col_name +" FROM " +table+" WHERE file_number = '" + file_number + "' AND block_type = '"\
+              + block_type + "'"
+        cursor.execute(sql)
+        values = cursor.fetchall()
+        value = [value[0] for value in values]
+    except:
+        value = 'NA'
+    return value
+

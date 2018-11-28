@@ -55,7 +55,7 @@ def multiple_mass(table, mammo_breast = "Right Breast"):
                                                                   "Spiculated", "Other"])
                 mass_nipple = input("Distance from nipple (cm): ")
                 mass_size = input("Mass dimensions (without unit): ")
-                mass_size_unit = input ("Mass dimensions unit")
+                mass_size_unit = input ("Mass dimensions unit: ")
                 mass_id = "Mass " + str(index + 1)
                 data_list = [mass_id, location_quad, mammo_mass_shape, mammo_mass_margin, mass_nipple, mass_size, mass_size_unit]
                 mass_df.loc[index] = data_list
@@ -80,8 +80,8 @@ def multiple_mass(table, mammo_breast = "Right Breast"):
                 location_clock = location_clock + " o'clock"
                 mass_shape = ask_y_n_statement.ask_option("Shape of mass " + str(mass_id), ["Oval", "Round",
                                                                                             "Irregular", "Other"])
-                mass_size = input("Mass dimensions (without unit: ")
-                mass_size_unit = input("Mass dimensions unit")
+                mass_size = input("Mass dimensions (without unit): ")
+                mass_size_unit = input("Mass dimensions unit: ")
                 mass_margin = ask_y_n_statement.ask_option("Margin of mass " + str(mass_id), ["Circumscribed",
                                                                                               "Indistinct", "Angular",
                                                                                                 "Microlobulated"])

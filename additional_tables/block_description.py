@@ -11,8 +11,7 @@ class BlockDescription():
         self.block_no = block_no
         self.block_desc_df_cols = names('block_data')
 
-
-    def block_description (self):
+    def block_description(self):
         block_type_list = names('block_type_list')
         block_desc_df = pd.DataFrame(columns=self.block_desc_df_cols)
         if int(self.block_no) == 0:
@@ -32,10 +31,11 @@ class BlockDescription():
                     to_do =True
                     while to_do:
                         id = input("Enter block id to change: ")
-                        print (block_desc_df.loc[id, :])
+                        index = block_id_list.index(id)
+                        print (block_desc_df.loc[index, :])
                         col_change = ask.ask_option("Name of column to change", self.block_desc_df_cols)
                         new_val = input("Enter correct value for "+col_change +' for '+id)
-                        block_desc_df.loc[id, col_change] = new_val
+                        block_desc_df.loc[index, col_change] = new_val
                         print(block_desc_df)
                         to_do = ask.ask_y_n("Make more changes?")
         block_data_all =BlockDescription.block_description_for_db(self,block_desc_df)
@@ -122,7 +122,6 @@ class BlockDescription():
         data = block_sr, block_location, block_id, block_number
         return data
 
-
     @staticmethod
     def block_location():
         location = False
@@ -137,3 +136,76 @@ class BlockDescription():
             location = ask.ask_y_n("Is this correct?")
         return block_location
 
+    @staticmethod
+    def ihc_report(ihc_type):
+        tumour_er = ask.ask_option("ER Status", ["ER_positive", "ER_negative"])
+        if tumour_er == "ER_positive":
+            tumour_er_percent = input("ER Percent (number only), Enter 'ER_Percent_not_done' if %age not available: ")
+        else:
+            tumour_er_percent = tumour_er
+        tumour_pr = ask.ask_option("PR Status", ["PR_positive", "PR_negative"])
+        if tumour_pr == "PR_positive":
+            tumour_pr_percent = input("PR Percent (number only), Enter 'PR_Percent_not_done' if %age not available: ")
+        else:
+            tumour_pr_percent = tumour_pr
+        tumour_her2 = ask.ask_option("HER2 Status", ["HER2_positive", "HER2_negative",
+                                                     "HER2_equivocal"])
+        tumour_her2_grade = input("HER2 Grade: ")
+        tumour_fish = ask.ask_option("FISH", ["FISH_positive", "FISH_negative", "FISH Not Done"])
+        tumour_ki67 = input("Ki67 Percent, Number only, Enter 'Ki76_not_done' if test not done: ")
+        data = tumour_er, tumour_er_percent, tumour_pr, tumour_pr_percent, tumour_her2, tumour_her2_grade, tumour_fish,\
+               tumour_ki67
+        data = [ihc_type + "_" + item for item in data]
+        return data
+
+    @staticmethod
+    def stage(pt, pn, m):
+        path_stage = "pT" + pt + "N" + pn + 'M' + m
+        clinical_stage = 'NA'
+        print("Pathological Stage: " + path_stage)
+        check = ask.ask_y_n("Is pathological stage correct")
+        if not check:
+            path_stage = input("Please enter correct pathological stage: ")
+        if m in {"1", "2", "3"}:
+            clinical_stage = "IV"
+        elif m == "0":
+            if pn == "3":
+                clinical_stage = "IIIC"
+            elif pn == "2":
+                if pt == "4":
+                    clinical_stage = "IIIB"
+                else:
+                    clinical_stage = "IIIA"
+            elif pn == "1mi":
+                clinical_stage = "IB"
+            elif pn == "1":
+                if pt == "0" or pt == "1":
+                    clinical_stage = "IIA"
+                elif pt == "2":
+                    clinical_stage = "IIB"
+                elif pt == "3":
+                    clinical_stage = "IIIA"
+                elif pt == "4":
+                    clinical_stage = "IIIB"
+                else:
+                    clinical_stage = input("Clinical Staging: ")
+            elif pn == "0":
+                if pt == "is":
+                    clinical_stage = "0"
+                elif pt == "1":
+                    clinical_stage = "IA"
+                elif pt == "2":
+                    clinical_stage = "IIA"
+                elif pt == "3":
+                    clinical_stage = "IIB"
+                elif pt == "4":
+                    clinical_stage = "IIIB"
+                else:
+                    clinical_stage = input("Clinical Staging: ")
+            print("Clinical stage " + clinical_stage)
+            print("Based on TNM status", path_stage, "and TABLE 2 of Giuliano et al., 2017, CA CANCER J "
+                                                     "CLIN 2017;67:290–303")
+            check = ask.ask_y_n("Is clinical stage correct")
+            if not check:
+                clinical_stage = input("Please enter correct clinical stage: ")
+        return path_stage, clinical_stage

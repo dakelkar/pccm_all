@@ -71,21 +71,26 @@ def metastasis(file_number, user_name):
             else: distant_site = "NA"
         else:
             time_recur, nature_recur, distant_site = ("NA", )*3
-        status = ask_y_n_statement.ask_option("Status at last follow up", ["Survivor", "Deceased", "Lost to follow-up", "Other"])
-        if status == "Survivor":
-            type_survivor = ask_y_n_statement.ask_option("the Survivor is ", ["disease Free", "with recurrence",
-                                                                              "disease free with no known recurrence",
-                                                                              "with disease"])
-            status = status+": "+type_survivor
-        if status == "Deceased":
-            type_death = ask_y_n_statement.ask_option("Cause of death", ["due to disease", "due to unrelated causes", "not known"])
-            status = status + ": " + type_death
+        status = patient_status()
         last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [met_has, date_last,time_recur, nature_recur, distant_site, status, user_name, last_update]
         col_list = names.names_longterm("metastasis")
         check = review_input(file_number, col_list, data_list)
     return data_list
 
+def patient_status():
+    status = ask_y_n_statement.ask_option("Status at last follow up",
+                                          ["Survivor", "Deceased", "Lost to follow-up", "Other"])
+    if status == "Survivor":
+        type_survivor = ask_y_n_statement.ask_option("the Survivor is ", ["disease Free", "with recurrence",
+                                                                          "disease free with no known recurrence",
+                                                                          "with disease"])
+        status = status + ": " + type_survivor
+    if status == "Deceased":
+        type_death = ask_y_n_statement.ask_option("Cause of death",
+                                                  ["due to disease", "due to unrelated causes", "not known"])
+        status = status + ": " + type_death
+    return status
 
 def file_row(cursor, file_number):
     cursor.execute("INSERT INTO HormoneTherapy_Recurrence_Survival(File_number) VALUES ('" + file_number + "')")

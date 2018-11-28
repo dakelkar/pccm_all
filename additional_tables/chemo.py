@@ -1,7 +1,7 @@
 
 def drug_list():
     drugs = ["5-FluoroUracil", "Anthracycline", "Anastrozole", "Carboplatin", "Cisplatin", "Cyclophosphamide",
-         "Docitaxel", "Doxorubicin", 'Epirubicin', "Exemestane", "Fulvestrant", "Gemcitabine", "Goserelin",
+         "Docetaxel", "Doxorubicin", 'Epirubicin', "Exemestane", "Fulvestrant", "Gemcitabine", "Goserelin",
          "Herceptin(Trastuzumab)", "Letrozole", "Leuprolide", "Paclitaxel", "Tamoxifen", "Other"]
     return drugs
 

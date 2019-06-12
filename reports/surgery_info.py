@@ -3,7 +3,6 @@ from additional_tables.radio_tables import lesion_location
 import sql.add_update_sql as add_update_sql
 from modules.pccm_names import names_surgery_information as names
 import additional_tables.surgery_tables as surgery_tables
-from datetime import datetime
 import pandas as pd
 
 
@@ -314,15 +313,14 @@ def post_surgery(file_number, user_name):
         else:
             days_recurs, recurs = (recur,) * 2
         opd = input("Please input OPD notes (if any): ")
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [chemo, radio, other,drain, total_drain, days, complications, treatments, days_recurs, recurs, opd,
-                     user_name, last_update]
+                     user_name, add_update_sql.last_update()]
         col_list = names("post_surgery")
         check = add_update_sql.review_input(file_number, col_list, data_list)
     return data_list
 
 def add_data(conn, cursor, file_number, user_name):
-    table = "Surgery_Report"
+    table = "surgery_seport"
     #file_row(cursor, file_number)
     enter = ask_y_n("Do you want to enter Surgery Information?")
     if enter:
@@ -339,7 +337,7 @@ def add_data(conn, cursor, file_number, user_name):
 
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Surgery_Report"
+    table = "surgery_seport"
     print("Surgery Information")
     col_list = names("surgery_information")
     enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)

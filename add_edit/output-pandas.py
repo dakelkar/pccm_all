@@ -10,27 +10,27 @@ path = os.path.join(folders, file)
 ex_path = os.path.join(folders, ex_file)
 conn = sqlite3.connect(path)
 
-table = "Radiotherapy"
+table = "radiotherapy"
 col_list = ["File_number"] + names.names_radiation()
 sql = ('SELECT ' + ", ".join(col_list[:-2]) + " FROM '" + table + "'")
 df = pd.read_sql(sql, conn)
 writer = pd.ExcelWriter(ex_path, engine='xlsxwriter')
 df.to_excel(writer, sheet_name=table)
 
-table = "HormoneTherapy_Recurrence_Survival"
+table = "hormonetherapy_recurrence_survival"
 col_list = ["File_number"] + names.names_longterm("hormone") + names.names_longterm("metastasis")
 sql = ('SELECT ' + ", ".join(col_list[:-2]) + " FROM '" + table + "'")
 df = pd.read_sql(sql, conn)
 df.to_excel(writer, sheet_name="Hormone_RecurrenceSurvival")
 
 
-table = "Follow_up_Data"
+table = "follow_up_data"
 col_list = ["File_number"] + names.name_follow_up()
 sql = ('SELECT ' + ", ".join(col_list[:-2]) + " FROM '" + table + "'")
 df = pd.read_sql(sql, conn)
 df.to_excel(writer, sheet_name=table)
 
-table = "Patient_Information_History"
+table = "patient_information_history"
 col_list_bio = names.names_info("bio_info")
 
 col_list = ["File_number"] + col_list_bio + names.names_info("phys_act") + names.names_info("habits") + \

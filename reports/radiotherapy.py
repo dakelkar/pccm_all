@@ -1,7 +1,6 @@
 import modules.ask_y_n_statement as ask_y_n_statement
-from sql.add_update_sql import review_input, update_multiple, review_data
+from sql.add_update_sql import review_input, update_multiple, review_data, last_update
 import modules.pccm_names as names
-from datetime import datetime
 
 
 def radiation (file_number, user_name):
@@ -36,23 +35,22 @@ def radiation (file_number, user_name):
             radio_finish = input ("Date of finishing radiotherapy: ")
             radio_location = input("Location of radiotherapy: ")
             radio_onco = ask_y_n_statement.ask_option("Name of Radiation Oncologist", ["Dr. Gautam Sharan", "Other"])
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [radio, radio_date,  radio_type, imrt, radio_tox, radio_delayed_tox, radio_finish, radio_location,
-                     radio_onco, user_name, last_update]
+                     radio_onco, user_name, last_update()]
         col_list =names.names_radiation()
         check = review_input(file_number, col_list, data_list)
     return data_list
 
 
 def add_data(conn, cursor, file_number, user_name):
-    table = "Radiotherapy"
+    table = "radiotherapy"
     col_list = names.names_radiation()
     data = radiation(file_number, user_name)
     update_multiple(conn, cursor, table, col_list, file_number, data)
 
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Radiotherapy"
+    table = "radiotherapy"
     col_list = names.names_radiation()
     enter = review_data(conn, cursor, table, file_number, col_list)
     if enter:

@@ -3,7 +3,6 @@ from modules.pccm_names import names_radio as names
 import modules.ask_y_n_statement as ask_y_n_statement
 import sql.add_update_sql as add_update_sql
 import additional_tables.radio_tables as radio_tables
-from datetime import datetime
 
 
 def file_row(cursor, file_number):
@@ -12,58 +11,77 @@ def file_row(cursor, file_number):
 
 def mammography(file_number = 'test'):
     module_name = "mammography"
+    columns_list = names(module_name)
+    data_list = ['data_to_be_entered', ]*22
     check = False
     while not check:
         mammo = ask_y_n_statement.ask_y_n("Are mammography results available for this patient?")
         if not mammo:
             check_mammo = ask_y_n("Is the diagnostic radiological report present?")
             if check_mammo:
-                mammo = "Mammography not done for diagnosis"
+                mammography_status = "Mammography not done for diagnosis"
             else:
-                mammo = "Requires Follow-up"
-            tomo, mammo_date, mammo_place, mammo_indication, mammo_breast, mass_number, mammo_mass_location, \
-            mammo_mass_shape, mammo_mass_margin, mammo_mass_nipple_cm, mammo_mass_size, mammo_mass_size_unit,\
-            calc_number, calc_location, calc_type, mammo_birad, mammo_impression, skin_lesion = (mammo,) * 18
+                mammography_status = "Requires Follow-up"
+            data = [mammography_status, ]* 21
         else:
             tomo = ask_y_n_statement.ask_y_n("Have 3D Tomography images also been acquired?")
             if tomo:
-                tomo = "Yes"
+                tomography_y_n = "Yes"
                 print("Please include 3d-Tomo observations in Mammography results")
             else:
-                tomo = "No"
-            mammo = "Mammography done"
-            mammo_date = ask_y_n_statement.check_date("Date of mammography: ")
+                tomography_y_n = "No"
+            mammography_status = "Mammography done"
+            mammography_date = ask_y_n_statement.check_date("Date of mammography: ")
             mammo_place = ask_y_n("Was exam peformed at PCCM?", yes_ans="PCCM", no_ans="Outside")
             if mammo_place == "Outside":
-                mammo_place = input("Please input Radiologist name and place (Name; Place): ")
-            mammo_indication = input ("Indication for mammography: ")
-            mammo_breast = ask_y_n_statement.ask_option("Details described for", ["Right Breast", "Left Breast", "Bilateral"])
-            mammo_mass_location = ask_y_n_statement.ask_y_n("Is there any mass/lesion detected")
-            if mammo_mass_location:
-                table = "Mammography_Mass"
-                mass_number, mammo_mass_location, mammo_mass_shape, mammo_mass_margin, mammo_mass_nipple_cm, \
-                mammo_mass_size, mammo_mass_size_unit = radio_tables.multiple_mass(table, mammo_breast)
+                mammography_place = input("Please input Radiologist name and place (Name; Place): ")
             else:
-                mass_number, mammo_mass_location, mammo_mass_shape, mammo_mass_margin, mammo_mass_nipple_cm, \
-                mammo_mass_size, mammo_mass_size_unit= ("No mass detected", )*7
+                mammography_place = mammo_place
+            mammography_indication = input ("Indication for mammography: ")
+            mammography_breast = ask_y_n_statement.ask_option("Details described for", ["Right Breast", "Left Breast",
+                                                                                        "Bilateral"])
+            mammo_mass = ask_y_n_statement.ask_y_n("Is there any mass/lesion detected")
+            if mammo_mass:
+                table = "mammography_mass"
+                mass_data = radio_tables.multiple_mass(table, mammography_breast)
+                print(mass_data)
+                mammography_massnumber, mammography_masslocation, mammography_massshape, mammography_massmargin, \
+                mammography_massnipple_cm, mammography_masssize, mammography_masssize_unit = mass_data
+            else:
+                mammography_massnumber, mammography_masslocation, mammography_massshape, mammography_massmargin, \
+                mammography_massnipple_cm, mammography_masssize, mammography_masssize_unit= ("No mass detected", )*7
             calc = ask_y_n_statement.ask_y_n("Is Calcification present?")
             if calc:
-                calc_number, calc_location, calc_type = radio_tables.cal_table(file_number, mammo_breast)
+                mammography_calcificationnumber, mammography_calcificationlocation, mammography_calcificationtype, \
+                mammography_calcification_comments = radio_tables.cal_table(file_number, mammography_breast)
             else:
-                calc_number, calc_location, calc_type = ("No Calcification detected", )*3
-            skin_lesion = input("Please input description of skin lesion if present: ")
+                mammography_calcificationnumber, mammography_calcificationlocation, mammography_calcificationtype, \
+                mammography_calcification_comments = ("No Calcification detected", )*4
+            mammography_skin_involvement = input("Please input description of skin involvement if present: ")
+            node_description = ask_y_n_statement.ask_y_n('Does the report include description of nodes?')
+            if node_description:
+                mammography_node_description = input('Please enter description of nodes: ')
+                mammography_node_size = input('Size of node if reported without unit (else enter NA): ')
+                mammography_node_size_unit = input('Unit of node size: ')
+            else:
+                mammography_node_description, mammography_node_size, mammography_node_size_unit \
+                    = ('nodes_not_described', )*3
             mammo_birad = ask_y_n_statement.ask_y_n("Does the report include a BI-RAD assessment/diagnosis?")
             if mammo_birad:
-                mammo_birad = radio_tables.birads()
+                mammography_birad = radio_tables.birads()
             else:
-                mammo_birad = "BI-RAD not assigned in report"
-            mammo_impression = input("Input Impression(if available): ")
-        data_list = [mammo, mammo_date, mammo_place, mammo_indication,mammo_breast, mass_number, mammo_mass_location,
-                     mammo_mass_shape, mammo_mass_margin, mammo_mass_nipple_cm, mammo_mass_size, mammo_mass_size_unit,
-                     calc_number, calc_location, calc_type, skin_lesion, mammo_birad, mammo_impression, tomo]
-        columns_list = names(module_name)
+                mammography_birad = "BI-RAD not assigned in report"
+            mammography_impression = input("Input Impression(if available): ")
+            data = [mammography_date, mammography_place, mammography_indication, mammography_breast,
+                    mammography_massnumber, mammography_masslocation, mammography_massshape, mammography_massmargin,
+                    mammography_massnipple_cm, mammography_masssize, mammography_masssize_unit,
+                    mammography_calcificationnumber, mammography_calcificationlocation, mammography_calcificationtype,
+                    mammography_calcification_comments, mammography_skin_involvement, mammography_node_description,
+                    mammography_node_size, mammography_node_size_unit, mammography_birad, mammography_impression,
+                    tomography_y_n]
+        data_list = [mammography_status] + data
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    return tuple(data_list)
+    return data_list
 
 
 def abvs(file_number):
@@ -100,6 +118,7 @@ def abvs(file_number):
 
 def sonomammo(file_number = 'test', user_name = "dk"):
     module_name = "sonomammo"
+    data_list = ['data_to_be_entered', ]*19 + [user_name, add_update_sql.last_update()]
     check = False
     while not check:
         sonomammo = ask_y_n_statement.ask_y_n("Are sonomammography results available for this patient?")
@@ -112,7 +131,7 @@ def sonomammo(file_number = 'test', user_name = "dk"):
             mass_sonomammo = ask_y_n_statement.ask_y_n("Is there any mass detected")
             if mass_sonomammo:
                 mass_sonomammo = 'Mass/Lesion Detected'
-                table = "SonnoMammography_Mass"
+                table = "sonnomammography_mass"
                 mass_number, sonomammo_mass_location, sonomammo_mass_location_clock, sonomammo_masss_shape, \
                 sonomammo_mass_margin, sonomammo_mass_echo, sonomammo_mass_size, sonomammo_mass_size_unit\
                     = radio_tables.multiple_mass(table, sonomammo_breast)
@@ -138,6 +157,13 @@ def sonomammo(file_number = 'test', user_name = "dk"):
             else:
                 sonomammo_birad = "NA"
             sonomammo_impression = input("Input Impression(if available): ")
+            node_description = ask_y_n_statement.ask_y_n('Does the report include description of nodes?')
+            if node_description:
+                sonomammo_node_description = input('Please enter description of nodes: ')
+                sonomammo_node_size = input('Size of node if reported without unit (else enter NA): ')
+                sonomammo_node_size_unit = input('Unit of node size')
+            else:
+                sonomammo_node_description, sonomammo_node_size, sonomammo_node_size_unit = ('nodes_not_described',)*3
         else:
             check_mammo = ask_y_n("Is the diagnostic radiological report present?")
             if check_mammo:
@@ -147,16 +173,16 @@ def sonomammo(file_number = 'test', user_name = "dk"):
             sonomammo_date, sonomammo_breast, mass_sonomammo, mass_number, sonomammo_mass_location, \
             sonomammo_masss_shape, sonomammo_mass_margin, sonomammo_mass_echo, sonomammo_mass_location_clock, \
             sonomammo_mass_size, sonomammo_mass_size_unit, sonomammo_calc, sonomammo_calc_type, \
-            sonomammo_vasc,sonomammo_birad, sonomammo_impression \
-                = (sonomammo,) * 16
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
+            sonomammo_vasc,sonomammo_birad, sonomammo_node_description, sonomammo_node_size, sonomammo_node_size_unit, \
+            sonomammo_impression = (sonomammo,) * 19
         data_list = [sonomammo, sonomammo_date, sonomammo_breast, mass_sonomammo, mass_number, sonomammo_mass_location,
                      sonomammo_mass_location_clock, sonomammo_masss_shape, sonomammo_mass_margin, sonomammo_mass_echo,
                      sonomammo_mass_size, sonomammo_mass_size_unit, sonomammo_calc, sonomammo_calc_type, sonomammo_vasc,
-                     sonomammo_birad,sonomammo_impression, user_name, last_update]
+                     sonomammo_birad, sonomammo_node_description, sonomammo_node_size, sonomammo_node_size_unit,
+                     sonomammo_impression, user_name, add_update_sql.last_update()]
         columns_list = names(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
-    return tuple(data_list)
+    return data_list
 
 
 def mri_breast(file_number = 'test', user_name = 'dk'):
@@ -181,7 +207,7 @@ def mri_breast(file_number = 'test', user_name = 'dk'):
             mass_mri = ask_y_n_statement.ask_y_n("Are masses detected?")
             if mass_mri:
                 mass_mri = "Mass Detected"
-                table = "MRI_Mass"
+                table = "mri_mass"
                 mri_mass_number, mass_location, mass_shape, mass_margin, mass_internal = \
                     radio_tables.multiple_mass(table, mri_breast_described)
             else:
@@ -240,21 +266,20 @@ def mri_breast(file_number = 'test', user_name = 'dk'):
             mri_breast_lesion, mri_breast_lesion_location, mri_breast_lesion_depth, mri_breast_kinetics_initial, \
             mri_breast_kinetics_delayed, mri_breast_non_enhance, mri_breast_implant, mri_breast_size, mri_breast_dist, \
             mri_breast_pect, mri_breast_birad, mri_breast_described = (mri_breast,) * 35
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [mri_breast, mri_breast_date, mri_breast_acc, mri_breast_described, fgt_mri, bpe_level_mri,
                      bpe_symm_mri, focus_mri, mass_mri, mri_mass_number, mass_location, mass_shape, mass_margin,
                      mass_internal, asso_feat_1, asso_feat_2, asso_feat_3, asso_feat_4, asso_feat_5, asso_feat_6,
                      asso_feat_7, asso_feat_8, asso_feat_9, fat_lesions, mri_breast_kinetics_initial,
                      mri_breast_kinetics_delayed, mri_breast_non_enhance, mri_breast_implant, mri_breast_lesion,
                      mri_breast_lesion_location, mri_breast_lesion_depth, mri_breast_size, mri_breast_dist,
-                     mri_breast_pect, mri_breast_birad, user_name, last_update]
+                     mri_breast_pect, mri_breast_birad, user_name, add_update_sql.last_update()]
         columns_list = names(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return tuple(data_list)
 
 
 def add_data(conn, cursor, file_number, user_name):
-    table = "Radiology"
+    table = "radiology"
     enter = ask_y_n("Enter Mammography Report?")
     if enter:
         data = mammography(file_number)
@@ -274,7 +299,7 @@ def add_data(conn, cursor, file_number, user_name):
 
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Radiology"
+    table = "radiology"
     print("Mammography")
     col_list = names("mammography")
     enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)

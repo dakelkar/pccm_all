@@ -1,15 +1,14 @@
 import modules.ask_y_n_statement as ask_y_n_statement
-from sql.add_update_sql import review_df_row, view_multiple, print_df, delete_rows, edit_table
+from sql.add_update_sql import review_df_row, delete_rows, edit_table, last_update
 from modules.pccm_names import name_follow_up as names
 import pandas as pd
-from datetime import datetime
 from reports.longterm_therapy import patient_status
 
 
 def follow_up(file_number, user_name):
     follow = True
     follow_index = 0
-    col_list = ["File_number"] + names()
+    col_list = ["file_number"] + names()
     follow_up_data = pd.DataFrame(columns=col_list)
     while follow:
         check = False
@@ -51,13 +50,12 @@ def follow_up(file_number, user_name):
                 all_data = [other_type_date_list, other_type_list, other_result_list]
                 all_data = ask_y_n_statement.join_lists(all_data, "; ")
                 other_type_date, other_type, other_result = all_data
-            last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
             data_list = [file_number, time_follow, follow_status, follow_mammo_date, follow_mammo, follow_usg_date,
-                         follow_usg, other_type_date,other_type, other_result, user_name, last_update]
+                         follow_usg, other_type_date,other_type, other_result, user_name, last_update()]
             follow_up_data.loc[follow_index] = data_list
             check, follow_up_data = review_df_row(follow_up_data)
         follow_index = follow_index + 1
-        follow_up_period = list(follow_up_data.loc[:, "Follow_up_Period"])
+        follow_up_period = list(follow_up_data.loc[:, "follow_up_period"])
         print("\n Follow up periods added: " + "; ".join(follow_up_period) + '\n')
         follow = ask_y_n_statement.ask_y_n("Add another follow-up period?")
     return follow_up_data
@@ -65,25 +63,26 @@ def follow_up(file_number, user_name):
 
 def add_data(conn, file_number, user_name):
     data = follow_up(file_number, user_name)
-    data.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
+    data.to_sql("follow_up_data", conn, index=False, if_exists="append")
 
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Follow_up_Data"
+    import sql.add_update_sql as sql
+    table = "follow_up_data"
     col_list = names()
-    enter = view_multiple(conn, table, col_list, file_number)
+    enter = sql.view_multiple(conn, table, col_list, file_number)
     if enter == "Add data":
         data = follow_up(file_number, user_name)
-        data.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
+        data.to_sql("follow_up_data", conn, index=False, if_exists="append")
     elif enter == "Edit data":
-        col_list = ["File_number"] + names()
-        sql = ('SELECT ' + ", ".join(col_list) + " FROM '" + table + "' WHERE File_number = '"+file_number+"'")
-        df = pd.read_sql(sql, conn)
-        print_df(df)
+        col_list = ["file_number"] + names()
+        sql_statment = ('SELECT ' + ", ".join(col_list) + " FROM '" + table + "' WHERE file_number = '"+file_number+"'")
+        df = pd.read_sql(sql_statment, conn)
+        sql.print_df(df)
         check_delete = False
         while not check_delete:
-            check_delete, df = edit_table(df, id_col='Follow_up_Period', df_col=names())
-        delete_rows(cursor, table,"File_number", file_number)
-        df.to_sql("Follow_up_Data", conn, index=False, if_exists="append")
+            check_delete, df = edit_table(df, pk_col='follow_up_period', df_col=names(), update_by=user_name)
+        delete_rows(cursor, table,"file_number", file_number)
+        df.to_sql("follow_up_data", conn, index=False, if_exists="append")
     else:
         print('\n No edits will be made to this table\n')

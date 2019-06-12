@@ -1,5 +1,5 @@
 import modules.ask_y_n_statement as ask_y_n_statement
-from sql.add_update_sql import review_input, update_multiple, review_data
+from sql.add_update_sql import review_input, update_multiple, review_data, last_update
 import modules.pccm_names as names
 from datetime import datetime
 
@@ -72,8 +72,7 @@ def metastasis(file_number, user_name):
         else:
             time_recur, nature_recur, distant_site = ("NA", )*3
         status = patient_status()
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
-        data_list = [met_has, date_last,time_recur, nature_recur, distant_site, status, user_name, last_update]
+        data_list = [met_has, date_last,time_recur, nature_recur, distant_site, status, user_name, last_update()]
         col_list = names.names_longterm("metastasis")
         check = review_input(file_number, col_list, data_list)
     return data_list
@@ -98,7 +97,7 @@ def file_row(cursor, file_number):
 
 def add_data(conn, cursor, file_number, user_name):
     #file_row(cursor, file_number)
-    table = "HormoneTherapy_Survival"
+    table = "hormonetherapy_survival"
     enter = ask_y_n_statement.ask_y_n("Enter Hormone Therapy Details?")
     if enter:
         col_list = names.names_longterm(module_name= "hormone")
@@ -112,7 +111,7 @@ def add_data(conn, cursor, file_number, user_name):
 
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "HormoneTherapy_Survival"
+    table = "hormonetherapy_survival"
     print("Hormone Therapy Details")
     col_list = names.names_longterm(module_name="hormone")
     enter = review_data(conn, cursor, table, file_number, col_list)

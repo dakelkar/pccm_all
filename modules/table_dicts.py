@@ -1,62 +1,63 @@
 import modules.pccm_names as names
 
 def create_col_list (colnames):
-    col_list = ["File_number"] + colnames
+    col_list = ['file_number'] + colnames
     return col_list
 
 def table_module_dict (table):
     table_module = {
-        "Patient_Information_History": ["bio_info", "phys_act", "habits", "nut_supplements", "family_details",
-                                        "med_history",
-                                        "cancer_history", "family_cancer", "det_by", "breast_symptoms"],
-        "Biopsy_Report_Data": ["biopsy_report_info", "tumour_biopsy_data"],
-        "Radiology": ["mammography", "abvs", "sonomammo", "mri_breast"],
-        "Neo_Adjuvant_Therapy": ["Neo_Adjuvant_Therapy", "clip_information"],
-        "Surgery_Report": ["surgery_information", "node_excision", "post_surgery"],
-        "Surgery_Block_Report_Data": ["surgery_block_information_1", "surgery_block_information_2",
-                                      "surgery_block_information_3",
-                                      "path_stage"],
-        "Adjuvant_ChemoTherapy": ['Adjuvant_ChemoTherapy'],
-        "Radiotherapy": [],
-        "HormoneTherapy_Survival": ["hormone", "metastasis"],
-        "Follow_up_Data": [],
-        'Block_list': []
+        "patient_information_history": ["bio_info", "phys_act", "habits", "nut_supplements", "family_details",
+                                        "med_history", "cancer_history", "family_cancer", "det_by", "breast_symptoms",
+                                        'other_test'],
+        "radiology": ["mammography", "abvs", "sonomammo", "mri_breast"],
+        "neo_adjuvant_therapy": ["neo_adjuvant_therapy", "clip_information"],
+        'biopsy_report': [],
+        "surgery_report": ["surgery_information", "node_excision", "post_surgery"],
+        "adjuvant_chemotherapy": ['adjuvant_chemotherapy'],
+        "radiotherapy": [],
+        "hormonetherapy_survival": ["hormone", "metastasis"],
+        "follow_up_data": [],
+        'block_list': ['all'],
+        'biopsy_path_report_data': ['biopsy_report_info', 'biopsy_details', 'ihc_biopsy_data', 'review_biopsy'],
+        'surgery_path_report_data': ['surgery_block_information_0', 'surgery_block_information_1',
+                                     'surgery_block_information_2', 'surgery_block_information_3']
+
     }
     module_list = table_module.get(table)
     return module_list
 
 def table_module_research (table):
     table_module = {
-        "Patient_Information_History": ["bio_info_without_personal_info", "phys_act", "habits", "nut_supplements", "family_details",
-                                        "med_history","cancer_history", "family_cancer", "det_by", "breast_symptoms"],
-        "Biopsy_Report_Data": ["biopsy_report_info", "tumour_biopsy_data"],
-        "Radiology": ["mammography", "abvs", "sonomammo", "mri_breast"],
-        "Neo_Adjuvant_Therapy": ["Neo_Adjuvant_Therapy", "clip_information"],
-        "Surgery_Report": ["surgery_information", "node_excision", "post_surgery"],
-        "Surgery_Block_Report_Data": ["surgery_block_information_1", "surgery_block_information_2",
-                                      "surgery_block_information_3",
-                                      "path_stage"],
-        "Adjuvant_ChemoTherapy": ['Adjuvant_ChemoTherapy'],
-        "Radiotherapy": [],
-        "HormoneTherapy_Survival": ["hormone", "metastasis"],
-        "Follow_up_Data": [],
-        'Block_list': []
+        "patient_information_history": ["bio_info_without_personal_info", "phys_act", "habits", "nut_supplements", "family_details",
+                                        "med_history","cancer_history", "family_cancer", "det_by", "breast_symptoms",
+                                        'other_test'],
+        "radiology": ["mammography", "abvs", "sonomammo", "mri_breast"],
+        "neo_adjuvant_therapy": ["neo_adjuvant_therapy", "clip_information"],
+        "surgery_report": ["surgery_information", "node_excision", "post_surgery"],
+        "adjuvant_chemotherapy": ['adjuvant_chemotherapy'],
+        "radiotherapy": [],
+        "hormonetherapy_survival": ["hormone", "metastasis"],
+        "follow_up_data": [],
+        'block_list': ['research'],
+        'biopsy_path_report_data': ['biopsy_report_info', 'biopsy_details', 'ihc_biopsy_data', 'review_biopsy'],
+        'surgery_path_report_data': ['surgery_block_information_0', 'surgery_block_information_1',
+                                     'surgery_block_information_2', 'surgery_block_information_3']
     }
     module_list = table_module.get(table)
     return module_list
 
 def db_dict (table, module):
-    db_tables = {"Patient_Information_History" : names.names_info(module),
-                 "Biopsy_Report_Data" : names.names_biopsy_new(module),
-                 "Radiology" : names.names_radio(module),
-                 "Neo_Adjuvant_Therapy": names.names_nact(module),
-                 "Surgery_Report" : names.names_surgery_information(module),
-                 "Surgery_Block_Report_Data" : names.names_surgery(module),
-                 "Adjuvant_ChemoTherapy": names.names_chemotherapy(module),
-                 "Radiotherapy": names.names_radiation(),
-                 "HormoneTherapy_Survival": names.names_longterm(module),
-                 "Follow_up_Data": names.name_follow_up(),
-                 'Block_list': names.name_ffpe_csv()
+    db_tables = {"patient_information_history" : names.names_info(module),
+                 "radiology" : names.names_radio(module),
+                 'biopsy_path_report_data': names.names_biopsy(module),
+                 "neo_adjuvant_therapy": names.names_nact(module),
+                 "surgery_report" : names.names_surgery_information(module),
+                 'surgery_path_report_data': names.names_surgery(module),
+                 "adjuvant_chemotherapy": names.names_chemotherapy(module),
+                 "radiotherapy": names.names_radiation(),
+                 "hormonetherapy_survival": names.names_longterm(module),
+                 "follow_up_data": names.name_follow_up(),
+                 'block_list': names.block_list(module)
                 }
 
     cols = db_tables.get(table)

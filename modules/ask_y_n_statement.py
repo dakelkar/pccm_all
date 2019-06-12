@@ -95,13 +95,16 @@ def ask_option_y_n(question, yes_ans = "Yes", no_ans = "No",
 
 def check_date(date_string):
     checked_date = False
+    inputDate = 'NA'
     while not checked_date:
-        isValidDate = True
-        error = '\nDate entered is not valid\nDate must be in dd/mm/yyyy format or NA\n'
+        error = '\nDate entered is not valid\nDate must be in past and in dd.mm.yyyy format or NA\n'
         inputDate = input('\n' + date_string + '\n')
         if inputDate !='NA':
             try:
-                day, month, year = inputDate.split('/')
+                day, month, year = inputDate.split('.')
+                isValidDate = (len(year)==4 and len(day)==2 and len(month)==2)
+                if not isValidDate:
+                    print(error)
                 try:
                     datetime.datetime(int(year), int(month), int(day))
                 except ValueError:
@@ -118,27 +121,42 @@ def check_date(date_string):
             checked_date= ask_y_n('Date is NA. Is that correct?')
     return inputDate
 
-def edit_table(df, id_col, df_col):
-    print(df)
-    check = ask_y_n("Are entries correct?")
-    if not check:
-        to_correct = ask_y_n("Correct entire table?")
+def edit_table(df, pk_col, df_col, update_by):
+    import sql.add_update_sql as sql
+    rows = (df.shape)[0]
+    for row in range(0,rows):
+        print(df.iloc[row].to_string()+'\n')
+    to_correct = ask_y_n("Are entries correct?")
+    if not to_correct:
+        print('To delete a single entry select No here and proceed')
+        to_correct = ask_y_n("Re-enter entire table?")
         if to_correct:
             return to_correct, df
         else:
-            id_list = list(df[id_col])
-            to_do = True
-            while to_do:
-                id = input("Enter " + id_col + "to change: ")
-                index = id_list.index(id)
-                print(df.loc[index, :])
-                col_change = ask_option("Name of column to change", df_col)
-                new_val = input("Enter correct value for " + col_change + ' for ' + id)
-                df.loc[index, col_change] = new_val
-                print(df)
-                to_do = ask_y_n("Make more changes to " + id_col + ' ' + id + '?')
+            change_row = True
+            while change_row:
+                pk_list = list(df[pk_col])
+                print(pk_list)
+                pk = input("Enter " + pk_col + " to change: ")
+                index = pk_list.index(pk)
+                to_do = True
+                while to_do:
+                    print(df.loc[index, :])
+                    print("\nTo delete a single entry select 'file_number' column here and change file number by \n",
+                          "appending (_delete) eg., 123/13 file becomes 123/13_delete\n")
+                    col_change = ask_option("Name of column to change", df_col)
+                    old_val = df.loc[index, col_change]
+                    print(old_val + '\n')
+                    new_val = input("Enter correct value for " + col_change + ' for ' + pk + ": ")
+                    df.loc[index, col_change] = new_val
+                    df.ix[index, 'update_by'] = update_by
+                    df.ix[index, 'last_update'] = sql.last_update()
+                    print(df.iloc[index].to_string() + '\n')
+                    to_do = ask_y_n("Make more changes to " + pk_col + ' ' + pk + '?')
+                sql.print_df(df)
+                change_row = ask_y_n("Change another row?")
             to_correct = False
-            return to_correct, df
+    return to_correct, df
 
 
 def ask_list(category, options):
@@ -161,5 +179,54 @@ def ask_list(category, options):
         answer = input("Enter option number: ")
         check = answer in set(val)
     ans_int = int(answer) - 1
-    option = options[ans_int]
+    option_ = options[ans_int]
+    if option_.lower() == "other":
+        option = input("Details: ")
+    else:
+        option = option_
     return option
+
+
+def check_number_input(number_statement, error):
+    number = input(number_statement)
+    number_check = False
+    while not number_check:
+        if number == 'NA':
+            number_check = ask_y_n('Number is entered as NA. Is that correct?')
+        else:
+            try:
+                int(number)
+                number_check = True
+            except ValueError:
+                print(error)
+                number_check = False
+                number = input(number_statement)
+    return number
+
+
+def check_date_or_today(date_string):
+    checked_date = False
+    inputDate = 'NA'
+    while not checked_date:
+        inputDate = input('\n' + date_string + '\n')
+        if inputDate.lower() == 'today':
+            inputDate = datetime.date.today().strftime('%d.%m.%Y')
+            checked_date = True
+        else:
+            check_date(date_string)
+    return inputDate
+
+
+def nested_list(data_list):
+    while any(isinstance(i, list) for i in data_list):
+        data_list = [datum for data in data_list for datum in data]
+    return data_list
+
+
+def create_yes_no_options(data_type, yes='yes', no='no', not_cancer='not_breast_cancer'):
+    base = data_type.lower().replace(" ", "_")
+    ans_yes = base + "_" + yes
+    ans_no = base + "_" + no
+    na_ans = base + '_data_not_in_report'
+    options = [ans_yes, ans_no, na_ans, not_cancer]
+    return options

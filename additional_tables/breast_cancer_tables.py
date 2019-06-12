@@ -3,7 +3,7 @@ from modules.ask_y_n_statement import ask_y_n, ask_option, join_lists, check_dat
 import sql.add_update_sql as sql
 
 def physical_activity_table(conn, cursor, file_number):
-    table_act = "Physical_Activity"
+    table_act = "physical_activity"
     columns = ", ".join(pccm_names.names_info("phys_act_table"))
     add_act = True
     type_phys_list, freq_phys_list = [], []
@@ -20,7 +20,7 @@ def physical_activity_table(conn, cursor, file_number):
     return (type_phys, freq_phys)
 
 def cancer_table(conn, cursor, file_number):
-    table_cancer = "Previous_Cancer_History"
+    table_cancer = "previous_cancer_history"
     type_of_cancer_list = []
     year_diagnosis_list = []
     treat_all = []
@@ -76,7 +76,7 @@ def cancer_table(conn, cursor, file_number):
 def nut_supp_table(conn, cursor, file_number):
     type_nut_list, quant_nut_list, duration_nut_list = [], [], []
     add_supp = True
-    table_nut = "Nutritional_Supplements"
+    table_nut = "nutritional_supplements"
     columns = ", ".join(pccm_names.names_info("nut_sup"))
     while add_supp:
         nut_supplements_type = input("Type of nutritional supplements taken: ")
@@ -104,7 +104,7 @@ def med_history_table(conn, cursor, file_number):
         treatment = input("Treatment: ")
         treatment_list.append(treatment)
         history = file_number, condition, diagnosis_date, treatment
-        table_med = "General_Medical_History"
+        table_med = "general_medical_history"
         columns = "File_number, Condition, Diagnosis_date, Treatment"
         sql.insert(conn, cursor, table_med, columns, history)
         add_history = ask_y_n ('Add more history')
@@ -130,14 +130,14 @@ def family_cancer_table(conn, cursor, file_number):
         family_history_list = "; ".join([type_of_cancer, relation_to_patient, type_relation, age_at_detection_yrs])
         all_data.append(family_history_list)
         columns = 'File_number, Type_Cancer, Relation_to_Patient, Type_Relation, Age_at_detection_yrs'
-        table = "Family_Cancer_History"
+        table = "family_cancer_history"
         sql.insert(conn, cursor, table, columns, family_history)
         add_family = ask_y_n("Add more family cancer history? ")
     all_data_flat = "|".join(all_data)
     return(all_data_flat)
 
 def feed_duration (conn, cursor, file_number, children_number):
-    table = "Breast_Feeding"
+    table = "breast_feeding"
     child_list, feeding_duration_list, feeding_details_list = [], [], []
     child_number = int(children_number)
     for index in range(0, child_number):

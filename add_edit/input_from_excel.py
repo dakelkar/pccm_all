@@ -24,7 +24,6 @@ if sql.table_check(cursor_all, table) == 0:
 file_to_read = "D:/Documents/IISER/Prashanti_docs/Breast_Cancer_FFPE_blocks_database_Biopsy_dk08062018.xlsx"
 data = pd.read_excel(file_to_read,header=1, dtype = 'object' ,usecols= 'A:AB')
 update_by = "dk from ruhi/shaheen data"
-last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
 module_names = ["biopsy_report_info", "tumour_biopsy_data", "lymphnode_biopsy"]
 col_list = ["File_number"]
 for index in module_names:
@@ -33,7 +32,7 @@ columns = ", ".join(col_list)
 for index in range (0, len(data)):
     data_list = list(data.loc[index])
     data_list.append(update_by)
-    data_list.append(last_update)
+    data_list.append(sql.last_update())
     sql.insert(conn_all, cursor_all, table, columns, data_list)
 
 #for surgery_report
@@ -51,7 +50,6 @@ if sql.table_check(cursor_all, table) == 0:
 file_to_read = "D:/Documents/IISER/Prashanti_docs/Breast_Cancer_FFPE_blocks_database_Surgery_dk08062018.xlsx"
 data = pd.read_excel(file_to_read,header=1, dtype = 'object' ,usecols= 'A:BB')
 update_by = "dk from ruhi/shaheen data"
-last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
 module_names = ["surgery_block_information_1","surgery_block_information_2", "surgery_block_information_3",
                     "path_stage"]
 col_list = ["File_number"]
@@ -61,7 +59,7 @@ columns = ", ".join(col_list)
 for index in range (0, len(data)):
     data_list = list(data.loc[index])
     data_list.append(update_by)
-    data_list.append(last_update)
+    data_list.append(sql.last_update())
     sql.insert(conn_all, cursor_all, table, columns, data_list)
 
 
@@ -70,7 +68,7 @@ for index in range (0, len(data)):
 import modules.pccm_names as pccm_names
 import sql.add_update_sql as sql
 #read from excel with same col names and distribution as in table
-table = 'Follow_up_Data'
+table = 'follow_up_Data'
 file_to_read = "D:/OneDrive/iiser_data/Prashanti_docs/Database_files/2018_10_09/Rituja_data/" \
                "PCCM_BreastCancerDB_Rituja_2018-10-11_2018-10-11.xlsx"
 data = pd.read_excel(file_to_read, header=0, dtype = 'object' ,usecols= 'A:L', sheet_name='Follow_up_Data')
@@ -80,4 +78,23 @@ columns = ", ".join(col_list)
 for index in range (0, len(data)):
     data_list = list(data.loc[index])
     sql.insert(conn_all, cursor_all, table, columns, tuple(data_list))
+
+#add mock block list table
+import pandas as pd
+import sql.add_update_sql as sql
+
+table = 'block_list'
+file_to_read = "D:/OneDrive/iiser_data/Prashanti_docs/Database_files/Block_data_biopsy_surgery/" \
+               "2019_03_06_mock_block_list.xlsx"
+data = pd.read_excel(file_to_read, header=0, dtype = 'object' ,usecols= 'A:K', sheet_name='Sheet2')
+data[['last_update']] = sql.last_update()
+col_list = ["file_number"]
+col_list = col_list + pccm_names.block_list()
+columns = ", ".join(col_list)
+#convert dates to objects
+data[['blocks_received_at_pccm']] = sql.last_update()
+data[['update_by']] = 'dk'
+for index in range (0, len(data)):
+    data_list = list(data.loc[index])
+    sql.insert(conn, cursor, table, columns, tuple(data_list))
 

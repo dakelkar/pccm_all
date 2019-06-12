@@ -17,3 +17,16 @@ git commit
 edit_follow_up function.tested with actual db entry. to demo to rituja/rohini on 9th.
 6:51 PM 11/20/2018
 added function to write details of new ffpe blocks to a db. To check why file number column is added at beginning.
+
+16:41 07-03-2019
+added a check_date_or_today function that acccepts today as an input and outputs the current date/accepts NA/accepts a valid date (past date in dd/mm/yyyy format)
+corrected how functions are called within a class to self.function(rquired input) vs Class.function(self, rquired input). This fixed the update function in block_list. 
+added function to check for integer or NA in block list and serial number. 
+modified edit_table to update the last_update and update_by columns in the data to the current user and time.
+
+
+11:00 11-05-2019
+completed update_ffpe_db
+sendng to pccm
+11:00 13-05-2019
+added additional check for benign. added additional check for correctness of data entered in block list.

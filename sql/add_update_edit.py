@@ -1,7 +1,7 @@
 import pandas as pd
 import modules.ask_y_n_statement as ask
 
-class AddUpdateEdiSQL:
+class AddUpdateEditSQL:
 
     def __init__(self, conn, cursor, table, column, file_number, data):
         self.conn = conn
@@ -55,7 +55,7 @@ class AddUpdateEdiSQL:
         for index in range (0, col_number):
             if self.data[index] == None:
                 data = input ("Data for "+self.column[index]+": ")
-                AddUpdateEdiSQL.update_single(self, data)
+                AddUpdateEditSQL.update_single(self, data)
         return False
 
     def view_multiple(self):
@@ -72,7 +72,7 @@ def print_df(df):
     for row in range(0, rows):
         print(df.iloc[row].to_string() + '\n')
 
-def edit_table(df, id_col, df_col):
+def edit_table(df, pk_col, df_col):
     import modules.ask_y_n_statement as ask
     rows = (df.shape)[0]
     for row in range(0,rows):
@@ -85,20 +85,20 @@ def edit_table(df, id_col, df_col):
         else:
             change_row = True
             while change_row:
-                id_list = list(df[id_col])
-                print(id_list)
-                id = input("Enter " + id_col + " to change: ")
-                index = id_list.index(id)
+                pk_list = list(df[pk_col])
+                print(pk_list)
+                pk = input("Enter " + pk_col + " to change: ")
+                index = pk_list.index(id)
                 to_do = True
                 while to_do:
                     print(df.loc[index, :])
                     col_change = ask.ask_option("Name of column to change", df_col)
                     old_val = df.loc[index, col_change]
                     print(old_val + '\n')
-                    new_val = input("Enter correct value for " + col_change + ' for ' + id + ": ")
+                    new_val = input("Enter correct value for " + col_change + ' for ' + pk + ": ")
                     df.loc[index, col_change] = new_val
                     print(df.iloc[index].to_string() + '\n')
-                    to_do = ask.ask_y_n("Make more changes to " + id_col + ' ' + id + '?')
+                    to_do = ask.ask_y_n("Make more changes to " + pk_col + ' ' + pk + '?')
                 print_df(df)
                 change_row = ask.ask_y_n("Change another row?")
             to_correct = False

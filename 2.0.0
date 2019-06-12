@@ -1,3 +1,0 @@
-Requirement already satisfied: prompt-toolkit in d:\miniconda3\envs\pccm_db\lib\site-packages (1.0.14)
-Requirement already satisfied: wcwidth in d:\miniconda3\envs\pccm_db\lib\site-packages (from prompt-toolkit) (0.1.7)
-Requirement already satisfied: six>=1.9.0 in d:\miniconda3\envs\pccm_db\lib\site-packages (from prompt-toolkit) (1.11.0)

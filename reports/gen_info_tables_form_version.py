@@ -1,5 +1,5 @@
 from additional_tables.breast_cancer_tables import nut_supp_table,physical_activity_table,med_history_table,cancer_table,feed_duration,family_cancer_table
-from sql.add_update_sql import review_input, update_multiple, review_data
+from sql.add_update_sql import review_input, update_multiple, review_data, last_update
 from modules.ask_y_n_statement import ask_option, ask_y_n
 from add_edit.print_gen_info import print_info
 import modules.pccm_names as pccm_names
@@ -267,8 +267,7 @@ def breast_symptoms(file_number, user_name):
         if met_flat == []:
             data_met = "No Metastatis Symptoms"
         columns_list = pccm_names.names_info(module_name)
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
-        data_list = data_list_symp + data_list_other + [data_met,user_name,last_update]
+        data_list = data_list_symp + data_list_other + [data_met,user_name,last_update()]
         check = review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
@@ -444,7 +443,7 @@ def file_row(cursor, file_number):
     cursor.execute("INSERT INTO Patient_Information_History(File_number) VALUES ('" + file_number + "')")
 
 def add_gen_info(conn, cursor, file_number, user_name):
-    table = "Patient_Information_History"
+    table = "patient_information_history"
     #file_row(cursor, file_number)
     enter = ask_y_n("Enter Patient Biographical Information")
     if enter:
@@ -483,7 +482,7 @@ def add_gen_info(conn, cursor, file_number, user_name):
     print_info(cursor, file_number)
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Patient_Information_History"
+    table = "patient_information_history"
     print("Patient Biographical Information")
     col_list = pccm_names.names_info("bio_info")
     enter = review_data(conn, cursor, table, file_number, col_list)

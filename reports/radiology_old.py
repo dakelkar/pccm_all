@@ -37,7 +37,7 @@ def mammography(conn, cursor, file_number):
                                                                             "mammography"])
             mammo_mass_location = ask_y_n_statement.ask_y_n("Is there any mass detected")
             if mammo_mass_location:
-                table = "Mammography_Multiple_Mass"
+                table = "mammography_multiple_mass"
                 mass_number, mammo_mass_location, mammo_mass_location_quad, mammo_mass_depth, mammo_mass_dist, \
                 mammo_mass_pect, mammo_mass_shape, mammo_mass_margin, mammo_mass_density = radio_tables_old.multiple_mass(
                     table, conn, cursor, file_number)
@@ -161,7 +161,7 @@ def sonomammo(conn, cursor, file_number):
                                                              "c. Heterogeneous background echotexture", "Other"])
             mass_sonomammo = ask_y_n_statement.ask_y_n("Is there any mass detected")
             if mass_sonomammo:
-                table = "SonnoMammography_Multiple_Mass"
+                table = "sonnomammography_multiple_mass"
                 mass_number_sonomammo, mass_location, mass_quad, mass_clock, mass_depth, mass_distance, mass_pect, \
                 mass_shape_sonomammo, mass_orientation_sonomammo, mass_margin_sonomammo, mass_echo_sonomammo, \
                 mass_posterior_sonomammo = radio_tables_old.multiple_mass(table, conn, cursor, file_number)
@@ -280,7 +280,7 @@ def mri_breast(conn, cursor, file_number, user_name):
             mass_mri = ask_y_n_statement.ask_y_n("Are masses detected?")
             if mass_mri:
                 mass_mri = "Mass Detected"
-                table = "MRI_Multiple_Mass"
+                table = "mri_multiple_mass"
                 mri_mass_number, mass_location, mass_quad, mass_shape, mass_margin, mass_internal = \
                     radio_tables_old.multiple_mass(table, conn, cursor, file_number)
             else:
@@ -339,21 +339,20 @@ def mri_breast(conn, cursor, file_number, user_name):
             mri_breast_lesion, mri_breast_lesion_location, mri_breast_lesion_depth, mri_breast_kinetics_initial, \
             mri_breast_kinetics_delayed, mri_breast_non_enhance, mri_breast_implant, mri_breast_size, mri_breast_dist, \
             mri_breast_pect, mri_breast_birad, mri_breast_birad_diag = ("NA",) * 35
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [mri_breast, mri_breast_date, mri_breast_acc, fgt_mri, bpe_level_mri, bpe_symm_mri, focus_mri,
                      mass_mri, mri_mass_number, mass_location, mass_quad, mass_shape, mass_margin, mass_internal,
                      asso_feat_1, asso_feat_2, asso_feat_3, asso_feat_4, asso_feat_5, asso_feat_6, asso_feat_7,
                      asso_feat_8, asso_feat_9, fat_lesions, mri_breast_kinetics_initial, mri_breast_kinetics_delayed,
                      mri_breast_non_enhance, mri_breast_implant, mri_breast_lesion, mri_breast_lesion_location,
                      mri_breast_lesion_depth, mri_breast_size, mri_breast_dist, mri_breast_pect, mri_breast_birad,
-                     mri_breast_birad_diag, user_name, last_update]
+                     mri_breast_birad_diag, user_name, add_update_sql.last_update()]
         columns_list = names(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
 
 
 def add_data(conn, cursor, file_number, user_name):
-    table = "Radiology"
+    table = "radiology"
     #file_row(cursor, file_number)
     enter = ask_y_n("Enter Mammography Report?")
     if enter:
@@ -378,7 +377,7 @@ def add_data(conn, cursor, file_number, user_name):
 
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Radiology"
+    table = "radiology"
     print("Mammography")
     col_list = names("mammography")
     enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)

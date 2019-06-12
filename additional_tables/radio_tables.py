@@ -1,34 +1,41 @@
-def clinical_tests(test):
+import modules.ask_y_n_statement as ask_y_n_statement
+import sql.add_update_sql as add_update_sql
+import modules.pccm_names as pccm_names
+import pandas as pd
+
+def clinical_tests():
     import modules.ask_y_n_statement as ask_y_n_statement
-    test_name = test[0]
+    other_tests = {'USG Abdomen': ['Abnormal'], 'CECT Abdomen and Thorax': ['Visceral Metastasis'],
+                   'PET Scan': ['Visceral Metastasis', 'Skeletal Metastasis'], 'Bone Scan': ['Skeletal Metastasis']}
+    test_key = list(other_tests.keys())
     data_list = []
-    test_done = ask_y_n_statement.ask_y_n("Has "+test_name+" been done?")
-    if test_done:
-        test_done = test_name+" done"
-        data_list.append(test_done)
-        for index in range(1, len(test)):
-            abnormal = test[index]
-            test_diag = ask_y_n_statement.ask_option("Diagnosis", ["Normal", abnormal])
-            data_list.append(test_diag)
-            if test_diag == abnormal:
-                test_details = input("Please provide details of "+abnormal+" diagnosis: ")
-            else:
-                test_details = "NA"
-            data_list.append(test_details)
-    else:
-        test_done = test_name+" not done"
-        data_list.append(test_done)
-        for index in range(1, len(test)):
-            not_done = ("NA", )*2
-            data_list.append(not_done)
+    for test in test_key:
+        test_name = test
+        test_done = ask_y_n_statement.ask_y_n("Has "+test_name+" been done?")
+        if test_done:
+            test_done = test_name+" done"
+            data_list.append(test_done)
+            abnormal = other_tests[test]
+            for diagnosis in abnormal:
+                test_diag = ask_y_n_statement.ask_y_n('Is the result ' + diagnosis + '?')
+                if test_diag:
+                    test_details = input("Please provide details of " + diagnosis + " diagnosis: ")
+                else:
+                    diagnosis = 'Normal'
+                    test_details = "NA"
+                data_list.append(diagnosis)
+                data_list.append(test_details)
+        else:
+            test_done = test_name+"_not_done"
+            data_list.append(test_done)
+            abnormal = other_tests[test]
+            for i in range(2*len(abnormal)):
+                i = 'NA'
+                data_list.append(i)
     return data_list
 
 
 def multiple_mass(table, mammo_breast = "Right Breast"):
-    import modules.ask_y_n_statement as ask_y_n_statement
-    import sql.add_update_sql as add_update_sql
-    import modules.pccm_names as pccm_names
-    import pandas as pd
     number_mass = input("Number of masses detected: ")
     try:
         mass_number = int(number_mass)
@@ -38,7 +45,7 @@ def multiple_mass(table, mammo_breast = "Right Breast"):
     mass_df = pd.DataFrame(columns=col_list)
     for index in range(0, mass_number):
         mass_id = index + 1
-        if table == "Mammography_Mass":
+        if table == "mammography_mass":
             check = False
             while not check:
                 if mammo_breast == "Bilateral":
@@ -68,7 +75,7 @@ def multiple_mass(table, mammo_breast = "Right Breast"):
             mass_id_, location_quad, mammo_mass_shape, mammo_mass_margin, mass_nipple, \
             mass_size, mass_size_unit  = data_df
             data_return = number_mass, location_quad, mammo_mass_shape, mammo_mass_margin, mass_nipple, mass_size, mass_size_unit
-        elif table == "SonnoMammography_Mass":
+        elif table == "sonnomammography_mass":
             check = False
             while not check:
                 if mammo_breast == "Bilateral":
@@ -106,7 +113,7 @@ def multiple_mass(table, mammo_breast = "Right Breast"):
             if mammo_breast != 'Bilateral':
                 mass_location = mammo_breast
             data_return = number_mass, mass_location,location_clock, mass_shape, mass_margin, mass_echo, mass_size, mass_size_unit
-        elif table == "MRI_Mass":
+        elif table == "mri_mass":
             check = False
             while not check:
                 if mammo_breast == "Bilateral":
@@ -118,9 +125,8 @@ def multiple_mass(table, mammo_breast = "Right Breast"):
                 mri_mass_margin = ask_y_n_statement.ask_option("Margins of mass",
                                                                ["Circumscribed", "Irregular", "Spiculated"])
 
-                mri_mass_internal = ask_y_n_statement.ask_option("Internal enhancement characteristics",
-                                                                 ["Homogeneous", "Heterogeneous", "Rim enhancement",
-                                                                  "Dark internal septations"])
+                mri_mass_internal = ask_y_n_statement.ask_option("Internal enhancement characteristics", ["Homogeneous", "Heterogeneous", "Rim enhancement",
+                                                                                                          "Dark internal septations"])
                 mass_id = "Mass " + str(index + 1)
                 data_list = [str(mass_id), mass_location, mri_mass_shape, mri_mass_margin,
                              mri_mass_internal]
@@ -179,13 +185,13 @@ def cal_table (file_number, mammo_breast):
     import modules.ask_y_n_statement as ask_y_n_statement
     import sql.add_update_sql as add_update_sql
     import modules.pccm_names as pccm_names
-    table = "Calcification_Mammography"
+    table = "calcification_mammography"
     mass_number = input("Number of groups of calcifications detected? ")
     try:
         number_calc = int(mass_number)
     except:
         number_calc = 1
-    location, calc_type= [list([]) for _ in range(2)]
+    location, calc_type, calicification_comments = [list([]) for _ in range(3)]
     for index in range(0, number_calc):
         check = False
         while not check:
@@ -193,9 +199,9 @@ def cal_table (file_number, mammo_breast):
             if mammo_breast == "Bilateral":
                 mass_location = ask_y_n_statement.ask_option("Location of calcification group " + str(mass_id),
                                                          ["Right Breast", "Left Breast"])
-                location.append(mass_location)
             else:
                 mass_location = mammo_breast
+            location.append(mass_location)
             mammo_calcification = ask_y_n_statement.ask_option("Calcification Type ",
                                                        ["Skin", "Vascular", "Coarse or 'Popcorn-like'",
                                                         "Large Rod-like", "Round and punctate", "Eggshell or Rim",
@@ -204,10 +210,12 @@ def cal_table (file_number, mammo_breast):
                                                         "Other"])
             calc_type.append(mammo_calcification)
             mass_id = "Group " + str(index + 1)
-            data_list = [file_number, mass_id, mass_location, mammo_calcification]
+            comment = input('Additional comments for calcification: ')
+            calicification_comments.append(comment)
+            data_list = [file_number, mass_id, mass_location, mammo_calcification, comment]
             col_list = pccm_names.names_radio_df(table)
             check = add_update_sql.review_input(file_number, col_list, data_list)
-    all_data = [[str(mass_number)], location, calc_type]
+    all_data = [[str(mass_number)], location, calc_type, calicification_comments]
     data_return = ask_y_n_statement.join_lists(all_data, "; ")
     return tuple(data_return)
 

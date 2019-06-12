@@ -1,12 +1,10 @@
 from additional_tables.breast_cancer_tables import nut_supp_table,physical_activity_table,med_history_table,cancer_table,\
     feed_duration,family_cancer_table
-from sql.add_update_sql import review_input, update_multiple, review_data
+from sql.add_update_sql import review_input, update_multiple, review_data, last_update
 from modules.ask_y_n_statement import ask_option, ask_y_n, ask_y_n_na, check_date
 from add_edit.print_gen_info import print_info
 import modules.pccm_names as pccm_names
-import textwrap
-from datetime import datetime
-
+from additional_tables.radio_tables import clinical_tests
 
 def nut_supplements(conn, cursor, file_number):
     module_name = "nut_supplements"
@@ -209,7 +207,7 @@ def breast_symptoms(file_number, user_name):
     module_name = "breast_symptoms"
     check = False
     while not check:
-        symp_present = ask_y_n("Does the file include on patient symptoms at presentations?")
+        symp_present = ask_y_n("Does the file include information on patient symptoms at presentations?")
         if symp_present:
          #   note = "Pain or tenderness; Lumps, Nipple Discharge - Milky/water discharge on pressing nippple, " \
          #          "Nipple Retraction - nipple reagion goes inside, Dimpling small pits anwywhere on breast, " \
@@ -302,8 +300,7 @@ def breast_symptoms(file_number, user_name):
             data_list_symp = ["Symptoms at presentation not in report", ] * 4
             data_met = "Symptoms at presentation not in report"
         columns_list = pccm_names.names_info(module_name)
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
-        data_list = data_list_symp + data_list_other + [data_met, user_name, last_update]
+        data_list = data_list_symp + data_list_other + [data_met]
         check = review_input(file_number, columns_list, data_list)
     return tuple(data_list)
 
@@ -435,6 +432,18 @@ def family_cancer(conn, cursor, file_number):
     return (tuple(data_list))
 
 
+def other_test(file_number, user_name):
+    data_list = ['data_to_be_entered', ]*14 + [user_name, last_update()]
+    module_name = "other_test"
+    check = False
+    while not check:
+        print('In this module please enter data for tests done at the time of diagnosis before the start of treatment')
+        data = clinical_tests()
+        data_list = data + [user_name, last_update()]
+        col_list = pccm_names.names_info(module_name)
+        check = review_input(file_number, col_list, data_list)
+    return data_list
+
 def bio_info(file_number):
     module_name = "bio_info"
     check = False
@@ -486,7 +495,7 @@ def file_row(cursor, file_number):
     cursor.execute("INSERT INTO Patient_Information_History(File_number) VALUES ('" + file_number + "')")
 
 def add_gen_info(conn, cursor, file_number, user_name, folders):
-    table = "Patient_Information_History"
+    table = "patient_information_history"
     #file_row(cursor, file_number)
     enter = ask_y_n("Enter Patient Biographical Information")
     if enter:
@@ -524,10 +533,14 @@ def add_gen_info(conn, cursor, file_number, user_name, folders):
         data = breast_symptoms(file_number, user_name)
         update_multiple(conn, cursor, table, pccm_names.names_info("breast_symptoms"), file_number,
                                        data)
+    enter = ask_y_n('Enter other tests done for diagnosis/metastatic checkup? ')
+    if enter:
+        data = other_test(file_number, user_name)
+        update_multiple(conn, cursor, table, pccm_names.names_info("other_test"), file_number, data)
     print_info(cursor, file_number, folders)
 
 def edit_data(conn, cursor, file_number, user_name, folders):
-    table = "Patient_Information_History"
+    table = "patient_information_history"
     print("Patient Biographical Information")
     col_list = pccm_names.names_info("bio_info")
     enter = review_data(conn, cursor, table, file_number, col_list)
@@ -572,4 +585,11 @@ def edit_data(conn, cursor, file_number, user_name, folders):
         data_symp = breast_symptoms(file_number,user_name)
         data = data_det + data_symp
         update_multiple(conn, cursor, table, col_list, file_number, data)
-    print_info(cursor, file_number, folders)
+    print('Other tests for diagnosis/metastatic checkup')
+    col_list = pccm_names.names_info('other_test')
+    enter = review_data(conn, cursor, table, file_number, col_list)
+    if enter:
+        data = other_test(file_number, user_name)
+        update_multiple(conn, cursor, table, pccm_names.names_info("other_test"), file_number, data)
+
+    #print_info(cursor, file_number, folders)

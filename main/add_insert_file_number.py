@@ -8,8 +8,8 @@ def add_insert():
     from modules.pccm_names import db_tables
 
 
-    folders = "d:/pccm_db/main/DB"
-    file = 'PCCM_BreastCancerDB_2018-09-08.db'
+    folders = "d:/repos/pccm_db/main/DB"
+    file = 'PCCM_BreastCancerDB_check_new_all_2_2019-05-27.db'
     #file = 'PCCM_BreastCancerDB_all_data_rituja_surgery_data.db'
     check_path = False
     while not check_path:
@@ -40,19 +40,11 @@ def add_insert():
                 table = ask_y_n_statement.ask_option("Table", db_tables())
                 file_table = file_number + "-" + table
                 files_table_added.append(file_table)
-                check_table = add_update_sql.check_file(conn, cursor, table, file_number, user_name, folders)
+                check_table = add_update_sql.check_file(conn, cursor, table, file_number, user_name, folders, file)
             folder_next = ask_y_n_statement.ask_y_n("Add/update another record?")
-        data = "Folders added/edited by " +user_name+" in this session are: " + "; ".join(files_table_added)
-        file_name = user_name+ datetime.now().strftime('%Y_%m_%d_at_%H_%M')+".txt"
-        folder_txt = folders +'/log'
-        path = os.path.join(folder_txt, file_name)
-        f = open(path, 'w')
-        f.write(data)
-        f.close()
     else:
         note = "current path: '" + path + "' to database is not valid. Check path and database name and run " \
                                           "start_pccm_db() again."
         wrapper = textwrap.TextWrapper(width=100)
         string = wrapper.fill(text=note)
         print(string)
-

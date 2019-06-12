@@ -117,13 +117,12 @@ def clinical_exam_initial (file_number, user_name):
         arm_volume_left = input("Upper limb volume - left arm (cc): ")
         arm_elbow_left = input("Distance from the elbow - left arm (cml): ")
         follow_up_advised = input("Follow up tests advised for patient: ")
-        last_update = datetime.now().strftime("%Y-%b-%d %H:%M")
         data_list = [con_stat, con_form, prov_diag, lump_palp, lump_location_data, lump_size, lump_number, lump_consistency,
                      lump_fixity, mastitis_location_data, mastitis_type, tender, retract, discharge, discharge_type,
                      skin_change_location, skin_change_type, ax_nodes, ax_nodes_number, ax_nodes_size, ax_nodes_fixity,
                      supra_nodes, supra_nodes_number, supra_nodes_size, supra_nodes_fixity, contra_breast, arm_edema,
                      arm_circ_right, arm_volume_right, arm_elbow_right, arm_circ_left, arm_volume_left, arm_elbow_left,
-                     follow_up_advised, user_name, last_update]
+                     follow_up_advised, user_name, add_update_sql.last_update()]
         columns_list = pccm_names.name_clinical(module_name)
         check = add_update_sql.review_input(file_number, columns_list, data_list)
     return (tuple(data_list))
@@ -168,7 +167,7 @@ def file_row(cursor, file_number):
 
 
 def add_data(conn, cursor, file_number, user_name):
-    table = "Clinical_Exam"
+    table = "clinical_exam"
     #file_row(cursor, file_number)
     enter =ask_y_n_statement.ask_y_n("Enter Clinical Examination information")
     if enter:
@@ -187,7 +186,7 @@ def add_data(conn, cursor, file_number, user_name):
                                        data)
 
 def edit_data(conn, cursor, file_number, user_name):
-    table = "Clinical_Exam"
+    table = "clinical_exam"
     print("Initial Clinical Examination")
     col_list = pccm_names.name_clinical("clinical_exam_initial")
     enter = add_update_sql.review_data(conn, cursor, table, file_number, col_list)

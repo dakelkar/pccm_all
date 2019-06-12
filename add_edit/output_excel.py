@@ -9,15 +9,15 @@ import modules.table_dicts as table_dicts
 
 
 class OutputData():
-    def __init__(self, data_location_name):
-        self.folder_db, self.db_name, self.output_folder, self.output_name = data_location_name
+    def __init__(self, data_location_name, user_name):
+        self.folder_db, self.db_name, self.output_folder, self.output_name, self.research = data_location_name
         self.conn = sqlite3.connect(os.path.join(self.folder_db, self.db_name))
+        self.user_name = user_name
 
     def print_table(self, writer, table):
         modules = table_dicts.table_module_dict(table)
-        if table == 'Patient_Information_History':
-            output_type = ask_y_n('Do you want a research print out for ' + table + '?')
-            if output_type:
+        if table == 'Patient_Information_History' or table == 'block_list':
+            if self.research:
                 modules = table_dicts.table_module_research(table)
         columns = []
         if not modules:
@@ -31,7 +31,10 @@ class OutputData():
             col_list = table_dicts.create_col_list(columns)
         else:
             col_list = columns
-        sql = ('SELECT ' + ", ".join(col_list) + " FROM '" + table + "'")
+        if self.user_name != 'dk':
+            sql = ('SELECT ' + ", ".join(col_list) + " FROM '" + table + "'")
+        else:
+            sql = ('SELECT ' + ", ".join(col_list) + " FROM '" + table + "' WHERE file_number NOT LIKE '%delete'")
         df = pd.read_sql(sql, self.conn)
         number = df.shape[0]
         df.to_excel(writer, sheet_name=table, startrow=0, index=False, header=True)
@@ -50,7 +53,10 @@ class OutputData():
         cursor = self.conn.cursor()
         tables_to_print = []
         summary_df = pd.DataFrame(columns=["table_name", "number_entries"])
-        output_path = os.path.join(self.output_folder, self.output_name)
+        output_name = self.output_name
+        if self.research:
+            output_name = 'Research_' + self.output_name
+        output_path = os.path.join(self.output_folder, output_name)
         for table in db_tables():
             check = table_check(cursor, table)
             if check:
@@ -70,26 +76,27 @@ class OutputData():
             if to_print == "All tables":
                 index = 0
                 for table in tables_to_print:
-                    OutputData.print_table(self, writer, table)
-                    number = OutputData.print_table(self, writer, table)
+                    self.print_table(writer, table)
+                    number = self.print_table(writer, table)
                     summary_df.loc[index] = [table, number]
                     index = index + 1
             elif to_print == "Select tables":
                 for table in tables_to_print:
                     to_print = ask_y_n("Do you want to print " + table)
                     if to_print:
-                        OutputData.print_table(self, writer, table)
-                        number = OutputData.print_table(self, writer, table)
+                        self.print_table(writer, table)
+                        number, output_type = self.print_table(writer, table)
                         summary_df.loc[table] = [table, number]
-            OutputData.print_summary(self, summary_df)
-            print("Data file " + self.output_name + " has been created at " + self.output_folder + '\n')
+            self.print_summary(summary_df)
+            print("Data file " + output_name + " has been created at " + self.output_folder + '\n')
         writer.save()
 
 
 def define_path():
-    folder_db, db_name, output_folder, output_name = ('D:/repos/pccm_db/main/DB', "PCCM_BreastCancerDB_all_data.db",
-                          'D:/repos/pccm_db/main/DB', 'Output_' + str(date.today()) + '.xlsx')
+    folder_db, db_name, output_folder, output_name, research = ('D:/repos/pccm_db/main/DB', "PCCM_BreastCancerDB_all_data.db",
+                          'D:/repos/pccm_db/main/DB', 'Output_' + str(date.today()) + '.xlsx', False)
     check_folder = None
+    research = ask_y_n('Do you want to create an output for research?')
     while check_folder != 'All are correct':
         print('\nFolder location of database file is set as: \n' + folder_db + '\n')
         print('Database file name is set as: \n' + db_name + '\n')
@@ -111,6 +118,6 @@ def define_path():
             print('Output file name is set as: \n' + output_name + '\n')
             file_name = input("Please input correct output file name (without date and .xlsx): ")
             output_name = file_name + '_' + str(date.today()) + '.xlsx'
-    data_location_name = folder_db, db_name, output_folder, output_name
+    data_location_name = folder_db, db_name, output_folder, output_name, research
     return data_location_name
 

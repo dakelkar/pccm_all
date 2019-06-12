@@ -11,7 +11,7 @@ path = os.path.join(folder, db_name)
 conn_all = sqlite3.connect(path)
 cursor_all = conn_all.cursor()
 file_number = "File_number"
-table = "Patient_Information_History"
+table = "patient_information_history"
 if table_check(cursor_all, table) == 0:
     cursor_all.execute('CREATE TABLE {tn}({nf})'\
                    .format(tn=table, nf=file_number))
@@ -20,19 +20,19 @@ if table_check(cursor_all, table) == 0:
     for index in module_names:
         col_name = pccm_names.names_info(index)
         add_columns(cursor_all, table, col_name)
-table = "Radiotherapy"
+table = "radiotherapy"
 if table_check(cursor_all, table) == 0:
     column = ", ".join(pccm_names.names_radiation())
     cols_file = "File_number, "+column
     cursor_all.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=cols_file))
 
-table = "Follow_up_Data"
+table = "follow_up_data"
 if table_check(cursor_all, table) == 0:
     column = ", ".join(pccm_names.name_follow_up())
     cols_file = "File_number, " + column
     cursor_all.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=cols_file))
 
-table = "HormoneTherapy_Recurrence_Survival"
+table = "hormonetherapy_recurrence_survival"
 if table_check(cursor_all, table) == 0:
     column = "File_number"
     cursor_all.execute('CREATE TABLE {tn}({nf})'.format(tn=table, nf=column))

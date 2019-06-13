@@ -166,7 +166,7 @@ class BlockDescription():
             metastasis_value = 'M1'
         else:
             metastasis_value = 'M0'
-        path_stage = prefix + "T" + pathological_pt + "N" + pathological_pn + metastasis_value
+        path_stage = prefix + pathological_pt + pathological_pn + metastasis_value
         clinical_stage = 'NA'
         print("Pathological Stage: " + path_stage)
         check = ask.ask_y_n("Is pathological stage correct")
@@ -176,44 +176,47 @@ class BlockDescription():
             clinical_stage = "IV"
         else:
             if prefix == 'yp':
-                clinical_stage = 'nact_treated'
+                if pathological_pt == 'T0' and pathological_pn == 'N0':
+                    clinical_stage = 'pcr'
+                else:
+                    clinical_stage = 'nact_treated'
             else:
-                if pathological_pn == "3":
+                if pathological_pn == "N3":
                     clinical_stage = "IIIC"
-                elif pathological_pn == "2":
-                    if pathological_pt == "4":
+                elif pathological_pn == "N2":
+                    if pathological_pt == "T4":
                         clinical_stage = "IIIB"
                     else:
                         clinical_stage = "IIIA"
-                elif pathological_pn == "1mi":
+                elif pathological_pn == "N1mi":
                     clinical_stage = "IB"
-                elif pathological_pn == "1":
-                    if pathological_pt == "0" or pathological_pt == "1":
+                elif pathological_pn == "N1":
+                    if pathological_pt == "T0" or pathological_pt == "T1":
                         clinical_stage = "IIA"
-                    elif pathological_pt == "2":
+                    elif pathological_pt == "T2":
                         clinical_stage = "IIB"
-                    elif pathological_pt == "3":
+                    elif pathological_pt == "T3":
                         clinical_stage = "IIIA"
-                    elif pathological_pt == "4":
+                    elif pathological_pt == "T4":
                         clinical_stage = "IIIB"
                     else:
                         clinical_stage = input("Clinical Staging: ")
-                elif pathological_pn == "0":
-                    if pathological_pt == "is":
+                elif pathological_pn == "N0":
+                    if pathological_pt == "Tis":
                         clinical_stage = "0"
-                    elif pathological_pt == "1":
+                    elif pathological_pt == "T1":
                         clinical_stage = "IA"
-                    elif pathological_pt == "2":
+                    elif pathological_pt == "T2":
                         clinical_stage = "IIA"
-                    elif pathological_pt == "3":
+                    elif pathological_pt == "T3":
                         clinical_stage = "IIB"
-                    elif pathological_pt == "4":
+                    elif pathological_pt == "T4":
                         clinical_stage = "IIIB"
                     else:
                         clinical_stage = input("Clinical Staging: ")
         print("Clinical stage: " + clinical_stage)
-        print("Based on TNM status", path_stage, "and TABLE 2 of Giuliano et al., 2017, CA CANCER J "
-                                                 "CLIN 2017;67:290–303")
+        print("Based on TNM status", path_stage, "and TABLE 2 of Giuliano et al., 2017, CA CANCER J CLIN 2017;67:290–"
+                                                 "303")
         check = ask.ask_y_n("Is clinical stage correct")
         if not check:
             clinical_stage = input("Please enter correct clinical stage: ")

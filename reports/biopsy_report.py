@@ -3,7 +3,7 @@ import sql.add_update_sql as sql
 import modules.pccm_names as names
 from reports.block_information import BlockInformation
 from additional_tables.block_description import BlockDescription, breast_cancer_subtype
-
+from modules.option_lists import PathReports
 
 class BiopsyData:
     def __init__(self, conn, cursor, file_number, pk, block_id, number_of_blocks, user_name):
@@ -51,8 +51,7 @@ class BiopsyData:
                                                                                   'path_history_notes',
                                                                                   'requires_specialist_input'])
             if biopsy_report_pccm != 'biopsy_report_pccm_no':
-                biopsy_block_source = ask.ask_option('Source of Biopsy Block', ['Golwilkar Lab', 'AG Diagnostics',
-                                                                                'Ruby Hall Clinic'])
+                biopsy_block_source = ask.ask_option('Source of Biopsy Block', PathReports.path_labs)
                 biopsy_lab_id = input("Biopsy Lab ID/SID: ")
             else:
                 biopsy_block_source, biopsy_lab_id = ('NAv',)*2
@@ -109,7 +108,6 @@ class BiopsyData:
                 biopsy_er, biopsy_er_percent, biopsy_pr, biopsy_pr_percent, biopsy_her2, biopsy_her2_grade, biopsy_fish,\
                 biopsy_ki67, biopsy_subtype = ['NA'] * 9
             else:
-                # error check
                 print('biopsy_ihc_report_pccm: ' + biopsy_ihc_report_pccm)
                 if biopsy_ihc_report_pccm[0] != 'biopsy_ihc_report_pccm_no':
                     print('Please input all data for ' + self.biopsy_block_id + ' block only')
@@ -149,15 +147,13 @@ class BiopsyData:
                                                                                   'doctors_notes_available',
                                                                                   'path_history_notes',
                                                                                   'requires_specialist_input'])
-        # error check
-        print('biopsy_report_pccm: ' + str(biopsy_report_pccm), biopsy_report_pccm != 'biopsy_report_pccm_no')
         data_list = ['NAv'] * 3 + ['False'] + ['NAv'] * 3
         if biopsy_report_pccm != 'biopsy_report_pccm_no':
             check = False
             while not check:
                 print('Please input all data for ' + self.biopsy_block_id + ' report only')
-                biopsy_type = ask.ask_list("Biopsy Type", ["trucut", "vab", 'excision', 'fnac', 'lumpectomy'])
-                biopsy_diagnosis = input('Enter the diagnosis in its full form (eg., Infiltrating Duct Carcinoma): ')
+                biopsy_type = ask.ask_list("Biopsy Type", PathReports.biopsy_type)
+                biopsy_diagnosis = ask.ask_list("Biopsy Diagnosis: ", PathReports.diagnosis)
                 biopsy_comments = input('Enter any additional comments on the diagnosis: ')
                 benign = ask.ask_y_n('Is the diagnosis of ' + str(biopsy_diagnosis) + ' describing a benign condition ('
                                                                                       'If diagnosis is not available '
@@ -165,7 +161,7 @@ class BiopsyData:
                 if benign:
                     biopsy_tumour_grade,  biopsy_lymph_emboli, dcis_biopsy = ['benign condition'] * 3
                 else:
-                    biopsy_tumour_grade = ask.ask_option("Tumour Biopsy Grade", ["I", "II", "III", 'na'])
+                    biopsy_tumour_grade = ask.ask_option("Tumour Biopsy Grade", PathReports.grade)
                     biopsy_lymph_emboli = ask.ask_list("Are Lymphovascular emboli seen?", ask.create_yes_no_options(
                         'Lymphovascular emboli Biopsy', not_cancer='requires_follow_up'))
                     dcis_biopsy = ask.ask_list("Does the biopsy show DCIS",

@@ -529,9 +529,6 @@ def names_surgery(module_name):
     elif module_name == 'block_data':
         col_list = ['fk', 'file_number', 'block_id', 'block_reference', 'block_type', 'block_description', 'update_by',
                     'last_update']
-    elif module_name == 'diagnosis':
-        col_list = ['IDC', 'IDC+DCIS', 'ILC', 'LCIS', 'ILC+LCIS', 'DCIS', 'Granulamatous Mastitis',
-                    'Papillary Carcinoma', 'Phylloid Carcinoma']
     else:
         col_list = 'file_number'
     return col_list

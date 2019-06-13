@@ -43,7 +43,7 @@ class AddBlockData:
 
     @staticmethod
     def get_table():
-        table = ask.ask_option("Table", ffpe_db_tables())
+        table = ask.ask_list("Table", ffpe_db_tables())
         return table
 
     def add_path_report(self, table):

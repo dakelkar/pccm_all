@@ -4,7 +4,7 @@ import sql.add_update_sql as add_update_sql
 from modules.pccm_names import names_surgery_information as names
 import additional_tables.surgery_tables as surgery_tables
 import pandas as pd
-from modules.surgery_lists import SurgeryLists
+from modules.option_lists import SurgeryLists
 
 
 def surgery_information(file_number):

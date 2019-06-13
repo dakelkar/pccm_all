@@ -4,7 +4,7 @@ from modules.pccm_names import names_surgery as names
 from additional_tables.block_description import BlockDescription, breast_cancer_subtype
 from reports.block_information import BlockInformation
 import pandas as pd
-
+from modules.option_lists import PathReports
 
 class SurgeryBlockData:
 
@@ -37,9 +37,7 @@ class SurgeryBlockData:
             block_data = ['block_sr_number', 'block_location', 'current_block_location', 'block_series']
             block_sr_number, block_location, current_block_location, surgery_block_series = \
                 block_list_table.get_block_information(self.surgery_block_id, block_data)
-            surgery_block_source = ask.ask_option("Pathology Lab (source of block)", ['A.G. Diagnostics',
-                                                                                      'Ruby Hall Clinic', 'SRL Pathlab',
-                                                                                      'Core Diagnostics'])
+            surgery_block_source = ask.ask_option("Pathology Lab (source of block)", PathReports.path_labs)
             breast_cancer_yes_no = ask.ask_y_n('Is this a case of breast cancer (Unilateral OR Bilateral)',
                                                yes_ans="breast_cancer_yes", no_ans="breast_cancer_no")
             pathology_report_available_yes_no = ask.ask_y_n('Is the pathology report available', yes_ans="yes",
@@ -54,13 +52,10 @@ class SurgeryBlockData:
                 neoadjuvant_therapy = 'nact_no'
                 surgery_block_primary_tissue = 'primary_tissue'
             date_of_surgery = ask.check_date("Date of Surgery: ")
-            surgeon_s = ask.ask_option("Name of the Surgeon/s", ["Dr. C. B. Koppiker"])
+            surgeon_s = ask.ask_option("Name of the Surgeon/s", PathReports.surgeon)
             surgery_hospital_id = input("Hospital ID: ")
             surgery_lesion_site = ask.ask_list("Lesion on", ["right_breast", "left_breast", "bilateral"])
-            surg_list = ['Mastectomy', 'Modified Radical Mastectomy', 'Breast Conservation Surgery',
-                         'Therapeutic Mammoplasty', 'Reduction Mammoplasty', 'Lumpectomy (Wide Local Excision)',
-                         'Reconstruction', 'Mastopexy']
-            surgery_type = self.bilateral_treatment(surgery_lesion_site, 'Type of surgery', surg_list)
+            surgery_type = self.bilateral_treatment(surgery_lesion_site, 'Type of surgery', PathReports.surgery_type)
             data_list = [self.file_number, surgery_block_data_type, block_sr_number, block_location,
                          current_block_location, self.surgery_block_id, self.surgery_number_of_blocks,
                          surgery_block_series, breast_cancer_yes_no, pathology_report_available_yes_no,
@@ -103,7 +98,7 @@ class SurgeryBlockData:
                 tumour_size_unit = ask.ask_list("Tumour size unit", ['mm', 'cm'])
                 tumour_grade = ask.ask_option("Tumour Grade", ["I", "II", "III"])
                 surgery_diagnosis = self.bilateral_treatment(surgery_lesion_site, "Surgery Diagnosis: ",
-                                                             names('diagnosis'))
+                                                             PathReports.diagnosis)
                 surgery_diagnosis_comments = self.bilateral_treatment(surgery_lesion_site, 'Descriptive or indicative '
                                                                                            'notes for surgery '
                                                                                            'diagnosis: ', 'input')
@@ -158,9 +153,9 @@ class SurgeryBlockData:
             surgery_perinodal_spread = ask.ask_list('Perinodal Spread',
                                                     ask.create_yes_no_options
                                                     ('Perinodal Spread', not_cancer='requires_follow_up'))
-            pathological_pt = input('Pathological T Status (Enter 0/1/2 etc as given in report): ')
-            pathological_pn = input('Pathological N Status (Enter 0/1/2 etc as given in report): ')
-            metastasis = ask.ask_y_n('Does the patient have metastasis at diagnosis?')
+            pathological_pt = input('Pathological T Status (Enter T0/T1/T2 etc as given in report): ')
+            pathological_pn = input('Pathological N Status (Enter N0/N1/N2 etc as given in report): ')
+            metastasis = ask.ask_y_n('Did the patient have metastasis at diagnosis?')
             nat = sql.get_value(col_name='neoadjuvant_therapy', table=self.table_name, pk=self.fk, cursor=self.cursor,
                                 pk_name='fk', error_statement='what is the nact status?')
             if nat != 'nact_no':

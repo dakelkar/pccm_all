@@ -30,3 +30,6 @@ completed update_ffpe_db
 sendng to pccm
 11:00 13-05-2019
 added additional check for benign. added additional check for correctness of data entered in block list.
+08:56 13-06-2019
+git commit
+added series to block_list, biopsy and surgery path reports. Changed Date format to dd.mm.yyyy from dd/mm/yyyy. Added additional check for lenght of input so input must be dd, mm, yyyy not d, m, yy variants. Created new version for data entry

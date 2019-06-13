@@ -93,33 +93,41 @@ def ask_option_y_n(question, yes_ans = "Yes", no_ans = "No",
         option = ans_4
     return option
 
+
 def check_date(date_string):
     checked_date = False
     inputDate = 'NA'
     while not checked_date:
         error = '\nDate entered is not valid\nDate must be in past and in dd.mm.yyyy format or NA\n'
         inputDate = input('\n' + date_string + '\n')
-        if inputDate !='NA':
+        is_valid_date = True
+        if inputDate.lower() != 'na':
             try:
+                # check that date has required number of char between separators
                 day, month, year = inputDate.split('.')
-                isValidDate = (len(year)==4 and len(day)==2 and len(month)==2)
-                if not isValidDate:
+                check_length = (len(year)==4 and len(day)==2 and len(month)==2)
+                if not check_length:
+                    is_valid_date = False
                     print(error)
-                try:
-                    datetime.datetime(int(year), int(month), int(day))
-                except ValueError:
-                    print(error)
-                    isValidDate = False
+                else:
+                    try:
+                        # check that  numbers resolve to a real date
+                        datetime.datetime(int(year), int(month), int(day))
+                    except ValueError:
+                        print(error)
+                        is_valid_date  = False
             except ValueError:
-                print (error)
-                isValidDate = False
-            if (isValidDate):
+                print(error)
+                is_valid_date = False
+            if is_valid_date:
+                # check date in past
                 checked_date = datetime.datetime.today() > datetime.datetime(int(year), int(month), int(day))
                 if not checked_date:
-                    print (error)
+                    print(error)
         else:
-            checked_date= ask_y_n('Date is NA. Is that correct?')
+            checked_date= ask_y_n('Date is ' + inputDate + '. Is that correct?')
     return inputDate
+
 
 def edit_table(df, pk_col, df_col, update_by):
     import sql.add_update_sql as sql

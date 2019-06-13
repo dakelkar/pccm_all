@@ -50,10 +50,7 @@ def update_multiple_key(conn, cursor, table, columns, key_name, key_value, data)
     # update multiple columns in a sql db. Key is defined at use.
     col_number = len(data)
     for index in range(0, col_number):
-        sql_update = "UPDATE " + table + " SET " + columns[index] + "= ? WHERE " + key_name + "= '" + key_value + \
-                     "'"
-        # error check
-        print(sql_update)
+        sql_update = "UPDATE " + table + " SET " + columns[index] + "= ? WHERE " + key_name + "= '" + key_value + "'"
         var = data[index]
         cursor.execute(sql_update, [var])
     conn.commit()
@@ -389,7 +386,9 @@ def extract_select_column_key(conn, columns, table, col_select, key_name, key_va
                      "'")
     df = pd.read_sql(sql_statement, conn)
     data = set(df[col_select])
-    return list(data)[0]
+    # error check
+    print(data)
+    return data
 
 
 def add_pk_fk_to_table(conn, cursor, table, col_filter, pk):

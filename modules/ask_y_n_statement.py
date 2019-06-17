@@ -103,7 +103,6 @@ def check_date(date_string):
         is_valid_date = True
         if inputDate.lower() != 'na':
             try:
-                # check that date has required number of char between separators
                 day, month, year = inputDate.split('.')
                 check_length = (len(year)==4 and len(day)==2 and len(month)==2)
                 if not check_length:
@@ -111,8 +110,7 @@ def check_date(date_string):
                     print(error)
                 else:
                     try:
-                        # check that  numbers resolve to a real date
-                        datetime.datetime(int(year), int(month), int(day))
+                       datetime.datetime(int(year), int(month), int(day))
                     except ValueError:
                         print(error)
                         is_valid_date  = False
@@ -120,7 +118,6 @@ def check_date(date_string):
                 print(error)
                 is_valid_date = False
             if is_valid_date:
-                # check date in past
                 checked_date = datetime.datetime.today() > datetime.datetime(int(year), int(month), int(day))
                 if not checked_date:
                     print(error)
@@ -215,13 +212,36 @@ def check_number_input(number_statement, error):
 def check_date_or_today(date_string):
     checked_date = False
     inputDate = 'NA'
+    error = '\nDate entered is not valid\nDate must be in past and in dd.mm.yyyy format or NA\n' 
     while not checked_date:
         inputDate = input('\n' + date_string + '\n')
         if inputDate.lower() == 'today':
             inputDate = datetime.date.today().strftime('%d.%m.%Y')
             checked_date = True
         else:
-            check_date(date_string)
+            is_valid_date = True
+            if inputDate.lower() != 'na':
+                try:
+                    day, month, year = inputDate.split('.')
+                    check_length = (len(year)==4 and len(day)==2 and len(month)==2)
+                    if not check_length:
+                        is_valid_date = False
+                        print(error)
+                    else:
+                        try:
+                            datetime.datetime(int(year), int(month), int(day))
+                        except ValueError:
+                            print(error)
+                            is_valid_date  = False
+                except ValueError:
+                    print(error)
+                    is_valid_date = False
+                if is_valid_date:
+                    checked_date = datetime.datetime.today() > datetime.datetime(int(year), int(month), int(day))
+                    if not checked_date:
+                        print(error)
+            else:
+                checked_date= ask_y_n('Date is ' + inputDate + '. Is that correct?')
     return inputDate
 
 

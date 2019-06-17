@@ -2,17 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c5b0ee2d-27cc-4b7f-ab6a-ff85c9d74cdd" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/additional_tables/block_description.py" beforeDir="false" afterPath="$PROJECT_DIR$/additional_tables/block_description.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/DB/PCCM_BreastCancerDB_check_new_all_2_2019_06_12.db" beforeDir="false" afterPath="$PROJECT_DIR$/main/DB/PCCM_BreastCancerDB_check_new_all_2_2019_06_12.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/add_insert_block_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/main/add_insert_block_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/modules/ask_y_n_statement.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/ask_y_n_statement.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/pccm_names.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/pccm_names.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/modules/surgery_lists.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/option_lists.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/biopsy_report.py" beforeDir="false" afterPath="$PROJECT_DIR$/reports/biopsy_report.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/surgery_block.py" beforeDir="false" afterPath="$PROJECT_DIR$/reports/surgery_block.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reports/surgery_info_new.py" beforeDir="false" afterPath="$PROJECT_DIR$/reports/surgery_info_new.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/sql/add_update_sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/sql/add_update_sql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/modules/pccm_bcdb_create.py" beforeDir="false" afterPath="$PROJECT_DIR$/modules/pccm_bcdb_create.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reports/ffpe_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/reports/ffpe_db.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -26,34 +20,10 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/modules/pccm_names.py">
+        <entry file="file://$PROJECT_DIR$/modules/pccm_bcdb_create.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="557">
-              <caret line="531" column="9" lean-forward="true" selection-start-line="531" selection-start-column="9" selection-end-line="531" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/reports/surgery_block.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="608">
-              <caret line="168" column="41" lean-forward="true" selection-start-line="168" selection-start-column="41" selection-end-line="168" selection-end-column="41" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/update_ffpe_db.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="51">
-              <caret line="3" column="18" selection-start-line="3" selection-start-column="18" selection-end-line="3" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#68#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="625">
+              <caret line="205" selection-start-line="205" selection-end-line="205" />
             </state>
           </provider>
         </entry>
@@ -61,8 +31,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/main/add_insert_block_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
-              <caret line="50" column="20" lean-forward="true" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
+            <state relative-caret-position="714">
+              <caret line="50" column="20" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
               <folding>
                 <element signature="e#0#14#0" expanded="true" />
               </folding>
@@ -74,9 +44,34 @@
         <entry file="file://$PROJECT_DIR$/additional_tables/block_description.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="442">
-              <caret line="174" column="22" lean-forward="true" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
+              <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/reports/ffpe_db.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="489">
+              <caret line="188" column="30" lean-forward="true" selection-start-line="188" selection-start-column="30" selection-end-line="188" selection-end-column="30" />
+              <folding>
+                <element signature="e#0#19#0" expanded="true" />
+                <marker date="1560773624485" expanded="true" signature="240:245" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/reports/follow_up_month_year.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="625">
+              <caret line="88" lean-forward="true" selection-start-line="88" selection-end-line="88" />
+              <folding>
+                <element signature="e#0#53#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -103,8 +98,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/modules/ask_y_n_statement.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="625">
-              <caret line="135" lean-forward="true" selection-start-line="135" selection-end-line="135" />
+            <state relative-caret-position="591">
+              <caret line="163" selection-start-line="163" selection-end-line="163" />
               <folding>
                 <element signature="e#0#15#0" expanded="true" />
               </folding>
@@ -116,7 +111,6 @@
         <entry file="file://$PROJECT_DIR$/reports/biopsy_report.py">
           <provider selected="true" editor-type-id="text-editor">
             <state>
-              <caret lean-forward="true" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
                 <marker date="1560395326844" expanded="true" signature="9709:9710" ph="..." />
@@ -129,8 +123,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/sql/add_update_sql.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="489">
-              <caret line="391" lean-forward="true" selection-start-line="391" selection-end-line="391" />
+            <state relative-caret-position="625">
+              <caret line="317" lean-forward="true" selection-start-line="317" selection-end-line="317" />
               <folding>
                 <element signature="e#0#29#0" expanded="true" />
               </folding>
@@ -150,7 +144,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>drugs_administered</find>
       <find>block</find>
       <find>biopsy</find>
       <find>number_of</find>
@@ -166,7 +159,6 @@
       <find>edit_table</find>
       <find>edit_ta</find>
       <find>print_</find>
-      <find>edit_t</find>
       <find>edit_</find>
       <find>get_valu</find>
       <find>breast_cancer_yes_no</find>
@@ -180,6 +172,8 @@
       <find>diagn</find>
       <find>pathological_pn</find>
       <find>pathological_pt</find>
+      <find>check_</find>
+      <find>edit_t</find>
     </findStrings>
     <replaceStrings>
       <replace>m</replace>
@@ -246,12 +240,9 @@
         <option value="$PROJECT_DIR$/reports/surgery_info.py" />
         <option value="$PROJECT_DIR$/additional_tables/surgery_tables.py" />
         <option value="$PROJECT_DIR$/reports/surgery_info_new.py" />
-        <option value="$PROJECT_DIR$/reports/ffpe_db.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_4.py" />
-        <option value="$PROJECT_DIR$/modules/pccm_bcdb_create.py" />
         <option value="$PROJECT_DIR$/changes.log" />
         <option value="$PROJECT_DIR$/main/add_insert_block_data.py" />
-        <option value="$PROJECT_DIR$/modules/ask_y_n_statement.py" />
         <option value="$PROJECT_DIR$/sql/add_update_sql.py" />
         <option value="$PROJECT_DIR$/modules/surgery_lists.py" />
         <option value="$PROJECT_DIR$/modules/pccm_names.py" />
@@ -259,6 +250,9 @@
         <option value="$PROJECT_DIR$/modules/option_lists.py" />
         <option value="$PROJECT_DIR$/additional_tables/block_description.py" />
         <option value="$PROJECT_DIR$/reports/surgery_block.py" />
+        <option value="$PROJECT_DIR$/modules/pccm_bcdb_create.py" />
+        <option value="$PROJECT_DIR$/modules/ask_y_n_statement.py" />
+        <option value="$PROJECT_DIR$/reports/ffpe_db.py" />
       </list>
     </option>
   </component>
@@ -375,12 +369,13 @@
       <workItem from="1559299514746" duration="2024000" />
       <workItem from="1559375962768" duration="5017000" />
       <workItem from="1560237841171" duration="13036000" />
-      <workItem from="1560369382381" duration="4102000" />
+      <workItem from="1560369382381" duration="5200000" />
+      <workItem from="1560503728635" duration="1805000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="311104000" />
+    <option name="totallyTimeSpent" value="314007000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -395,9 +390,9 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49787837" visible="true" weight="0.13270777" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49787837" weight="0.117962465" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.24983476" />
-      <window_info id="Favorites" order="2" sideWeight="0.5021216" side_tool="true" visible="true" weight="0.13270777" />
+      <window_info id="Favorites" order="2" sideWeight="0.5021216" side_tool="true" weight="0.13270777" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -417,6 +412,29 @@
       <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="right" id="SciView" order="4" weight="0.32908848" />
     </layout>
+    <layout-to-restore>
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49787837" visible="true" weight="0.117962465" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.24983476" />
+      <window_info id="Favorites" order="2" sideWeight="0.5021216" side_tool="true" weight="0.13270777" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32956153" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32956153" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.3281471" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50165236" side_tool="true" weight="0.6203966" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49834764" weight="0.4596888" />
+      <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" order="12" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="right" id="SciView" order="4" weight="0.32908848" />
+    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
@@ -735,37 +753,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/reports/follow_up_month_year.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1343">
-          <caret line="83" column="36" selection-start-line="83" selection-start-column="36" selection-end-line="83" selection-end-column="36" />
-          <folding>
-            <element signature="e#0#53#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/reports/ffpe_db.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="119" column="46" selection-start-line="119" selection-start-column="46" selection-end-line="119" selection-end-column="46" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-            <marker date="1560281065492" expanded="true" signature="240:245" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/pccm_bcdb_create.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="41" column="37" lean-forward="true" selection-start-line="41" selection-start-column="37" selection-end-line="41" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/changes.log">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -783,32 +770,29 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/modules/pccm_names.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9027">
+          <caret line="531" column="9" selection-start-line="531" selection-start-column="9" selection-end-line="531" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reports/surgery_block.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2397">
+          <caret line="147" column="100" selection-start-line="147" selection-start-column="100" selection-end-line="147" selection-end-column="100" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main/add_insert_block_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="50" column="20" lean-forward="true" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
+        <state relative-caret-position="714">
+          <caret line="50" column="20" selection-start-line="50" selection-start-column="20" selection-end-line="50" selection-end-column="20" />
           <folding>
             <element signature="e#0#14#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/modules/ask_y_n_statement.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="625">
-          <caret line="135" lean-forward="true" selection-start-line="135" selection-end-line="135" />
-          <folding>
-            <element signature="e#0#15#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/sql/add_update_sql.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="489">
-          <caret line="391" lean-forward="true" selection-start-line="391" selection-end-line="391" />
-          <folding>
-            <element signature="e#0#29#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -820,17 +804,16 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/pccm_names.py">
+    <entry file="file://$PROJECT_DIR$/modules/option_lists.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="557">
-          <caret line="531" column="9" lean-forward="true" selection-start-line="531" selection-start-column="9" selection-end-line="531" selection-end-column="9" />
+        <state relative-caret-position="510">
+          <caret line="30" selection-start-line="30" selection-end-line="30" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/reports/biopsy_report.py">
       <provider selected="true" editor-type-id="text-editor">
         <state>
-          <caret lean-forward="true" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
             <marker date="1560395326844" expanded="true" signature="9709:9710" ph="..." />
@@ -839,29 +822,60 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/modules/option_lists.py">
+    <entry file="file://$PROJECT_DIR$/modules/pccm_bcdb_create.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" selection-start-line="30" selection-end-line="30" />
+        <state relative-caret-position="625">
+          <caret line="205" selection-start-line="205" selection-end-line="205" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/modules/ask_y_n_statement.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="591">
+          <caret line="163" selection-start-line="163" selection-end-line="163" />
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/additional_tables/block_description.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="442">
-          <caret line="174" column="22" lean-forward="true" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
+          <caret line="174" column="22" selection-start-line="174" selection-start-column="22" selection-end-line="174" selection-end-column="22" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/reports/surgery_block.py">
+    <entry file="file://$PROJECT_DIR$/sql/add_update_sql.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="168" column="41" lean-forward="true" selection-start-line="168" selection-start-column="41" selection-end-line="168" selection-end-column="41" />
+        <state relative-caret-position="625">
+          <caret line="317" lean-forward="true" selection-start-line="317" selection-end-line="317" />
           <folding>
-            <element signature="e#0#39#0" expanded="true" />
+            <element signature="e#0#29#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reports/follow_up_month_year.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="625">
+          <caret line="88" lean-forward="true" selection-start-line="88" selection-end-line="88" />
+          <folding>
+            <element signature="e#0#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/reports/ffpe_db.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="489">
+          <caret line="188" column="30" lean-forward="true" selection-start-line="188" selection-start-column="30" selection-end-line="188" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <marker date="1560773624485" expanded="true" signature="240:245" ph="..." />
           </folding>
         </state>
       </provider>

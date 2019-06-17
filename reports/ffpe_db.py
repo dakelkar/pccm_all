@@ -180,12 +180,17 @@ class NewBlock:
                              "' WHERE file_number = '" + file_number + "'")
             df = pd.read_sql(sql_statement, self.conn)
             sql.print_df(df)
-            check_delete = False
-            while not check_delete:
-                check_delete, df = sql.edit_table(df, pk_col='block_id', df_col=self.columns[:-2],
+            # check_delete = False
+            # while not check_delete:
+            check_delete, df = sql.edit_table(df, pk_col='block_id', df_col=self.columns[:-2],
                                                   update_by=self.user_name)
-            sql.delete_rows(self.cursor, self.table_name, "file_number", file_number)
-            df.to_sql(self.table_name, self.conn, index=False, if_exists="append")
+            if check_delete:
+                sql.delete_rows(self.cursor, self.table_name, "file_number", file_number)
+                data = self.add_data()
+                data.to_sql(self.table_name, self.conn, index=False, if_exists="append")
+            else:
+                sql.delete_rows(self.cursor, self.table_name, "file_number", file_number)
+                df.to_sql(self.table_name, self.conn, index=False, if_exists="append")
         else:
             print('\n No edits will be made to this table\n')
 

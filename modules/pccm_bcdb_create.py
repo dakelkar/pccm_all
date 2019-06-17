@@ -7,7 +7,7 @@ import modules.pccm_names as pccm_names
 
 folder = "d:/repos/pccm_db/main/DB"
 db_name = 'PCCM_BreastCancerDB_FFPE_check_2019-05-11.db'
-db_name = "PCCM_BreastCancerDB_check_new_all_2_" + datetime.now().strftime("%Y_%m_%d") + '.db'
+db_name = "PCCM_BreastCancerDB_" + datetime.now().strftime("%Y_%m_%d") + '.db'
 
 path = os.path.join(folder, db_name)
 
@@ -173,6 +173,36 @@ if table_check(cursor, table) == 0:
         col_name = pccm_names.names_longterm(index)
         add_columns(cursor, table, col_name)
     print(table + ' created')
+d:
+d:
+
+
+
+
+
+
+
+
+
+
+
+d
+
+
+
+
+d
+d
+d
+d
+d
+d
+d
+d
+d
+d:
+
+
 
 table = 'block_list'
 if table_check(cursor, table) == 0:

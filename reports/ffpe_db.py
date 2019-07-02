@@ -42,6 +42,7 @@ class NewBlock:
         block_df = self.block_data
         check = False
         while not check:
+            print('update_patient')
             pk = uuid.uuid4().hex
             patient_name = self.get_value_and_check_value(col_name='patient_name', file_number=file_number,
                                                           input_statement='Please enter patient name: ',
@@ -85,6 +86,8 @@ class NewBlock:
                          consent, self.user_name, sql.last_update()]
             block_df.loc[pk] = data_list
             check, block_df = sql.review_df_row(block_df)
+        print("error check in update_patient")
+        sql.print_df(block_df)
         return block_df
 
     def add_update_patient(self):
@@ -92,20 +95,22 @@ class NewBlock:
         file_number = 'test'
         check_file = False
         while not check_file:
+            print('add_update_patient')
             file_number = input("Enter File Number: ")
             print("File Number: " + file_number)
             check_file = ask.ask_y_n("Is this file number correct")
         check = False
         while not check:
             if sql.check_file_number_exist(self.cursor, file_number, self.table_name):
+                print('add_update_patient_not_checck')
                 pk = uuid.uuid4().hex
                 patient_name = self.get_value_and_check_value(col_name='patient_name', file_number=file_number,
                                                               input_statement='Please enter patient name: ',
                                                               integer=False)
                 block_sr_number = self.get_value_and_check_value(col_name='block_sr_number', file_number=file_number,
                                                                  input_statement='Please enter block serial number: ',
-                                                                 integer=True)
-                block_location = 'block_location'
+                                                                                                           integer=True)
+                # block_location = 'block_location'
                 block_location_check = sql.get_value_no_error(col_name='block_location', table=self.table_name,
                                                               pk=file_number, pk_name='file_number', cursor=self.cursor)
                 if not block_location_check:
@@ -150,8 +155,16 @@ class NewBlock:
             data_list = [pk, file_number, patient_name, block_sr_number, block_location, block_type, block_id,
                          current_block_location, blocks_received_at_pccm, number_of_blocks, block_series, str(consent_discussed),
                          consent, self.user_name, sql.last_update()]
+            # error check
+            print("error check in loop 1")
+            sql.print_df(block_df)
             block_df.loc[pk] = data_list
+            print("error check in loop 2")
+            sql.print_df(block_df)
             check, block_df = sql.review_df_row(block_df)
+        # error check
+        print("error check out of loop_to_db")
+        sql.print_df(block_df)
         return block_df
 
     def add_data(self):
@@ -186,7 +199,7 @@ class NewBlock:
                                                   update_by=self.user_name)
             if check_delete:
                 sql.delete_rows(self.cursor, self.table_name, "file_number", file_number)
-                data = self.add_data()
+                data = self.add_update_patient()
                 data.to_sql(self.table_name, self.conn, index=False, if_exists="append")
             else:
                 sql.delete_rows(self.cursor, self.table_name, "file_number", file_number)

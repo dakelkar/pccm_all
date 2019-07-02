@@ -263,18 +263,13 @@ def check_path_report_entry(conn, cursor, file_number, table_to_check, pk, block
     from reports.surgery_block import SurgeryBlockData
     table_data = BiopsyData(conn, cursor, file_number, pk, block_id, number_of_blocks, user_name)
     col_filter = 'pk'
-    col_select = 'biopsy_block_id'
     if 'surgery' in table_to_check:
         table_data = SurgeryBlockData(conn, cursor, file_number, pk, block_id, number_of_blocks, user_name)
         col_filter = 'fk'
-        col_select = 'surgery_block_id'
-    sql_statement = "SELECT " + col_select + " FROM " + table_to_check + " WHERE " + col_filter + " = ?"
-    cursor.execute(sql_statement, (pk,))
-    data = cursor.fetchall()
-    if len(data) == 0:
+    pk_fk_present = sql.check_pk_fk_exist(cursor, col_filter, pk, table_to_check)
+    if not pk_fk_present:
         sql.add_pk_fk_to_table(conn, cursor, table_to_check, col_filter, pk)
-        print(
-            "This block_id -'" + block_id + "' for " + file_number + " does not exist in table " +
+        print("This block_id -'" + block_id + "' for " + file_number + " does not exist in table " +
             table_to_check + ". Enter new record")
         table_data.add_data()
     else:

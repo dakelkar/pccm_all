@@ -3,7 +3,7 @@ import modules.ask_y_n_statement as ask
 import os
 import textwrap
 from modules.pccm_names import ffpe_db_tables
-from reports.ffpe_db import NewBlock
+from reports.ffpe_db_new import NewBlock
 from reports.block_information import BlockInformation
 from additional_tables.block_description import check_path_report_entry
 import sql.add_update_sql as sql

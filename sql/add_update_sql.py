@@ -351,6 +351,15 @@ def check_file_number_exist(cursor, file_number, table):
     else:
         return True
 
+def check_pk_fk_exist(cursor, col_filter, pk, table):
+    sql_statement = "SELECT rowid FROM " + table + " WHERE " + col_filter + " = ?"
+    cursor.execute(sql_statement, (pk,))
+    data = cursor.fetchall()
+    if len(data) == 0:
+        return False
+    else:
+        return True
+
 
 def check_value_not_exist(cursor, value_name, value, table):
     sql_statement = "SELECT rowid FROM " + table + " WHERE " + value_name + " = ?"

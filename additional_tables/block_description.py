@@ -227,7 +227,7 @@ def block_location_format():
     block_location = 'To be entered'
     location = False
     while location == False:
-        print("Block Location: ")
+        print("Block Location")
         block_cab = input("Cabinet No: ")
         block_drawer = input("Drawer Number: ")
         block_col = input("Column Number: ")

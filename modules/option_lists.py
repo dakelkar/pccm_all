@@ -29,3 +29,17 @@ class PathReports:
                     'Therapeutic Mammoplasty', 'Reduction Mammoplasty', 'Lumpectomy (Wide Local Excision)',
                     'Reconstruction', 'Mastopexy', 'Other']
     surgeon = ["Dr. C. B. Koppiker", 'other']
+
+class BlockList:
+    edit_values = {'current_block_location' : ['pccm', 'iiser_mk_lab', 'iiser_ml_lab', 'with_patient', 'not_available'],
+                   'number_of_blocks' : ['Enter value'], 'block_series' : ['Enter value'],
+                   'block_type': ['biopsy', 'surgery'], 'block_id' : ['Enter value']}
+
+    unique_values = {'file_number', 'patient_name', 'mr_number', 'block_sr_number', 'block_location','block_id'}
+
+class FollowUpStatus:
+
+    survivor_status = ["disease Free", "with recurrence", "disease free with no known recurrence", "treatment ongoing",
+                       'metastatic disease']
+    deceased_status = ["due to disease", "due to unrelated causes", "not known"]
+

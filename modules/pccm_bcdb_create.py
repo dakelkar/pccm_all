@@ -173,36 +173,6 @@ if table_check(cursor, table) == 0:
         col_name = pccm_names.names_longterm(index)
         add_columns(cursor, table, col_name)
     print(table + ' created')
-d:
-d:
-
-
-
-
-
-
-
-
-
-
-
-d
-
-
-
-
-d
-d
-d
-d
-d
-d
-d
-d
-d
-d:
-
-
 
 table = 'block_list'
 if table_check(cursor, table) == 0:

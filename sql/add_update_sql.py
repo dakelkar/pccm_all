@@ -49,9 +49,11 @@ def update_multiple(conn, cursor, table, columns, file_number, data):
 def update_multiple_key(conn, cursor, table, columns, key_name, key_value, data):
     # update multiple columns in a sql db. Key is defined at use.
     col_number = len(data)
+    # print('col_number is ' + str(col_number))
     for index in range(0, col_number):
         sql_update = "UPDATE " + table + " SET " + columns[index] + "= ? WHERE " + key_name + "= '" + key_value + "'"
         var = data[index]
+        # print(sql_update, var)
         cursor.execute(sql_update, [var])
     conn.commit()
 
@@ -374,6 +376,9 @@ def check_value_not_exist(cursor, value_name, value, table):
 
 def extract_multiple_value_select_column(conn, columns, table='block_list', file_number='test', col_select='block_id',
                                          col_filter='block_type', col_filter_value='biopsy'):
+    # extracts multiple values (columns) form a row/rows in a table defined by presence of a filter value
+    # (col_filter_value) in a defined column (col_filter). Returns only a single column (col_select)
+
     sql_statement = ('SELECT ' + ", ".join(columns) + " FROM '" + table + "' WHERE file_number = '" + file_number +
                      "' AND " + col_filter + " = '" + col_filter_value + "'")
     df = pd.read_sql(sql_statement, conn)
@@ -387,16 +392,24 @@ def extract_multiple_value_select_column_pk(conn, columns, table='block_list', p
                      "' AND " + col_filter + " = '" + col_filter_value + "'")
     df = pd.read_sql(sql_statement, conn)
     data = set(df[col_select])
-    return list(data)
+    if len(data)==1:
+        data = list(data)[0]
+    else:
+        data = list(data)
+    return data
 
 
 def extract_select_column_key(conn, columns, table, col_select, key_name, key_value):
+    # extracts multiple values (columns) form a row/rows in a table defined by presence of a key value
+    # (key_value) in a defined column (key_name). Returns a set from only a single column (col_select)
     sql_statement = ('SELECT ' + ", ".join(columns) + " FROM '" + table + "' WHERE " + key_name + " = '" + key_value +
                      "'")
     df = pd.read_sql(sql_statement, conn)
     data = set(df[col_select])
-    # error check
-    print(data)
+    if len(data)==1:
+        data = list(data)[0]
+    else:
+        data = list(data)
     return data
 
 

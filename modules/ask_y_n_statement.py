@@ -164,7 +164,13 @@ def edit_table(df, pk_col, df_col, update_by):
     return to_correct, df
 
 
-def ask_list(category, options):
+def ask_list(category, choices):
+    if type(choices) is not list:
+        options = list(choices)
+    elif choices == ['x']:
+        options = ['Enter Value']
+    else:
+        options = choices
     option_list = []
     val = []
     i=1
@@ -187,6 +193,8 @@ def ask_list(category, options):
     option_ = options[ans_int]
     if option_.lower() == "other":
         option = input("Details: ")
+    elif option_.lower() =='enter value':
+        option = input('Enter value of ' + category + ': ')
     else:
         option = option_
     return option

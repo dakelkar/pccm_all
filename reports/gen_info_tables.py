@@ -537,7 +537,7 @@ def add_gen_info(conn, cursor, file_number, user_name, folders):
     if enter:
         data = other_test(file_number, user_name)
         update_multiple(conn, cursor, table, pccm_names.names_info("other_test"), file_number, data)
-    print_info(cursor, file_number, folders)
+    #print_info(cursor, file_number, folders)
 
 def edit_data(conn, cursor, file_number, user_name, folders):
     table = "patient_information_history"
@@ -591,5 +591,4 @@ def edit_data(conn, cursor, file_number, user_name, folders):
     if enter:
         data = other_test(file_number, user_name)
         update_multiple(conn, cursor, table, pccm_names.names_info("other_test"), file_number, data)
-
     #print_info(cursor, file_number, folders)

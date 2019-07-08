@@ -68,7 +68,7 @@ class SurgeryBlockData:
     @property
     def surgery_block_information_1(self):
         module_name = self.module_list[1]
-        data_list = ['NA', ] * 17
+        data_list = ['NA', ] * 21
         block_desc_df = pd.DataFrame()
         check = False
         while not check:
@@ -84,6 +84,8 @@ class SurgeryBlockData:
                                                 pk=self.file_number, cursor=self.cursor, pk_name='file_number')
             if not surgery_lesion_site:
                 surgery_lesion_site = ask.ask_list("Lesion on", ["right_breast", "left_breast", "bilateral"])
+            block_info = BlockInformation(self.conn, self.cursor, self.file_number)
+            specimen_resection_size, margin_size, cut_margin_size, margin_report = block_info.margin_info()
             tumour_size, tumour_size_unit, tumour_grade, surgery_diagnosis, surgery_diagnosis_comments, dcis_yes_no, \
             dcis_percent, surgery_perineural_invasion, surgery_necrosis, surgery_lymphovascular_invasion, \
             percent_lymph_invasion, stromal_tils_percent, tumour_desmoplastic_response = [breast_cancer_yes_no, ] * 13
@@ -129,9 +131,10 @@ class SurgeryBlockData:
 
             tumour_block_ref, node_block_ref, ad_normal_block_ref, red_tissue_block_ref \
                 = ask.join_lists(block_descriptions_all, sep="; ")
-            data_list = [tumour_block_ref, node_block_ref, ad_normal_block_ref, red_tissue_block_ref, tumour_size,
-                         tumour_size_unit, tumour_grade, surgery_diagnosis, surgery_diagnosis_comments, dcis_yes_no,
-                         dcis_percent, surgery_perineural_invasion, surgery_necrosis, surgery_lymphovascular_invasion,
+            data_list = [specimen_resection_size, tumour_block_ref, margin_size, cut_margin_size, margin_report,
+                        node_block_ref, ad_normal_block_ref, red_tissue_block_ref, tumour_size, tumour_size_unit,
+                        tumour_grade, surgery_diagnosis, surgery_diagnosis_comments, dcis_yes_no, dcis_percent,
+                        surgery_perineural_invasion, surgery_necrosis, surgery_lymphovascular_invasion,
                          percent_lymph_invasion, stromal_tils_percent, tumour_desmoplastic_response]
             columns_list = names(module_name)
             check = sql.review_input(self.file_number, columns_list, data_list)

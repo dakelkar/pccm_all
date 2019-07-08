@@ -236,14 +236,13 @@ def names_radio_df(module_name):
 
 def block_list(module_name):
     if module_name == 'all':
-        col_list = ['file_number', 'patient_name', 'block_sr_number', 'block_location', 'block_type', 'block_id',
-                    'current_block_location', 'blocks_received_at_pccm', 'number_of_blocks', 'block_series' , 'consent_discussed',
-                    'consent' ,'update_by', 'last_update']
+        col_list = ['file_number', 'patient_name', 'mr_number','date_of_birth','date_first_visit',
+                    'block_sr_number', 'block_location', 'block_type', 'block_id', 'current_block_location',
+                    'blocks_received_at_pccm', 'number_of_blocks', 'block_series', 'consent_discussed', 'consent',
+                    'update_by', 'last_update']
     elif module_name == 'research':
-        col_list = ['block_sr_number', 'block_type', 'block_id', 'block_series','number_of_blocks', 'current_block_location',
-                    'consent_discussed', 'consent' ,'update_by', 'last_update']
-    elif module_name == 'location':
-        col_list = ['pccm', 'iiser_mk_lab', 'iiser_ml_lab', 'with_patient']
+        col_list = ['block_sr_number', 'block_type', 'block_id', 'block_series','number_of_blocks',
+                    'current_block_location', 'consent_discussed', 'consent' ,'update_by', 'last_update']
     else:
         col_list = ['file_number']
     return col_list
@@ -503,14 +502,14 @@ def names_surgery(module_name):
         col_list = ['file_number', 'surgery_block_data_type', 'block_sr_number', 'block_location', 
                     'current_block_location', 'surgery_block_id', 'surgery_number_of_blocks', 'surgery_block_series',
                     'breast_cancer_yes_no', 'pathology_report_available_yes_no', 'neoadjuvant_therapy', 
-                    'surgery_block_primary_tissue', 'surgery_block_source', 'date_of_surgery', 'surgeon_s', 
+                    'surgery_block_primary_tissue', 'surgery_block_source','date_of_surgery', 'surgeon_s',
                     'surgery_hospital_id', 'surgery_lesion_site', 'surgery_type']
     elif module_name == 'surgery_block_information_1':
-        col_list = ['tumour_block_ref', 'node_block_ref', 'ad_normal_block_ref', 'red_tissue_block_ref', 'tumour_size', 
-                    'tumour_size_unit', 'tumour_grade', 'surgery_diagnosis', 'surgery_diagnosis_comments', 
-                    'dcis_yes_no', 'dcis_percent', 'surgery_perineural_invasion', 'surgery_necrosis', 
-                    'surgery_lymphovascular_invasion', 'percent_lymph_invasion', 'stromal_tils_percent', 
-                    'tumour_desmoplastic_response']
+        col_list = ['specimen_ressection_size','tumour_block_ref', 'margin_size','cut_margin_size', 'margin_report',
+                    'node_block_ref', 'ad_normal_block_ref', 'red_tissue_block_ref', 'tumour_size', 'tumour_size_unit',
+                    'tumour_grade', 'surgery_diagnosis', 'surgery_diagnosis_comments', 'dcis_yes_no', 'dcis_percent',
+                    'surgery_perineural_invasion', 'surgery_necrosis', 'surgery_lymphovascular_invasion',
+                    'percent_lymph_invasion', 'stromal_tils_percent', 'tumour_desmoplastic_response']
     elif module_name == 'surgery_block_information_2':
         col_list = ['surgery_er', 'surgery_er_percent', 'surgery_pr', 'surgery_pr_percent', 'surgery_her2', 
                     'surgery_her2_grade', 'surgery_fish', 'surgery_ki67', 'surgery_subtype', 

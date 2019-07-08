@@ -89,9 +89,8 @@ class BiopsyData:
         try:
             columns = names.names_biopsy('biopsy_details')
             benign = sql.extract_select_column_key(conn=self.conn, columns=columns, table=self.table_name,
-                                                   key_name='pk', key_value=self.pk,
-                                                   col_select='benign')[0]
-            print('Diagnosis is :' + benign)
+                                                   key_name='pk', key_value=self.pk, col_select='benign')
+            # print('Diagnosis is :', benign)
             if benign.lower() == 'false':
                 benign = False
             elif benign.lower() == 'true':
@@ -103,7 +102,7 @@ class BiopsyData:
         check = False
         while not check:
             if benign:
-                print(str(benign))
+                # print(str(benign))
                 print('Diagnosis is benign so IHC has not been considered')
                 biopsy_er, biopsy_er_percent, biopsy_pr, biopsy_pr_percent, biopsy_her2, biopsy_her2_grade, biopsy_fish,\
                 biopsy_ki67, biopsy_subtype = ['NA'] * 9

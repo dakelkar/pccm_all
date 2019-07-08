@@ -33,3 +33,7 @@ added additional check for benign. added additional check for correctness of dat
 08:56 13-06-2019
 git commit
 added series to block_list, biopsy and surgery path reports. Changed Date format to dd.mm.yyyy from dd/mm/yyyy. Added additional check for lenght of input so input must be dd, mm, yyyy not d, m, yy variants. Created new version for data entry
+
+19:26 08-07-2019
+added mr_number, date_first_visit, date_of_birth to block info. Added margin information to surgery path report. added node info to radiology and nact tables. added check date to hormone therapy survival. Changed vocab of survival.
+

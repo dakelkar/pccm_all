@@ -10,7 +10,7 @@ import sql.add_update_sql as sql
 
 def get_folder_name():
     folders = "d:/repos/pccm_db/main/DB"
-    file = 'PCCM_BreastCancerDB_FFPE_check_all_lc_2019-05-11.db'
+    file = 'PCCM_BreastCancerDB_2019_07_03.db'
     check_path = False
     path = os.path.join(folders, file)
     while not check_path:
@@ -59,7 +59,7 @@ class AddBlockData:
             block_list_table = BlockInformation(self.conn, self.cursor, file_number)
             pk, block_id, number_of_blocks = block_list_table.get_block_pk(self.user_name,
                                                                            col_filter_value=table_type)
-            print(block_id, number_of_blocks)
+            #print(block_id, number_of_blocks)
             check_path_report_entry(conn=self.conn, cursor=self.cursor, file_number=file_number, table_to_check=table,
                                     pk=pk, block_id=block_id, number_of_blocks=number_of_blocks,
                                     user_name=self.user_name)
@@ -67,33 +67,29 @@ class AddBlockData:
 
     def add_block_list(self):
         block_list = NewBlock(self.conn, self.cursor, self.user_name)
-        table_name = 'block_list'
         add_data = True
         while add_data:
-            categories = ['Add', 'Update', 'Exit Program']
-            new_update = ask.ask_list('Do you want to add new blocks or update earlier entries', categories)
-            if new_update == categories[0]:
-                block_list.add_data()
-                add_data = False
-            elif new_update == categories[1]:
+            categories = ['Add Block', 'Edit Block','Exit']
+            new_update = ask.ask_list('you want to do?', categories)
+            if new_update == 'Edit Block':
+                block_list.edit_data()
+                add_data = ask.ask_y_n('Do you want to add/edit another block?')
+            elif new_update == 'Add Block':
                 file_number = 'test'
-                check = False
-                while not check:
-                    file_number = input("Enter File Number to update: ")
+                check_file = False
+                while not check_file:
+                    file_number = input("Enter File Number: ")
                     print("File Number: " + file_number)
-                    check = ask.ask_y_n("Is this file number correct")
-                check_file = sql.check_file_number_exist(self.cursor, file_number, table_name)
-                if check_file:
-                    block_list.edit_data(file_number)
-                    add_data = ask.ask_y_n('Do you want to add more blocks to file number ' + file_number + '?')
+                    check_file = ask.ask_y_n("Is this file number correct")
+                if not sql.check_file_number_exist(self.cursor, file_number, table='block_list'):
+                    block_list.add_data(file_number)
                 else:
-                    print('No blocks have been added for file number: ' + file_number + '\nPlease make a new entry. '
-                                                                                        'Re-enter file number\n')
-                    block_list.add_data()
-                    add_data = False
-            elif new_update == categories[2]:
+                    print('This file_number already exists. Add a new block if for ' + file_number)
+                    block_type = ask.ask_list('Block type', ['biopsy', 'surgery'])
+                    block_list.add_new_pk(file_number, block_type)
+                add_data = ask.ask_y_n('Do you want to add/edit another block?')
+            else:
                 add_data = False
-
 
     def add_ffpe(self):
         table_next = True

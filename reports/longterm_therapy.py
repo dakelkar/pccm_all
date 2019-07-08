@@ -1,38 +1,38 @@
-import modules.ask_y_n_statement as ask_y_n_statement
+import modules.ask_y_n_statement as ask
 from sql.add_update_sql import review_input, update_multiple, review_data, last_update
 import modules.pccm_names as names
 from datetime import datetime
-
+from modules.option_lists import FollowUpStatus
 
 def hormone (file_number):
     check = False
     while not check:
-        hormone = ask_y_n_statement.ask_y_n("Hormone therapy indicated?")
+        hormone = ask.ask_y_n("Hormone therapy indicated?")
         if not hormone:
             hormone = "Hormone therapy not indicated"
             hormone_recieved, hormone_date, hormone_type, hormone_duration, hormone_disc, hormone_ovary,hormone_outcome, \
             hormone_follow_up, hormone_recur = ("NA", )*9
         else:
             hormone = "Hormone therapy indicated"
-            hormone_recieved = ask_y_n_statement.ask_y_n("Was Hormone therapy recieved?")
+            hormone_recieved = ask.ask_y_n("Was Hormone therapy recieved?")
             if hormone_recieved:
                 hormone_recieved = "Hormone therapy recieved"
-                hormone_date = input("Date of starting hormone therapy: ")
-                hormone_type = ask_y_n_statement.ask_option("Type of hormone therapy", ["Tamoxifen", "Anastrazole",
+                hormone_date = ask.check_date("Date of starting hormone therapy: ")
+                hormone_type = ask.ask_option("Type of hormone therapy", ["Tamoxifen", "Anastrazole",
                                                              "Injectables", "Letrozole", "Others"])
                 if hormone_type == "Injectables":
                     details = input ("Please provide details of injectables recieved: ")
                     hormone_type = hormone_type +": "+ details
                 hormone_duration = input("Duration of hormone therapy (years): ")
-                hormone_disc = ask_y_n_statement.ask_option("What is the current status of hormone therapy. "
+                hormone_disc = ask.ask_option("What is the current status of hormone therapy. "
                                                             "Give specific reasons if discontinued prematurely "
                                                             "(or not taken at all)",
                                                             ['Therapy is ongoing', "Completion of planned course",
                                                              "Adverse Effects","Stopped by patient",
                                                              "Progression of disease","Other"])
-                ovary = ask_y_n_statement.ask_y_n_na("Has ovarian surpression been used?")
+                ovary = ask.ask_y_n_na("Has ovarian surpression been used?")
                 if ovary == 'Yes':
-                    hormone_ovary = ask_y_n_statement.ask_option("Type of ovarian surpression used", ["Surgery", "Drug"])
+                    hormone_ovary = ask.ask_option("Type of ovarian surpression used", ["Surgery", "Drug"])
                     if hormone_ovary == "Drug":
                         details = input("Please provide details of drug used: ")
                         hormone_ovary = hormone_ovary + ": "+details
@@ -40,7 +40,7 @@ def hormone (file_number):
                     hormone_ovary = ovary
                 hormone_outcome = input ("Outcome of hormone therapy: ")
                 hormone_follow_up = input("Follow up after hormone therapy: ")
-                hormone_recur = ask_y_n_statement.ask_y_n("Was there recurrence after hormone therapy?", "Recurrence",
+                hormone_recur = ask.ask_y_n("Was there recurrence after hormone therapy?", "Recurrence",
                                                           "No recurrence")
             else:
                 hormone_recieved = "No hormone therapy recieved"
@@ -56,16 +56,16 @@ def hormone (file_number):
 def metastasis(file_number, user_name):
     check = False
     while not check:
-        met_has = ask_y_n_statement.ask_y_n("Has the patient been examined for metastatic disease?")
+        met_has = ask.ask_y_n("Has the patient been examined for metastatic disease?")
         if not met_has:
             met_has = "Not examined for metastatic disease"
         else:
             met_has = "Examined for metastatic disease"
-        date_last = input("Date of last follow-up: ")
-        recur = ask_y_n_statement.ask_y_n("Has the patient experienced a recurrence?")
+        date_last = ask.check_date("Date of last follow-up: ")
+        recur = ask.ask_y_n("Has the patient experienced a recurrence?")
         if recur:
             time_recur = input("Time to disease recurrence: ")
-            nature_recur = ask_y_n_statement.ask_option("Nature of recurrence", ["Distant", "Local", "Other"])
+            nature_recur = ask.ask_option("Nature of recurrence", ["Distant", "Local", "Other"])
             if nature_recur == "Distant":
                 distant_site = input("Site of distant recurrence: ")
             else: distant_site = "NA"
@@ -78,16 +78,13 @@ def metastasis(file_number, user_name):
     return data_list
 
 def patient_status():
-    status = ask_y_n_statement.ask_option("Status at last follow up",
+    status = ask.ask_option("Status at last follow up",
                                           ["Survivor", "Deceased", "Lost to follow-up", "Other"])
     if status == "Survivor":
-        type_survivor = ask_y_n_statement.ask_option("the Survivor is ", ["disease Free", "with recurrence",
-                                                                          "disease free with no known recurrence",
-                                                                          "with disease"])
+        type_survivor = ask.ask_list("the Survivor is ", FollowUpStatus.survivor_status)
         status = status + ": " + type_survivor
     if status == "Deceased":
-        type_death = ask_y_n_statement.ask_option("Cause of death",
-                                                  ["due to disease", "due to unrelated causes", "not known"])
+        type_death = ask.ask_option("Cause of death", FollowUpStatus.deceased_status)
         status = status + ": " + type_death
     return status
 
@@ -98,12 +95,12 @@ def file_row(cursor, file_number):
 def add_data(conn, cursor, file_number, user_name):
     #file_row(cursor, file_number)
     table = "hormonetherapy_survival"
-    enter = ask_y_n_statement.ask_y_n("Enter Hormone Therapy Details?")
+    enter = ask.ask_y_n("Enter Hormone Therapy Details?")
     if enter:
         col_list = names.names_longterm(module_name= "hormone")
         data = hormone(file_number)
         update_multiple(conn, cursor, table, col_list, file_number, data)
-    enter = ask_y_n_statement.ask_y_n("Enter Recurrence and follow-up status?")
+    enter = ask.ask_y_n("Enter Recurrence and follow-up status?")
     if enter:
         col_list = names.names_longterm(module_name="metastasis")
         data = metastasis(file_number, user_name)

@@ -415,7 +415,8 @@ def names_radiation():
 def name_follow_up():
     col_list = ['follow_up_period', 'follow_up_status', 'follow_up_mammography_date', 'follow_up_mammography',
                 'follow_up_usg_date', 'follow_up_usg', 'follow_up_other_test', 'follow_up_other_test_date',
-                'follow_up_other_result', 'update_by', 'last_update']
+                'follow_up_other_result', 'follow_up_treatment', 'follow_up_treatment_result', 'update_by',
+                'last_update']
     return col_list
 
 

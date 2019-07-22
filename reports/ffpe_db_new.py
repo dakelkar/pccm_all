@@ -24,9 +24,11 @@ class NewBlock:
         data_list = self.columns
         check = False
         while not check:
-            patient_name = self.get_value_and_check_value(col_name='patient_name', file_number=file_number,
-                                                          input_statement='Please enter patient name: ',
-                                                          integer=False)
+            check_name = False
+            while not check_name:
+                patient_name = input('Please enter patient name: '),
+                print('Patient name: ' + str(patient_name))
+                check_name = ask.ask_y_n('Is name correct')
             mr_number = self.check_block_value_in_db(input_statement='Please enter MR number: ',
                                                      value_name='mr_number', integer=True)
             date_of_birth = self.get_value_and_check_value(col_name='date_of_birth', file_number=file_number,
@@ -105,7 +107,7 @@ class NewBlock:
                          block_location, block_type, block_id, current_block_location, blocks_received_at_pccm,
                          number_of_blocks, block_series, str(consent_discussed), consent, self.user_name,
                          sql.last_update()]
-            print(data_list, self.columns_db)
+            # print(data_list, self.columns_db)
             block_df.loc[pk] = data_list
             check, block_df = sql.review_df_row(block_df)
         return data_list[1:], pk

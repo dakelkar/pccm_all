@@ -35,7 +35,7 @@ class BlockList:
                    'number_of_blocks' : ['Enter value'], 'block_series' : ['Enter value'],
                    'block_type': ['biopsy', 'surgery'], 'block_id' : ['Enter value']}
 
-    unique_values = {'file_number', 'patient_name', 'mr_number', 'block_sr_number', 'block_location','block_id'}
+    unique_values = {'file_number', 'mr_number', 'block_sr_number', 'block_location','block_id'}
 
 class FollowUpStatus:
 

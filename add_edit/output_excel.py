@@ -2,7 +2,7 @@ import pandas as pd
 import os
 import sqlite3
 from modules.ask_y_n_statement import ask_option, ask_y_n
-from datetime import date
+from datetime import date, datetime
 from modules.pccm_names import db_tables
 from sql.add_update_sql import table_check
 import modules.table_dicts as table_dicts
@@ -84,7 +84,11 @@ class OutputData():
                 for table in tables_to_print:
                     to_print = ask_y_n("Do you want to print " + table)
                     if to_print:
+                        # error check
+                        print('printing ' + table)
                         self.print_table(writer, table)
+                        # error check
+                        print('getting shape of ' + table)
                         number, output_type = self.print_table(writer, table)
                         summary_df.loc[table] = [table, number]
             self.print_summary(summary_df)
@@ -93,9 +97,11 @@ class OutputData():
 
 
 def define_path():
-    folder_db, db_name, output_folder, output_name, research = ('D:/repos/pccm_db/main/DB', "PCCM_BreastCancerDB_all_data.db",
-                          'D:/repos/pccm_db/main/DB', 'Output_' + str(date.today()) + '.xlsx', False)
-    check_folder = None
+    folder_db, db_name, output_folder, output_name, research = ('E:/pccm_db/main/DB', "PCCM_BreastCancerDB_all_data.db",
+                          'E:/pccm_db/main/DB/data_output', datetime.now().strftime('%Y_%m_%d') +
+                                                                'Output_PCCM_BreastCancerDB_' + str(date.today()) +
+                                                                '.xlsx', False)
+    check_folder = None 
     research = ask_y_n('Do you want to create an output for research?')
     while check_folder != 'All are correct':
         print('\nFolder location of database file is set as: \n' + folder_db + '\n')
